@@ -1,0 +1,9 @@
+#def GIT_BEGIN_DECL
+#def GIT_END_DECL
+
+/** Declare a public function exported for application use. */
+
+#def GIT_EXTERN(type) extern type
+
+/** Declare a function's takes printf style arguments. */
+#def GIT_FORMAT_PRINTF(a,b) /* empty */
