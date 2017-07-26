@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types
 
@@ -35,8 +36,8 @@ const
 ## * Unique identity of any object (commit, tree, blob, tag).
 
 type
-  git_oid* {.bycopy.} = object
-    id*: array[GIT_OID_RAWSZ, cuchar] ## * raw binary formatted id
+  git_oid* = object
+    id*: array[GIT_OID_RAWSZ, uint8] ## * raw binary formatted id
   git_oid_shorten* = object 
 
 ## *
@@ -49,7 +50,7 @@ type
 ##  @return 0 or an error code
 ## 
 
-proc git_oid_fromstr*(`out`: ptr git_oid; str: cstring): cint
+proc git_oid_fromstr*(`out`: ptr git_oid; str: cstring): cint  {.importc.}
 ## *
 ##  Parse a hex formatted null-terminated string into a git_oid.
 ## 
@@ -58,7 +59,7 @@ proc git_oid_fromstr*(`out`: ptr git_oid; str: cstring): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_oid_fromstrp*(`out`: ptr git_oid; str: cstring): cint
+proc git_oid_fromstrp*(`out`: ptr git_oid; str: cstring): cint  {.importc.}
 ## *
 ##  Parse N characters of a hex formatted object id into a git_oid.
 ## 
@@ -71,7 +72,7 @@ proc git_oid_fromstrp*(`out`: ptr git_oid; str: cstring): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_oid_fromstrn*(`out`: ptr git_oid; str: cstring; length: csize): cint
+proc git_oid_fromstrn*(`out`: ptr git_oid; str: cstring; length: csize): cint  {.importc.}
 ## *
 ##  Copy an already raw oid into a git_oid structure.
 ## 
@@ -79,7 +80,7 @@ proc git_oid_fromstrn*(`out`: ptr git_oid; str: cstring; length: csize): cint
 ##  @param raw the raw input bytes to be copied.
 ## 
 
-proc git_oid_fromraw*(`out`: ptr git_oid; raw: ptr cuchar)
+proc git_oid_fromraw*(`out`: ptr git_oid; raw: ptr cuchar) {.importc.}
 ## *
 ##  Format a git_oid into a hex string.
 ## 
@@ -91,7 +92,7 @@ proc git_oid_fromraw*(`out`: ptr git_oid; raw: ptr cuchar)
 ##  @param id oid structure to format.
 ## 
 
-proc git_oid_fmt*(`out`: cstring; id: ptr git_oid)
+proc git_oid_fmt*(`out`: cstring; id: ptr git_oid) {.importc.}
 ## *
 ##  Format a git_oid into a partial hex string.
 ## 
@@ -102,7 +103,7 @@ proc git_oid_fmt*(`out`: cstring; id: ptr git_oid)
 ##  @param id oid structure to format.
 ## 
 
-proc git_oid_nfmt*(`out`: cstring; n: csize; id: ptr git_oid)
+proc git_oid_nfmt*(`out`: cstring; n: csize; id: ptr git_oid) {.importc.}
 ## *
 ##  Format a git_oid into a loose-object path string.
 ## 
@@ -117,7 +118,7 @@ proc git_oid_nfmt*(`out`: cstring; n: csize; id: ptr git_oid)
 ##  @param id oid structure to format.
 ## 
 
-proc git_oid_pathfmt*(`out`: cstring; id: ptr git_oid)
+proc git_oid_pathfmt*(`out`: cstring; id: ptr git_oid) {.importc.}
 ## *
 ##  Format a git_oid into a statically allocated c-string.
 ## 
@@ -130,7 +131,7 @@ proc git_oid_pathfmt*(`out`: cstring; id: ptr git_oid)
 ##  @return the c-string
 ## 
 
-proc git_oid_tostr_s*(oid: ptr git_oid): cstring
+proc git_oid_tostr_s*(oid: ptr git_oid): cstring  {.importc.}
 ## *
 ##  Format a git_oid into a buffer as a hex format c-string.
 ## 
@@ -149,7 +150,7 @@ proc git_oid_tostr_s*(oid: ptr git_oid): cstring
 ## 			errors, otherwise a pointer to an empty string.
 ## 
 
-proc git_oid_tostr*(`out`: cstring; n: csize; id: ptr git_oid): cstring
+proc git_oid_tostr*(`out`: cstring; n: csize; id: ptr git_oid): cstring  {.importc.}
 ## *
 ##  Copy an oid from one structure to another.
 ## 
@@ -157,7 +158,7 @@ proc git_oid_tostr*(`out`: cstring; n: csize; id: ptr git_oid): cstring
 ##  @param src oid structure to copy from.
 ## 
 
-proc git_oid_cpy*(`out`: ptr git_oid; src: ptr git_oid)
+proc git_oid_cpy*(`out`: ptr git_oid; src: ptr git_oid) {.importc.}
 ## *
 ##  Compare two oid structures.
 ## 
@@ -166,7 +167,7 @@ proc git_oid_cpy*(`out`: ptr git_oid; src: ptr git_oid)
 ##  @return <0, 0, >0 if a < b, a == b, a > b.
 ## 
 
-proc git_oid_cmp*(a: ptr git_oid; b: ptr git_oid): cint
+proc git_oid_cmp*(a: ptr git_oid; b: ptr git_oid): cint  {.importc.}
 ## *
 ##  Compare two oid structures for equality
 ## 
@@ -175,7 +176,7 @@ proc git_oid_cmp*(a: ptr git_oid; b: ptr git_oid): cint
 ##  @return true if equal, false otherwise
 ## 
 
-proc git_oid_equal*(a: ptr git_oid; b: ptr git_oid): cint
+proc git_oid_equal*(a: ptr git_oid; b: ptr git_oid): cint  {.importc.}
 ## *
 ##  Compare the first 'len' hexadecimal characters (packets of 4 bits)
 ##  of two oid structures.
@@ -186,7 +187,7 @@ proc git_oid_equal*(a: ptr git_oid; b: ptr git_oid): cint
 ##  @return 0 in case of a match
 ## 
 
-proc git_oid_ncmp*(a: ptr git_oid; b: ptr git_oid; len: csize): cint
+proc git_oid_ncmp*(a: ptr git_oid; b: ptr git_oid; len: csize): cint  {.importc.}
 ## *
 ##  Check if an oid equals an hex formatted object id.
 ## 
@@ -195,7 +196,7 @@ proc git_oid_ncmp*(a: ptr git_oid; b: ptr git_oid; len: csize): cint
 ##  @return 0 in case of a match, -1 otherwise.
 ## 
 
-proc git_oid_streq*(id: ptr git_oid; str: cstring): cint
+proc git_oid_streq*(id: ptr git_oid; str: cstring): cint  {.importc.}
 ## *
 ##  Compare an oid to an hex formatted object id.
 ## 
@@ -205,14 +206,14 @@ proc git_oid_streq*(id: ptr git_oid; str: cstring): cint
 ##          0 if id matches str, >0 if id sorts after str.
 ## 
 
-proc git_oid_strcmp*(id: ptr git_oid; str: cstring): cint
+proc git_oid_strcmp*(id: ptr git_oid; str: cstring): cint  {.importc.}
 ## *
 ##  Check is an oid is all zeros.
 ## 
 ##  @return 1 if all zeros, 0 otherwise.
 ## 
 
-proc git_oid_iszero*(id: ptr git_oid): cint
+proc git_oid_iszero*(id: ptr git_oid): cint  {.importc.}
 ## *
 ##  OID Shortener object
 ## 
@@ -233,7 +234,7 @@ proc git_oid_iszero*(id: ptr git_oid): cint
 ## 	@return a `git_oid_shorten` instance, NULL if OOM
 ## 
 
-proc git_oid_shorten_new*(min_length: csize): ptr git_oid_shorten
+proc git_oid_shorten_new*(min_length: csize): ptr git_oid_shorten  {.importc.}
 ## *
 ##  Add a new OID to set of shortened OIDs and calculate
 ##  the minimal length to uniquely identify all the OIDs in
@@ -259,12 +260,12 @@ proc git_oid_shorten_new*(min_length: csize): ptr git_oid_shorten
 ## 		error occurs.
 ## 
 
-proc git_oid_shorten_add*(os: ptr git_oid_shorten; text_id: cstring): cint
+proc git_oid_shorten_add*(os: ptr git_oid_shorten; text_id: cstring): cint  {.importc.}
 ## *
 ##  Free an OID shortener instance
 ## 
 ##  @param os a `git_oid_shorten` instance
 ## 
 
-proc git_oid_shorten_free*(os: ptr git_oid_shorten)
+proc git_oid_shorten_free*(os: ptr git_oid_shorten) {.importc.}
 ## * @}

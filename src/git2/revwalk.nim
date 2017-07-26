@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types, oid
 
@@ -62,7 +63,7 @@ type ## *
 ##  @return 0 or an error code
 ## 
 
-proc git_revwalk_new*(`out`: ptr ptr git_revwalk; repo: ptr git_repository): cint
+proc git_revwalk_new*(`out`: ptr ptr git_revwalk; repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Reset the revision walker for reuse.
 ## 
@@ -77,7 +78,7 @@ proc git_revwalk_new*(`out`: ptr ptr git_revwalk; repo: ptr git_repository): cin
 ##  @param walker handle to reset.
 ## 
 
-proc git_revwalk_reset*(walker: ptr git_revwalk)
+proc git_revwalk_reset*(walker: ptr git_revwalk)  {.importc.}
 ## *
 ##  Add a new root for the traversal
 ## 
@@ -96,7 +97,7 @@ proc git_revwalk_reset*(walker: ptr git_revwalk)
 ##  @return 0 or an error code
 ## 
 
-proc git_revwalk_push*(walk: ptr git_revwalk; id: ptr git_oid): cint
+proc git_revwalk_push*(walk: ptr git_revwalk; id: ptr git_oid): cint  {.importc.}
 ## *
 ##  Push matching references
 ## 
@@ -114,7 +115,7 @@ proc git_revwalk_push*(walk: ptr git_revwalk; id: ptr git_oid): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_revwalk_push_glob*(walk: ptr git_revwalk; glob: cstring): cint
+proc git_revwalk_push_glob*(walk: ptr git_revwalk; glob: cstring): cint  {.importc.}
 ## *
 ##  Push the repository's HEAD
 ## 
@@ -122,7 +123,7 @@ proc git_revwalk_push_glob*(walk: ptr git_revwalk; glob: cstring): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_revwalk_push_head*(walk: ptr git_revwalk): cint
+proc git_revwalk_push_head*(walk: ptr git_revwalk): cint  {.importc.}
 ## *
 ##  Mark a commit (and its ancestors) uninteresting for the output.
 ## 
@@ -137,7 +138,7 @@ proc git_revwalk_push_head*(walk: ptr git_revwalk): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_revwalk_hide*(walk: ptr git_revwalk; commit_id: ptr git_oid): cint
+proc git_revwalk_hide*(walk: ptr git_revwalk; commit_id: ptr git_oid): cint  {.importc.}
 ## *
 ##  Hide matching references.
 ## 
@@ -156,7 +157,7 @@ proc git_revwalk_hide*(walk: ptr git_revwalk; commit_id: ptr git_oid): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_revwalk_hide_glob*(walk: ptr git_revwalk; glob: cstring): cint
+proc git_revwalk_hide_glob*(walk: ptr git_revwalk; glob: cstring): cint  {.importc.}
 ## *
 ##  Hide the repository's HEAD
 ## 
@@ -164,7 +165,7 @@ proc git_revwalk_hide_glob*(walk: ptr git_revwalk; glob: cstring): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_revwalk_hide_head*(walk: ptr git_revwalk): cint
+proc git_revwalk_hide_head*(walk: ptr git_revwalk): cint  {.importc.}
 ## *
 ##  Push the OID pointed to by a reference
 ## 
@@ -175,7 +176,7 @@ proc git_revwalk_hide_head*(walk: ptr git_revwalk): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_revwalk_push_ref*(walk: ptr git_revwalk; refname: cstring): cint
+proc git_revwalk_push_ref*(walk: ptr git_revwalk; refname: cstring): cint  {.importc.}
 ## *
 ##  Hide the OID pointed to by a reference
 ## 
@@ -186,7 +187,7 @@ proc git_revwalk_push_ref*(walk: ptr git_revwalk; refname: cstring): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_revwalk_hide_ref*(walk: ptr git_revwalk; refname: cstring): cint
+proc git_revwalk_hide_ref*(walk: ptr git_revwalk; refname: cstring): cint  {.importc.}
 ## *
 ##  Get the next commit from the revision walk.
 ## 
@@ -206,7 +207,7 @@ proc git_revwalk_hide_ref*(walk: ptr git_revwalk; refname: cstring): cint
 ## 	GIT_ITEROVER if there are no commits left to iterate
 ## 
 
-proc git_revwalk_next*(`out`: ptr git_oid; walk: ptr git_revwalk): cint
+proc git_revwalk_next*(`out`: ptr git_oid; walk: ptr git_revwalk): cint  {.importc.}
 ## *
 ##  Change the sorting mode when iterating through the
 ##  repository's contents.
@@ -217,7 +218,7 @@ proc git_revwalk_next*(`out`: ptr git_oid; walk: ptr git_revwalk): cint
 ##  @param sort_mode combination of GIT_SORT_XXX flags
 ## 
 
-proc git_revwalk_sorting*(walk: ptr git_revwalk; sort_mode: cuint)
+proc git_revwalk_sorting*(walk: ptr git_revwalk; sort_mode: cuint)  {.importc.}
 ## *
 ##  Push and hide the respective endpoints of the given range.
 ## 
@@ -232,21 +233,21 @@ proc git_revwalk_sorting*(walk: ptr git_revwalk; sort_mode: cuint)
 ## 
 ## 
 
-proc git_revwalk_push_range*(walk: ptr git_revwalk; range: cstring): cint
+proc git_revwalk_push_range*(walk: ptr git_revwalk; range: cstring): cint  {.importc.}
 ## *
 ##  Simplify the history by first-parent
 ## 
 ##  No parents other than the first for each commit will be enqueued.
 ## 
 
-proc git_revwalk_simplify_first_parent*(walk: ptr git_revwalk)
+proc git_revwalk_simplify_first_parent*(walk: ptr git_revwalk)  {.importc.}
 ## *
 ##  Free a revision walker previously allocated.
 ## 
 ##  @param walk traversal handle to close. If NULL nothing occurs.
 ## 
 
-proc git_revwalk_free*(walk: ptr git_revwalk)
+proc git_revwalk_free*(walk: ptr git_revwalk)  {.importc.}
 ## *
 ##  Return the repository on which this walker
 ##  is operating.
@@ -255,7 +256,7 @@ proc git_revwalk_free*(walk: ptr git_revwalk)
 ##  @return the repository being walked
 ## 
 
-proc git_revwalk_repository*(walk: ptr git_revwalk): ptr git_repository
+proc git_revwalk_repository*(walk: ptr git_revwalk): ptr git_repository  {.importc.}
 ## *
 ##  This is a callback function that user can provide to hide a
 ##  commit and its parents. If the callback function returns non-zero value,
@@ -266,7 +267,7 @@ proc git_revwalk_repository*(walk: ptr git_revwalk): ptr git_repository
 ## 
 
 type
-  git_revwalk_hide_cb* = proc (commit_id: ptr git_oid; payload: pointer): cint
+  git_revwalk_hide_cb* = proc (commit_id: ptr git_oid; payload: pointer): cint  {.importc.}
 
 ## *
 ##  Adds a callback function to hide a commit and its parents
@@ -276,6 +277,6 @@ type
 ##  @param payload  data payload to be passed to callback function
 ## 
 
-proc git_revwalk_add_hide_cb*(walk: ptr git_revwalk; hide_cb: git_revwalk_hide_cb;
-                             payload: pointer): cint
+proc git_revwalk_add_hide_cb*(walk: ptr git_revwalk; hide_cb: git_revwalk_hide_cb; 
+                             payload: pointer): cint {.importc.}
 ## * @}

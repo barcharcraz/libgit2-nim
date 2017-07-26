@@ -22,4 +22,4 @@ import
 ##  This function cannot fail.
 ## 
 
-proc git_time_monotonic*(): cdouble
+proc git_time_monotonic*(): cdouble  {.importc.}

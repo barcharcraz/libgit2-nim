@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types, indexer, checkout, remote, transport
 
@@ -58,8 +59,8 @@ type ## *
 ## 
 
 type
-  git_remote_create_cb* = proc (`out`: ptr ptr git_remote; repo: ptr git_repository;
-                             name: cstring; url: cstring; payload: pointer): cint
+  git_remote_create_cb* = proc (`out`: ptr ptr git_remote; repo: ptr git_repository; 
+                             name: cstring; url: cstring; payload: pointer): cint {.importc.}
 
 ## *
 ##  The signature of a function matchin git_repository_init, with an
@@ -77,8 +78,8 @@ type
 ## 
 
 type
-  git_repository_create_cb* = proc (`out`: ptr ptr git_repository; path: cstring;
-                                 bare: cint; payload: pointer): cint
+  git_repository_create_cb* = proc (`out`: ptr ptr git_repository; path: cstring; 
+                                 bare: cint; payload: pointer): cint {.importc.}
 
 ## *
 ##  Clone options structure
@@ -146,7 +147,7 @@ const
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_clone_init_options*(opts: ptr git_clone_options; version: cuint): cint
+proc git_clone_init_options*(opts: ptr git_clone_options; version: cuint): cint  {.importc.}
 ## *
 ##  Clone a remote repository.
 ## 
@@ -164,6 +165,6 @@ proc git_clone_init_options*(opts: ptr git_clone_options; version: cuint): cint
 ##          `giterr_last` for a detailed error message)
 ## 
 
-proc git_clone*(`out`: ptr ptr git_repository; url: cstring; local_path: cstring;
-               options: ptr git_clone_options): cint
+proc git_clone*(`out`: ptr ptr git_repository; url: cstring; local_path: cstring; 
+               options: ptr git_clone_options): cint {.importc.}
 ## * @}

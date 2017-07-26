@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types, oid, refs
 
@@ -28,7 +29,7 @@ import
 ##  @return 0 or an error code
 ## 
 
-proc git_refdb_new*(`out`: ptr ptr git_refdb; repo: ptr git_repository): cint
+proc git_refdb_new*(`out`: ptr ptr git_refdb; repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Create a new reference database and automatically add
 ##  the default backends:
@@ -42,19 +43,19 @@ proc git_refdb_new*(`out`: ptr ptr git_refdb; repo: ptr git_repository): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_refdb_open*(`out`: ptr ptr git_refdb; repo: ptr git_repository): cint
+proc git_refdb_open*(`out`: ptr ptr git_refdb; repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Suggests that the given refdb compress or optimize its references.
 ##  This mechanism is implementation specific.  For on-disk reference
 ##  databases, for example, this may pack all loose references.
 ## 
 
-proc git_refdb_compress*(refdb: ptr git_refdb): cint
+proc git_refdb_compress*(refdb: ptr git_refdb): cint  {.importc.}
 ## *
 ##  Close an open reference database.
 ## 
 ##  @param refdb reference database pointer or NULL
 ## 
 
-proc git_refdb_free*(refdb: ptr git_refdb)
+proc git_refdb_free*(refdb: ptr git_refdb)  {.importc.}
 ## * @}

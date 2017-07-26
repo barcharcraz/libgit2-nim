@@ -32,13 +32,13 @@ type
     db*: ptr git_refdb ## *
                     ##  Return the current reference and advance the iterator.
                     ## 
-    next*: proc (`ref`: ptr ptr git_reference; iter: ptr git_reference_iterator): cint ## *
+    next*: proc (`ref`: ptr ptr git_reference; iter: ptr git_reference_iterator): cint ## *  {.importc.}
                                                                              ##  Return the name of the current reference and advance the iterator
                                                                              ## 
-    next_name*: proc (ref_name: cstringArray; iter: ptr git_reference_iterator): cint ## *
+    next_name*: proc (ref_name: cstringArray; iter: ptr git_reference_iterator): cint ## *  {.importc.}
                                                                               ##  Free the iterator
                                                                               ## 
-    free*: proc (iter: ptr git_reference_iterator)
+    free*: proc (iter: ptr git_reference_iterator) 
 
 
 ## * An instance for a custom backend
@@ -49,76 +49,76 @@ type
                   ##  Queries the refdb backend to determine if the given ref_name
                   ##  exists.  A refdb implementation must provide this function.
                   ## 
-    exists*: proc (exists: ptr cint; backend: ptr git_refdb_backend; ref_name: cstring): cint ## *
+    exists*: proc (exists: ptr cint; backend: ptr git_refdb_backend; ref_name: cstring): cint ## *  {.importc.}
                                                                                    ##  Queries the refdb backend for a given reference.  A refdb
                                                                                    ##  implementation must provide this function.
                                                                                    ## 
-    lookup*: proc (`out`: ptr ptr git_reference; backend: ptr git_refdb_backend;
-                 ref_name: cstring): cint ## *
+    lookup*: proc (`out`: ptr ptr git_reference; backend: ptr git_refdb_backend; 
+                 ref_name: cstring): cint ## * {.importc.}
                                        ##  Allocate an iterator object for the backend.
                                        ## 
                                        ##  A refdb implementation must provide this function.
                                        ## 
-    `iterator`*: proc (iter: ptr ptr git_reference_iterator;
-                     backend: ptr git_refdb_backend; glob: cstring): cint ## 
+    `iterator`*: proc (iter: ptr ptr git_reference_iterator; 
+                     backend: ptr git_refdb_backend; glob: cstring): cint ##  {.importc.}
                                                                     ##  Writes the given reference to the refdb.  A refdb implementation
                                                                     ##  must provide this function.
                                                                     ## 
-    write*: proc (backend: ptr git_refdb_backend; `ref`: ptr git_reference; force: cint;
+    write*: proc (backend: ptr git_refdb_backend; `ref`: ptr git_reference; force: cint; 
                 who: ptr git_signature; message: cstring; old: ptr git_oid;
-                old_target: cstring): cint
-    rename*: proc (`out`: ptr ptr git_reference; backend: ptr git_refdb_backend;
+                old_target: cstring): cint {.importc.}
+    rename*: proc (`out`: ptr ptr git_reference; backend: ptr git_refdb_backend; 
                  old_name: cstring; new_name: cstring; force: cint;
-                 who: ptr git_signature; message: cstring): cint ## *
+                 who: ptr git_signature; message: cstring): cint ## * {.importc.}
                                                            ##  Deletes the given reference (and if necessary its reflog)
                                                            ##  from the refdb.  A refdb implementation must provide this
                                                            ##  function.
                                                            ## 
-    del*: proc (backend: ptr git_refdb_backend; ref_name: cstring; old_id: ptr git_oid;
-              old_target: cstring): cint ## *
+    del*: proc (backend: ptr git_refdb_backend; ref_name: cstring; old_id: ptr git_oid; 
+              old_target: cstring): cint ## * {.importc.}
                                       ##  Suggests that the given refdb compress or optimize its references.
                                       ##  This mechanism is implementation specific.  (For on-disk reference
                                       ##  databases, this may pack all loose references.)    A refdb
                                       ##  implementation may provide this function; if it is not provided,
                                       ##  nothing will be done.
                                       ## 
-    compress*: proc (backend: ptr git_refdb_backend): cint ## *
+    compress*: proc (backend: ptr git_refdb_backend): cint ## *  {.importc.}
                                                      ##  Query whether a particular reference has a log (may be empty)
                                                      ## 
-    has_log*: proc (backend: ptr git_refdb_backend; refname: cstring): cint ## *
+    has_log*: proc (backend: ptr git_refdb_backend; refname: cstring): cint ## *  {.importc.}
                                                                     ##  Make sure a particular reference will have a reflog which
                                                                     ##  will be appended to on writes.
                                                                     ## 
-    ensure_log*: proc (backend: ptr git_refdb_backend; refname: cstring): cint ## *
+    ensure_log*: proc (backend: ptr git_refdb_backend; refname: cstring): cint ## *  {.importc.}
                                                                        ##  Frees any resources held by the refdb (including the `git_refdb_backend`
                                                                        ##  itself). A refdb backend implementation must provide this function.
                                                                        ## 
-    free*: proc (backend: ptr git_refdb_backend) ## *
+    free*: proc (backend: ptr git_refdb_backend) ## * 
                                             ##  Read the reflog for the given reference name.
                                             ## 
-    reflog_read*: proc (`out`: ptr ptr git_reflog; backend: ptr git_refdb_backend;
-                      name: cstring): cint ## *
+    reflog_read*: proc (`out`: ptr ptr git_reflog; backend: ptr git_refdb_backend; 
+                      name: cstring): cint ## * {.importc.}
                                         ##  Write a reflog to disk.
                                         ## 
-    reflog_write*: proc (backend: ptr git_refdb_backend; reflog: ptr git_reflog): cint ## *
+    reflog_write*: proc (backend: ptr git_refdb_backend; reflog: ptr git_reflog): cint ## *  {.importc.}
                                                                               ##  Rename a reflog
                                                                               ## 
-    reflog_rename*: proc (_backend: ptr git_refdb_backend; old_name: cstring;
-                        new_name: cstring): cint ## *
+    reflog_rename*: proc (_backend: ptr git_refdb_backend; old_name: cstring; 
+                        new_name: cstring): cint ## * {.importc.}
                                               ##  Remove a reflog.
                                               ## 
-    reflog_delete*: proc (backend: ptr git_refdb_backend; name: cstring): cint ## *
+    reflog_delete*: proc (backend: ptr git_refdb_backend; name: cstring): cint ## *  {.importc.}
                                                                        ##  Lock a reference. The opaque parameter will be passed to the unlock function
                                                                        ## 
-    lock*: proc (payload_out: ptr pointer; backend: ptr git_refdb_backend;
-               refname: cstring): cint ## *
+    lock*: proc (payload_out: ptr pointer; backend: ptr git_refdb_backend; 
+               refname: cstring): cint ## * {.importc.}
                                     ##  Unlock a reference. Only one of target or symbolic_target
                                     ##  will be set. success indicates whether to update the
                                     ##  reference or discard the lock (if it's false)
                                     ## 
-    unlock*: proc (backend: ptr git_refdb_backend; payload: pointer; success: cint;
+    unlock*: proc (backend: ptr git_refdb_backend; payload: pointer; success: cint; 
                  update_reflog: cint; `ref`: ptr git_reference;
-                 sig: ptr git_signature; message: cstring): cint
+                 sig: ptr git_signature; message: cstring): cint {.importc.}
 
 
 const
@@ -133,7 +133,7 @@ const
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_refdb_init_backend*(backend: ptr git_refdb_backend; version: cuint): cint
+proc git_refdb_init_backend*(backend: ptr git_refdb_backend; version: cuint): cint  {.importc.}
 ## *
 ##  Constructors for default filesystem-based refdb backend
 ## 
@@ -146,8 +146,8 @@ proc git_refdb_init_backend*(backend: ptr git_refdb_backend; version: cuint): ci
 ##  @return 0 on success, <0 error code on failure
 ## 
 
-proc git_refdb_backend_fs*(backend_out: ptr ptr git_refdb_backend;
-                          repo: ptr git_repository): cint
+proc git_refdb_backend_fs*(backend_out: ptr ptr git_refdb_backend; 
+                          repo: ptr git_repository): cint {.importc.}
 ## *
 ##  Sets the custom backend to an existing reference DB
 ## 
@@ -159,4 +159,4 @@ proc git_refdb_backend_fs*(backend_out: ptr ptr git_refdb_backend;
 ##  @return 0 on success; error code otherwise
 ## 
 
-proc git_refdb_set_backend*(refdb: ptr git_refdb; backend: ptr git_refdb_backend): cint
+proc git_refdb_set_backend*(refdb: ptr git_refdb; backend: ptr git_refdb_backend): cint  {.importc.}

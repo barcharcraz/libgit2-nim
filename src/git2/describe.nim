@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types, buffer
 
@@ -61,7 +62,7 @@ const
   GIT_DESCRIBE_DEFAULT_ABBREVIATED_SIZE* = 7
   GIT_DESCRIBE_OPTIONS_VERSION* = 1
 
-proc git_describe_init_options*(opts: ptr git_describe_options; version: cuint): cint
+proc git_describe_init_options*(opts: ptr git_describe_options; version: cuint): cint  {.importc.}
 ## *
 ##  Options for formatting the describe string
 ## 
@@ -86,8 +87,8 @@ type
 const
   GIT_DESCRIBE_FORMAT_OPTIONS_VERSION* = 1
 
-proc git_describe_init_format_options*(opts: ptr git_describe_format_options;
-                                      version: cuint): cint
+proc git_describe_init_format_options*(opts: ptr git_describe_format_options; 
+                                      version: cuint): cint {.importc.}
 ## *
 ##  A struct that stores the result of a describe operation.
 ## 
@@ -104,8 +105,8 @@ proc git_describe_init_format_options*(opts: ptr git_describe_format_options;
 ##  @param opts the lookup options
 ## 
 
-proc git_describe_commit*(result: ptr ptr git_describe_result;
-                         committish: ptr git_object; opts: ptr git_describe_options): cint
+proc git_describe_commit*(result: ptr ptr git_describe_result; 
+                         committish: ptr git_object; opts: ptr git_describe_options): cint {.importc.}
 ## *
 ##  Describe a commit
 ## 
@@ -119,8 +120,8 @@ proc git_describe_commit*(result: ptr ptr git_describe_result;
 ##  @param opts the lookup options
 ## 
 
-proc git_describe_workdir*(`out`: ptr ptr git_describe_result;
-                          repo: ptr git_repository; opts: ptr git_describe_options): cint
+proc git_describe_workdir*(`out`: ptr ptr git_describe_result; 
+                          repo: ptr git_repository; opts: ptr git_describe_options): cint {.importc.}
 ## *
 ##  Print the describe result to a buffer
 ## 
@@ -130,11 +131,11 @@ proc git_describe_workdir*(`out`: ptr ptr git_describe_result;
 ##  @param opts the formatting options
 ## 
 
-proc git_describe_format*(`out`: ptr git_buf; result: ptr git_describe_result;
-                         opts: ptr git_describe_format_options): cint
+proc git_describe_format*(`out`: ptr git_buf; result: ptr git_describe_result; 
+                         opts: ptr git_describe_format_options): cint {.importc.}
 ## *
 ##  Free the describe result.
 ## 
 
-proc git_describe_result_free*(result: ptr git_describe_result)
+proc git_describe_result_free*(result: ptr git_describe_result)  {.importc.}
 ## * @}

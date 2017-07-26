@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common
 
@@ -39,7 +40,7 @@ type
 ##  @param array git_strarray from which to free string data
 ## 
 
-proc git_strarray_free*(array: ptr git_strarray)
+proc git_strarray_free*(array: ptr git_strarray)  {.importc.}
 ## *
 ##  Copy a string array object from source to target.
 ## 
@@ -51,5 +52,5 @@ proc git_strarray_free*(array: ptr git_strarray)
 ##  @return 0 on success, < 0 on allocation failure
 ## 
 
-proc git_strarray_copy*(tgt: ptr git_strarray; src: ptr git_strarray): cint
+proc git_strarray_copy*(tgt: ptr git_strarray; src: ptr git_strarray): cint  {.importc.}
 ## * @}

@@ -4,10 +4,11 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
-  oid
+  oid, types, buffer
 
 ## *
 ##  @file git2/notes.h
@@ -26,8 +27,8 @@ import
 ## 
 
 type
-  git_note_foreach_cb* = proc (blob_id: ptr git_oid; annotated_object_id: ptr git_oid;
-                            payload: pointer): cint
+  git_note_foreach_cb* = proc (blob_id: ptr git_oid; annotated_object_id: ptr git_oid; 
+                            payload: pointer): cint {.importc.}
 
 ## *
 ##  note iterator
@@ -49,15 +50,15 @@ type
 ##  @return 0 or an error code
 ## 
 
-proc git_note_iterator_new*(`out`: ptr ptr git_note_iterator;
-                           repo: ptr git_repository; notes_ref: cstring): cint
+proc git_note_iterator_new*(`out`: ptr ptr git_note_iterator; 
+                           repo: ptr git_repository; notes_ref: cstring): cint {.importc.}
 ## *
 ##  Frees an git_note_iterator
 ## 
 ##  @param it pointer to the iterator
 ## 
 
-proc git_note_iterator_free*(it: ptr git_note_iterator)
+proc git_note_iterator_free*(it: ptr git_note_iterator)  {.importc.}
 ## *
 ##  Return the current item (note_id and annotated_id) and advance the iterator
 ##  internally to the next value
@@ -70,8 +71,8 @@ proc git_note_iterator_free*(it: ptr git_note_iterator)
 ##          (negative value)
 ## 
 
-proc git_note_next*(note_id: ptr git_oid; annotated_id: ptr git_oid;
-                   it: ptr git_note_iterator): cint
+proc git_note_next*(note_id: ptr git_oid; annotated_id: ptr git_oid; 
+                   it: ptr git_note_iterator): cint {.importc.}
 ## *
 ##  Read the note for an object
 ## 
@@ -86,8 +87,8 @@ proc git_note_next*(note_id: ptr git_oid; annotated_id: ptr git_oid;
 ##  @return 0 or an error code
 ## 
 
-proc git_note_read*(`out`: ptr ptr git_note; repo: ptr git_repository;
-                   notes_ref: cstring; oid: ptr git_oid): cint
+proc git_note_read*(`out`: ptr ptr git_note; repo: ptr git_repository; 
+                   notes_ref: cstring; oid: ptr git_oid): cint {.importc.}
 ## *
 ##  Get the note author
 ## 
@@ -95,7 +96,7 @@ proc git_note_read*(`out`: ptr ptr git_note; repo: ptr git_repository;
 ##  @return the author
 ## 
 
-proc git_note_author*(note: ptr git_note): ptr git_signature
+proc git_note_author*(note: ptr git_note): ptr git_signature  {.importc.}
 ## *
 ##  Get the note committer
 ## 
@@ -103,7 +104,7 @@ proc git_note_author*(note: ptr git_note): ptr git_signature
 ##  @return the committer
 ## 
 
-proc git_note_committer*(note: ptr git_note): ptr git_signature
+proc git_note_committer*(note: ptr git_note): ptr git_signature  {.importc.}
 ## *
 ##  Get the note message
 ## 
@@ -111,7 +112,7 @@ proc git_note_committer*(note: ptr git_note): ptr git_signature
 ##  @return the note message
 ## 
 
-proc git_note_message*(note: ptr git_note): cstring
+proc git_note_message*(note: ptr git_note): cstring  {.importc.}
 ## *
 ##  Get the note object's id
 ## 
@@ -119,7 +120,7 @@ proc git_note_message*(note: ptr git_note): cstring
 ##  @return the note object's id
 ## 
 
-proc git_note_id*(note: ptr git_note): ptr git_oid
+proc git_note_id*(note: ptr git_note): ptr git_oid  {.importc.}
 ## *
 ##  Add a note for an object
 ## 
@@ -136,9 +137,9 @@ proc git_note_id*(note: ptr git_note): ptr git_oid
 ##  @return 0 or an error code
 ## 
 
-proc git_note_create*(`out`: ptr git_oid; repo: ptr git_repository; notes_ref: cstring;
+proc git_note_create*(`out`: ptr git_oid; repo: ptr git_repository; notes_ref: cstring; 
                      author: ptr git_signature; committer: ptr git_signature;
-                     oid: ptr git_oid; note: cstring; force: cint): cint
+                     oid: ptr git_oid; note: cstring; force: cint): cint {.importc.}
 ## *
 ##  Remove the note for an object
 ## 
@@ -152,16 +153,16 @@ proc git_note_create*(`out`: ptr git_oid; repo: ptr git_repository; notes_ref: c
 ##  @return 0 or an error code
 ## 
 
-proc git_note_remove*(repo: ptr git_repository; notes_ref: cstring;
+proc git_note_remove*(repo: ptr git_repository; notes_ref: cstring; 
                      author: ptr git_signature; committer: ptr git_signature;
-                     oid: ptr git_oid): cint
+                     oid: ptr git_oid): cint {.importc.}
 ## *
 ##  Free a git_note object
 ## 
 ##  @param note git_note object
 ## 
 
-proc git_note_free*(note: ptr git_note)
+proc git_note_free*(note: ptr git_note)  {.importc.}
 ## *
 ##  Get the default notes reference for a repository
 ## 
@@ -171,7 +172,7 @@ proc git_note_free*(note: ptr git_note)
 ##  @return 0 or an error code
 ## 
 
-proc git_note_default_ref*(`out`: ptr git_buf; repo: ptr git_repository): cint
+proc git_note_default_ref*(`out`: ptr git_buf; repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Loop over all the notes within a specified namespace
 ##  and issue a callback for each one.
@@ -189,6 +190,6 @@ proc git_note_default_ref*(`out`: ptr git_buf; repo: ptr git_repository): cint
 ##  @return 0 on success, non-zero callback return value, or error code
 ## 
 
-proc git_note_foreach*(repo: ptr git_repository; notes_ref: cstring;
-                      note_cb: git_note_foreach_cb; payload: pointer): cint
+proc git_note_foreach*(repo: ptr git_repository; notes_ref: cstring; 
+                      note_cb: git_note_foreach_cb; payload: pointer): cint {.importc.}
 ## * @}

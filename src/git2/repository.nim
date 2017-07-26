@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types, oid, buffer
 
@@ -32,7 +33,7 @@ import
 ##  @return 0 or an error code
 ## 
 
-proc git_repository_open*(`out`: ptr ptr git_repository; path: cstring): cint
+proc git_repository_open*(`out`: ptr ptr git_repository; path: cstring): cint  {.importc.}
 ## *
 ##  Open working tree as a repository
 ## 
@@ -44,8 +45,8 @@ proc git_repository_open*(`out`: ptr ptr git_repository; path: cstring): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_repository_open_from_worktree*(`out`: ptr ptr git_repository;
-                                       wt: ptr git_worktree): cint
+proc git_repository_open_from_worktree*(`out`: ptr ptr git_repository; 
+                                       wt: ptr git_worktree): cint  {.importc.}
 ## *
 ##  Create a "fake" repository to wrap an object database
 ## 
@@ -58,7 +59,7 @@ proc git_repository_open_from_worktree*(`out`: ptr ptr git_repository;
 ##  @return 0 or an error code
 ## 
 
-proc git_repository_wrap_odb*(`out`: ptr ptr git_repository; odb: ptr git_odb): cint
+proc git_repository_wrap_odb*(`out`: ptr ptr git_repository; odb: ptr git_odb): cint  {.importc.}
 ## *
 ##  Look for a git repository and copy its path in the given buffer.
 ##  The lookup start from base_path and walk across parent directories
@@ -86,8 +87,8 @@ proc git_repository_wrap_odb*(`out`: ptr ptr git_repository; odb: ptr git_odb): 
 ##  @return 0 or an error code
 ## 
 
-proc git_repository_discover*(`out`: ptr git_buf; start_path: cstring;
-                             across_fs: cint; ceiling_dirs: cstring): cint
+proc git_repository_discover*(`out`: ptr git_buf; start_path: cstring; 
+                             across_fs: cint; ceiling_dirs: cstring): cint  {.importc.}
 ## *
 ##  Option flags for `git_repository_open_ext`.
 ## 
@@ -147,8 +148,8 @@ type
 ##         (such as repo corruption or system errors).
 ## 
 
-proc git_repository_open_ext*(`out`: ptr ptr git_repository; path: cstring;
-                             flags: cuint; ceiling_dirs: cstring): cint
+proc git_repository_open_ext*(`out`: ptr ptr git_repository; path: cstring; 
+                             flags: cuint; ceiling_dirs: cstring): cint  {.importc.}
 ## *
 ##  Open a bare repository on the serverside.
 ## 
@@ -161,7 +162,7 @@ proc git_repository_open_ext*(`out`: ptr ptr git_repository; path: cstring;
 ##  @return 0 on success, or an error code
 ## 
 
-proc git_repository_open_bare*(`out`: ptr ptr git_repository; bare_path: cstring): cint
+proc git_repository_open_bare*(`out`: ptr ptr git_repository; bare_path: cstring): cint  {.importc.}
 ## *
 ##  Free a previously allocated repository
 ## 
@@ -174,7 +175,7 @@ proc git_repository_open_bare*(`out`: ptr ptr git_repository; bare_path: cstring
 ##  @param repo repository handle to close. If NULL nothing occurs.
 ## 
 
-proc git_repository_free*(repo: ptr git_repository)
+proc git_repository_free*(repo: ptr git_repository) {.importc.}
 ## *
 ##  Creates a new Git repository in the given folder.
 ## 
@@ -191,7 +192,7 @@ proc git_repository_free*(repo: ptr git_repository)
 ##  @return 0 or an error code
 ## 
 
-proc git_repository_init*(`out`: ptr ptr git_repository; path: cstring; is_bare: cuint): cint
+proc git_repository_init*(`out`: ptr ptr git_repository; path: cstring; is_bare: cuint): cint  {.importc.}
 ## *
 ##  Option flags for `git_repository_init_ext`.
 ## 
@@ -303,8 +304,8 @@ const
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_repository_init_init_options*(opts: ptr git_repository_init_options;
-                                      version: cuint): cint
+proc git_repository_init_init_options*(opts: ptr git_repository_init_options; 
+                                      version: cuint): cint  {.importc.}
 ## *
 ##  Create a new Git repository in the given folder with extended controls.
 ## 
@@ -319,8 +320,8 @@ proc git_repository_init_init_options*(opts: ptr git_repository_init_options;
 ##  @return 0 or an error code on failure.
 ## 
 
-proc git_repository_init_ext*(`out`: ptr ptr git_repository; repo_path: cstring;
-                             opts: ptr git_repository_init_options): cint
+proc git_repository_init_ext*(`out`: ptr ptr git_repository; repo_path: cstring; 
+                             opts: ptr git_repository_init_options): cint  {.importc.}
 ## *
 ##  Retrieve and resolve the reference pointed at by HEAD.
 ## 
@@ -335,7 +336,7 @@ proc git_repository_init_ext*(`out`: ptr ptr git_repository; repo_path: cstring;
 ##  branch, GIT_ENOTFOUND when HEAD is missing; an error code otherwise
 ## 
 
-proc git_repository_head*(`out`: ptr ptr git_reference; repo: ptr git_repository): cint
+proc git_repository_head*(`out`: ptr ptr git_reference; repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Retrieve the referenced HEAD for the worktree
 ## 
@@ -345,8 +346,8 @@ proc git_repository_head*(`out`: ptr ptr git_reference; repo: ptr git_repository
 ##  @return 0 when successful, error-code otherwise
 ## 
 
-proc git_repository_head_for_worktree*(`out`: ptr ptr git_reference;
-                                      repo: ptr git_repository; name: cstring): cint
+proc git_repository_head_for_worktree*(`out`: ptr ptr git_reference; 
+                                      repo: ptr git_repository; name: cstring): cint  {.importc.}
 ## *
 ##  Check if a repository's HEAD is detached
 ## 
@@ -358,7 +359,7 @@ proc git_repository_head_for_worktree*(`out`: ptr ptr git_reference;
 ##  was an error.
 ## 
 
-proc git_repository_head_detached*(repo: ptr git_repository): cint
+proc git_repository_head_detached*(repo: ptr git_repository): cint  {.importc.}
 ## 
 ##  Check if a worktree's HEAD is detached
 ## 
@@ -371,8 +372,8 @@ proc git_repository_head_detached*(repo: ptr git_repository): cint
 ##   there was an error
 ## 
 
-proc git_repository_head_detached_for_worktree*(repo: ptr git_repository;
-    name: cstring): cint
+proc git_repository_head_detached_for_worktree*(repo: ptr git_repository; 
+    name: cstring): cint  {.importc.}
 ## *
 ##  Check if the current branch is unborn
 ## 
@@ -384,7 +385,7 @@ proc git_repository_head_detached_for_worktree*(repo: ptr git_repository;
 ##  code if there was an error
 ## 
 
-proc git_repository_head_unborn*(repo: ptr git_repository): cint
+proc git_repository_head_unborn*(repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Check if a repository is empty
 ## 
@@ -396,7 +397,7 @@ proc git_repository_head_unborn*(repo: ptr git_repository): cint
 ##  if the repository is corrupted
 ## 
 
-proc git_repository_is_empty*(repo: ptr git_repository): cint
+proc git_repository_is_empty*(repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  List of items which belong to the git repository layout
 ## 
@@ -427,8 +428,8 @@ type
 ##  @return 0, GIT_ENOTFOUND if the path cannot exist or an error code
 ## 
 
-proc git_repository_item_path*(`out`: ptr git_buf; repo: ptr git_repository;
-                              item: git_repository_item_t): cint
+proc git_repository_item_path*(`out`: ptr git_buf; repo: ptr git_repository; 
+                              item: git_repository_item_t): cint  {.importc.}
 ## *
 ##  Get the path of this repository
 ## 
@@ -439,7 +440,7 @@ proc git_repository_item_path*(`out`: ptr git_buf; repo: ptr git_repository;
 ##  @return the path to the repository
 ## 
 
-proc git_repository_path*(repo: ptr git_repository): cstring
+proc git_repository_path*(repo: ptr git_repository): cstring  {.importc.}
 ## *
 ##  Get the path of the working directory for this repository
 ## 
@@ -450,7 +451,7 @@ proc git_repository_path*(repo: ptr git_repository): cstring
 ##  @return the path to the working dir, if it exists
 ## 
 
-proc git_repository_workdir*(repo: ptr git_repository): cstring
+proc git_repository_workdir*(repo: ptr git_repository): cstring  {.importc.}
 ## *
 ##  Get the path of the shared common directory for this repository
 ## 
@@ -461,7 +462,7 @@ proc git_repository_workdir*(repo: ptr git_repository): cstring
 ##  @return the path to the common dir
 ## 
 
-proc git_repository_commondir*(repo: ptr git_repository): cstring
+proc git_repository_commondir*(repo: ptr git_repository): cstring  {.importc.}
 ## *
 ##  Set the path to the working directory for this repository
 ## 
@@ -480,8 +481,8 @@ proc git_repository_commondir*(repo: ptr git_repository): cstring
 ##  @return 0, or an error code
 ## 
 
-proc git_repository_set_workdir*(repo: ptr git_repository; workdir: cstring;
-                                update_gitlink: cint): cint
+proc git_repository_set_workdir*(repo: ptr git_repository; workdir: cstring; 
+                                update_gitlink: cint): cint {.importc.}
 ## *
 ##  Check if a repository is bare
 ## 
@@ -489,7 +490,7 @@ proc git_repository_set_workdir*(repo: ptr git_repository; workdir: cstring;
 ##  @return 1 if the repository is bare, 0 otherwise.
 ## 
 
-proc git_repository_is_bare*(repo: ptr git_repository): cint
+proc git_repository_is_bare*(repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Check if a repository is a linked work tree
 ## 
@@ -497,7 +498,7 @@ proc git_repository_is_bare*(repo: ptr git_repository): cint
 ##  @return 1 if the repository is a linked work tree, 0 otherwise.
 ## 
 
-proc git_repository_is_worktree*(repo: ptr git_repository): cint
+proc git_repository_is_worktree*(repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Get the configuration file for this repository.
 ## 
@@ -513,7 +514,7 @@ proc git_repository_is_worktree*(repo: ptr git_repository): cint
 ##  @return 0, or an error code
 ## 
 
-proc git_repository_config*(`out`: ptr ptr git_config; repo: ptr git_repository): cint
+proc git_repository_config*(`out`: ptr ptr git_config; repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Get a snapshot of the repository's configuration
 ## 
@@ -529,8 +530,8 @@ proc git_repository_config*(`out`: ptr ptr git_config; repo: ptr git_repository)
 ##  @return 0, or an error code
 ## 
 
-proc git_repository_config_snapshot*(`out`: ptr ptr git_config;
-                                    repo: ptr git_repository): cint
+proc git_repository_config_snapshot*(`out`: ptr ptr git_config; 
+                                    repo: ptr git_repository): cint {.importc.}
 ## *
 ##  Get the Object Database for this repository.
 ## 
@@ -546,7 +547,7 @@ proc git_repository_config_snapshot*(`out`: ptr ptr git_config;
 ##  @return 0, or an error code
 ## 
 
-proc git_repository_odb*(`out`: ptr ptr git_odb; repo: ptr git_repository): cint
+proc git_repository_odb*(`out`: ptr ptr git_odb; repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Get the Reference Database Backend for this repository.
 ## 
@@ -562,7 +563,7 @@ proc git_repository_odb*(`out`: ptr ptr git_odb; repo: ptr git_repository): cint
 ##  @return 0, or an error code
 ## 
 
-proc git_repository_refdb*(`out`: ptr ptr git_refdb; repo: ptr git_repository): cint
+proc git_repository_refdb*(`out`: ptr ptr git_refdb; repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Get the Index file for this repository.
 ## 
@@ -578,7 +579,7 @@ proc git_repository_refdb*(`out`: ptr ptr git_refdb; repo: ptr git_repository): 
 ##  @return 0, or an error code
 ## 
 
-proc git_repository_index*(`out`: ptr ptr git_index; repo: ptr git_repository): cint
+proc git_repository_index*(`out`: ptr ptr git_index; repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Retrieve git's prepared message
 ## 
@@ -596,14 +597,14 @@ proc git_repository_index*(`out`: ptr ptr git_index; repo: ptr git_repository): 
 ##  @return 0, GIT_ENOTFOUND if no message exists or an error code
 ## 
 
-proc git_repository_message*(`out`: ptr git_buf; repo: ptr git_repository): cint
+proc git_repository_message*(`out`: ptr git_buf; repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Remove git's prepared message.
 ## 
 ##  Remove the message that `git_repository_message` retrieves.
 ## 
 
-proc git_repository_message_remove*(repo: ptr git_repository): cint
+proc git_repository_message_remove*(repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Remove all the metadata associated with an ongoing command like merge,
 ##  revert, cherry-pick, etc.  For example: MERGE_HEAD, MERGE_MSG, etc.
@@ -612,9 +613,9 @@ proc git_repository_message_remove*(repo: ptr git_repository): cint
 ##  @return 0 on success, or error
 ## 
 
-proc git_repository_state_cleanup*(repo: ptr git_repository): cint
+proc git_repository_state_cleanup*(repo: ptr git_repository): cint  {.importc.}
 type
-  git_repository_fetchhead_foreach_cb* = proc (ref_name: cstring;
+  git_repository_fetchhead_foreach_cb* = proc (ref_name: cstring; 
       remote_url: cstring; oid: ptr git_oid; is_merge: cuint; payload: pointer): cint
 
 ## *
@@ -629,10 +630,10 @@ type
 ##          there is no FETCH_HEAD file, or other error code.
 ## 
 
-proc git_repository_fetchhead_foreach*(repo: ptr git_repository; callback: git_repository_fetchhead_foreach_cb;
-                                      payload: pointer): cint
+proc git_repository_fetchhead_foreach*(repo: ptr git_repository; callback: git_repository_fetchhead_foreach_cb; 
+                                      payload: pointer): cint {.importc.}
 type
-  git_repository_mergehead_foreach_cb* = proc (oid: ptr git_oid; payload: pointer): cint
+  git_repository_mergehead_foreach_cb* = proc (oid: ptr git_oid; payload: pointer): cint 
 
 ## *
 ##  If a merge is in progress, invoke 'callback' for each commit ID in the
@@ -647,8 +648,8 @@ type
 ##          there is no MERGE_HEAD file, or other error code.
 ## 
 
-proc git_repository_mergehead_foreach*(repo: ptr git_repository; callback: git_repository_mergehead_foreach_cb;
-                                      payload: pointer): cint
+proc git_repository_mergehead_foreach*(repo: ptr git_repository; callback: git_repository_mergehead_foreach_cb; 
+                                      payload: pointer): cint {.importc.}
 ## *
 ##  Calculate hash of file using repository filtering rules.
 ## 
@@ -673,8 +674,8 @@ proc git_repository_mergehead_foreach*(repo: ptr git_repository; callback: git_r
 ##  @return 0 on success, or an error code
 ## 
 
-proc git_repository_hashfile*(`out`: ptr git_oid; repo: ptr git_repository;
-                             path: cstring; `type`: git_otype; as_path: cstring): cint
+proc git_repository_hashfile*(`out`: ptr git_oid; repo: ptr git_repository; 
+                             path: cstring; `type`: git_otype; as_path: cstring): cint {.importc.}
 ## *
 ##  Make the repository HEAD point to the specified reference.
 ## 
@@ -694,7 +695,7 @@ proc git_repository_hashfile*(`out`: ptr git_oid; repo: ptr git_repository;
 ##  @return 0 on success, or an error code
 ## 
 
-proc git_repository_set_head*(repo: ptr git_repository; refname: cstring): cint
+proc git_repository_set_head*(repo: ptr git_repository; refname: cstring): cint  {.importc.}
 ## *
 ##  Make the repository HEAD directly point to the Commit.
 ## 
@@ -712,8 +713,8 @@ proc git_repository_set_head*(repo: ptr git_repository; refname: cstring): cint
 ##  @return 0 on success, or an error code
 ## 
 
-proc git_repository_set_head_detached*(repo: ptr git_repository;
-                                      commitish: ptr git_oid): cint
+proc git_repository_set_head_detached*(repo: ptr git_repository; 
+                                      commitish: ptr git_oid): cint {.importc.}
 ## *
 ##  Make the repository HEAD directly point to the Commit.
 ## 
@@ -727,8 +728,8 @@ proc git_repository_set_head_detached*(repo: ptr git_repository;
 ##  @see git_repository_set_head_detached
 ## 
 
-proc git_repository_set_head_detached_from_annotated*(repo: ptr git_repository;
-    commitish: ptr git_annotated_commit): cint
+proc git_repository_set_head_detached_from_annotated*(repo: ptr git_repository; 
+    commitish: ptr git_annotated_commit): cint {.importc.}
 ## *
 ##  Detach the HEAD.
 ## 
@@ -747,7 +748,7 @@ proc git_repository_set_head_detached_from_annotated*(repo: ptr git_repository;
 ##  branch or an error code
 ## 
 
-proc git_repository_detach_head*(repo: ptr git_repository): cint
+proc git_repository_detach_head*(repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Repository state
 ## 
@@ -774,7 +775,7 @@ type
 ##  @return The state of the repository
 ## 
 
-proc git_repository_state*(repo: ptr git_repository): cint
+proc git_repository_state*(repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Sets the active namespace for this Git Repository
 ## 
@@ -788,7 +789,7 @@ proc git_repository_state*(repo: ptr git_repository): cint
 ## 	@return 0 on success, -1 on error
 ## 
 
-proc git_repository_set_namespace*(repo: ptr git_repository; nmspace: cstring): cint
+proc git_repository_set_namespace*(repo: ptr git_repository; nmspace: cstring): cint  {.importc.}
 ## *
 ##  Get the currently active namespace for this repository
 ## 
@@ -796,7 +797,7 @@ proc git_repository_set_namespace*(repo: ptr git_repository; nmspace: cstring): 
 ##  @return the active namespace, or NULL if there isn't one
 ## 
 
-proc git_repository_get_namespace*(repo: ptr git_repository): cstring
+proc git_repository_get_namespace*(repo: ptr git_repository): cstring  {.importc.}
 ## *
 ##  Determine if the repository was a shallow clone
 ## 
@@ -804,7 +805,7 @@ proc git_repository_get_namespace*(repo: ptr git_repository): cstring
 ##  @return 1 if shallow, zero if not
 ## 
 
-proc git_repository_is_shallow*(repo: ptr git_repository): cint
+proc git_repository_is_shallow*(repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Retrieve the configured identity to use for reflogs
 ## 
@@ -816,8 +817,8 @@ proc git_repository_is_shallow*(repo: ptr git_repository): cint
 ##  @param repo the repository
 ## 
 
-proc git_repository_ident*(name: cstringArray; email: cstringArray;
-                          repo: ptr git_repository): cint
+proc git_repository_ident*(name: cstringArray; email: cstringArray; 
+                          repo: ptr git_repository): cint {.importc.}
 ## *
 ##  Set the identity to be used for writing reflogs
 ## 
@@ -830,5 +831,5 @@ proc git_repository_ident*(name: cstringArray; email: cstringArray;
 ##  @param email the email to use for the reflog entries
 ## 
 
-proc git_repository_set_ident*(repo: ptr git_repository; name: cstring; email: cstring): cint
+proc git_repository_set_ident*(repo: ptr git_repository; name: cstring; email: cstring): cint  {.importc.}
 ## * @}

@@ -4,10 +4,11 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
-  common, types, oid, `object`, strarray
+  common, types, oid, g_object, strarray
 
 ## *
 ##  @file git2/tag.h
@@ -25,7 +26,7 @@ import
 ##  @return 0 or an error code
 ## 
 
-proc git_tag_lookup*(`out`: ptr ptr git_tag; repo: ptr git_repository; id: ptr git_oid): cint
+proc git_tag_lookup*(`out`: ptr ptr git_tag; repo: ptr git_repository; id: ptr git_oid): cint  {.importc.}
 ## *
 ##  Lookup a tag object from the repository,
 ##  given a prefix of its identifier (short id).
@@ -39,8 +40,8 @@ proc git_tag_lookup*(`out`: ptr ptr git_tag; repo: ptr git_repository; id: ptr g
 ##  @return 0 or an error code
 ## 
 
-proc git_tag_lookup_prefix*(`out`: ptr ptr git_tag; repo: ptr git_repository;
-                           id: ptr git_oid; len: csize): cint
+proc git_tag_lookup_prefix*(`out`: ptr ptr git_tag; repo: ptr git_repository; 
+                           id: ptr git_oid; len: csize): cint {.importc.}
 ## *
 ##  Close an open tag
 ## 
@@ -52,7 +53,7 @@ proc git_tag_lookup_prefix*(`out`: ptr ptr git_tag; repo: ptr git_repository;
 ##  @param tag the tag to close
 ## 
 
-proc git_tag_free*(tag: ptr git_tag)
+proc git_tag_free*(tag: ptr git_tag)  {.importc.}
 ## *
 ##  Get the id of a tag.
 ## 
@@ -60,7 +61,7 @@ proc git_tag_free*(tag: ptr git_tag)
 ##  @return object identity for the tag.
 ## 
 
-proc git_tag_id*(tag: ptr git_tag): ptr git_oid
+proc git_tag_id*(tag: ptr git_tag): ptr git_oid  {.importc.}
 ## *
 ##  Get the repository that contains the tag.
 ## 
@@ -68,7 +69,7 @@ proc git_tag_id*(tag: ptr git_tag): ptr git_oid
 ##  @return Repository that contains this tag.
 ## 
 
-proc git_tag_owner*(tag: ptr git_tag): ptr git_repository
+proc git_tag_owner*(tag: ptr git_tag): ptr git_repository  {.importc.}
 ## *
 ##  Get the tagged object of a tag
 ## 
@@ -80,7 +81,7 @@ proc git_tag_owner*(tag: ptr git_tag): ptr git_repository
 ##  @return 0 or an error code
 ## 
 
-proc git_tag_target*(target_out: ptr ptr git_object; tag: ptr git_tag): cint
+proc git_tag_target*(target_out: ptr ptr git_object; tag: ptr git_tag): cint  {.importc.}
 ## *
 ##  Get the OID of the tagged object of a tag
 ## 
@@ -88,7 +89,7 @@ proc git_tag_target*(target_out: ptr ptr git_object; tag: ptr git_tag): cint
 ##  @return pointer to the OID
 ## 
 
-proc git_tag_target_id*(tag: ptr git_tag): ptr git_oid
+proc git_tag_target_id*(tag: ptr git_tag): ptr git_oid  {.importc.}
 ## *
 ##  Get the type of a tag's tagged object
 ## 
@@ -96,7 +97,7 @@ proc git_tag_target_id*(tag: ptr git_tag): ptr git_oid
 ##  @return type of the tagged object
 ## 
 
-proc git_tag_target_type*(tag: ptr git_tag): git_otype
+proc git_tag_target_type*(tag: ptr git_tag): git_otype  {.importc.}
 ## *
 ##  Get the name of a tag
 ## 
@@ -104,7 +105,7 @@ proc git_tag_target_type*(tag: ptr git_tag): git_otype
 ##  @return name of the tag
 ## 
 
-proc git_tag_name*(tag: ptr git_tag): cstring
+proc git_tag_name*(tag: ptr git_tag): cstring  {.importc.}
 ## *
 ##  Get the tagger (author) of a tag
 ## 
@@ -112,7 +113,7 @@ proc git_tag_name*(tag: ptr git_tag): cstring
 ##  @return reference to the tag's author or NULL when unspecified
 ## 
 
-proc git_tag_tagger*(tag: ptr git_tag): ptr git_signature
+proc git_tag_tagger*(tag: ptr git_tag): ptr git_signature  {.importc.}
 ## *
 ##  Get the message of a tag
 ## 
@@ -120,7 +121,7 @@ proc git_tag_tagger*(tag: ptr git_tag): ptr git_signature
 ##  @return message of the tag or NULL when unspecified
 ## 
 
-proc git_tag_message*(tag: ptr git_tag): cstring
+proc git_tag_message*(tag: ptr git_tag): cstring  {.importc.}
 ## *
 ##  Create a new tag in the repository from an object
 ## 
@@ -161,9 +162,9 @@ proc git_tag_message*(tag: ptr git_tag): cstring
 ## 	is written in the /refs/tags folder, pointing to it
 ## 
 
-proc git_tag_create*(oid: ptr git_oid; repo: ptr git_repository; tag_name: cstring;
+proc git_tag_create*(oid: ptr git_oid; repo: ptr git_repository; tag_name: cstring; 
                     target: ptr git_object; tagger: ptr git_signature;
-                    message: cstring; force: cint): cint
+                    message: cstring; force: cint): cint {.importc.}
 ## *
 ##  Create a new tag in the object database pointing to a git_object
 ## 
@@ -188,9 +189,9 @@ proc git_tag_create*(oid: ptr git_oid; repo: ptr git_repository; tag_name: cstri
 ##  @return 0 on success or an error code
 ## 
 
-proc git_tag_annotation_create*(oid: ptr git_oid; repo: ptr git_repository;
+proc git_tag_annotation_create*(oid: ptr git_oid; repo: ptr git_repository; 
                                tag_name: cstring; target: ptr git_object;
-                               tagger: ptr git_signature; message: cstring): cint
+                               tagger: ptr git_signature; message: cstring): cint {.importc.}
 ## *
 ##  Create a new tag in the repository from a buffer
 ## 
@@ -201,8 +202,8 @@ proc git_tag_annotation_create*(oid: ptr git_oid; repo: ptr git_repository;
 ##  @return 0 on success; error code otherwise
 ## 
 
-proc git_tag_create_frombuffer*(oid: ptr git_oid; repo: ptr git_repository;
-                               buffer: cstring; force: cint): cint
+proc git_tag_create_frombuffer*(oid: ptr git_oid; repo: ptr git_repository; 
+                               buffer: cstring; force: cint): cint {.importc.}
 ## *
 ##  Create a new lightweight tag pointing at a target object
 ## 
@@ -234,9 +235,9 @@ proc git_tag_create_frombuffer*(oid: ptr git_oid; repo: ptr git_repository;
 ##  pointing to the provided target object
 ## 
 
-proc git_tag_create_lightweight*(oid: ptr git_oid; repo: ptr git_repository;
+proc git_tag_create_lightweight*(oid: ptr git_oid; repo: ptr git_repository; 
                                 tag_name: cstring; target: ptr git_object;
-                                force: cint): cint
+                                force: cint): cint {.importc.}
 ## *
 ##  Delete an existing tag reference.
 ## 
@@ -251,7 +252,7 @@ proc git_tag_create_lightweight*(oid: ptr git_oid; repo: ptr git_repository;
 ##  @return 0 on success, GIT_EINVALIDSPEC or an error code
 ## 
 
-proc git_tag_delete*(repo: ptr git_repository; tag_name: cstring): cint
+proc git_tag_delete*(repo: ptr git_repository; tag_name: cstring): cint  {.importc.}
 ## *
 ##  Fill a list with all the tags in the Repository
 ## 
@@ -266,7 +267,7 @@ proc git_tag_delete*(repo: ptr git_repository; tag_name: cstring): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_tag_list*(tag_names: ptr git_strarray; repo: ptr git_repository): cint
+proc git_tag_list*(tag_names: ptr git_strarray; repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Fill a list with all the tags in the Repository
 ##  which name match a defined pattern
@@ -286,10 +287,10 @@ proc git_tag_list*(tag_names: ptr git_strarray; repo: ptr git_repository): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_tag_list_match*(tag_names: ptr git_strarray; pattern: cstring;
-                        repo: ptr git_repository): cint
+proc git_tag_list_match*(tag_names: ptr git_strarray; pattern: cstring; 
+                        repo: ptr git_repository): cint {.importc.}
 type
-  git_tag_foreach_cb* = proc (name: cstring; oid: ptr git_oid; payload: pointer): cint
+  git_tag_foreach_cb* = proc (name: cstring; oid: ptr git_oid; payload: pointer): cint  {.importc.}
 
 ## *
 ##  Call callback `cb' for each tag in the repository
@@ -299,8 +300,8 @@ type
 ##  @param payload Pointer to callback data (optional)
 ## 
 
-proc git_tag_foreach*(repo: ptr git_repository; callback: git_tag_foreach_cb;
-                     payload: pointer): cint
+proc git_tag_foreach*(repo: ptr git_repository; callback: git_tag_foreach_cb; 
+                     payload: pointer): cint {.importc.}
 ## *
 ##  Recursively peel a tag until a non tag git_object is found
 ## 
@@ -312,7 +313,7 @@ proc git_tag_foreach*(repo: ptr git_repository; callback: git_tag_foreach_cb;
 ##  @return 0 or an error code
 ## 
 
-proc git_tag_peel*(tag_target_out: ptr ptr git_object; tag: ptr git_tag): cint
+proc git_tag_peel*(tag_target_out: ptr ptr git_object; tag: ptr git_tag): cint  {.importc.}
 ## *
 ##  Create an in-memory copy of a tag. The copy must be explicitly
 ##  free'd or it will leak.
@@ -321,5 +322,5 @@ proc git_tag_peel*(tag_target_out: ptr ptr git_object; tag: ptr git_tag): cint
 ##  @param source Original tag to copy
 ## 
 
-proc git_tag_dup*(`out`: ptr ptr git_tag; source: ptr git_tag): cint
+proc git_tag_dup*(`out`: ptr ptr git_tag; source: ptr git_tag): cint  {.importc.}
 ## * @}

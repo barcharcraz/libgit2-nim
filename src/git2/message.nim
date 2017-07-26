@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, buffer
 
@@ -34,6 +35,6 @@ import
 ##  @return 0 or an error code.
 ## 
 
-proc git_message_prettify*(`out`: ptr git_buf; message: cstring; strip_comments: cint;
-                          comment_char: char): cint
+proc git_message_prettify*(`out`: ptr git_buf; message: cstring; strip_comments: cint; 
+                          comment_char: char): cint {.importc.}
 ## * @}

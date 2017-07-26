@@ -4,10 +4,11 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
-  common, types
+  common, types, strarray, diff
 
 ## *
 ##  @file git2/status.h
@@ -49,7 +50,7 @@ type
 ## 
 
 type
-  git_status_cb* = proc (path: cstring; status_flags: cuint; payload: pointer): cint
+  git_status_cb* = proc (path: cstring; status_flags: cuint; payload: pointer): cint  {.importc.}
 
 ## *
 ##  Select the files on which to report status.
@@ -145,8 +146,8 @@ type
     GIT_STATUS_OPT_INCLUDE_UNREADABLE_AS_UNTRACKED = (1 shl 15)
 
 
-const GIT_STATUS_OPT_DEFAULTS* = GIT_STATUS_OPT_INCLUDE_IGNORED or GIT_STATUS_OPT_INCLUDE_UNTRACKED or 
-								 GIT_STATUS_OPT_RECURSE_UNTRACKED_DIRS
+const GIT_STATUS_OPT_DEFAULTS* = ord(GIT_STATUS_OPT_INCLUDE_IGNORED) or ord(GIT_STATUS_OPT_INCLUDE_UNTRACKED) or 
+                                ord(GIT_STATUS_OPT_RECURSE_UNTRACKED_DIRS)
 type
   git_status_options* {.bycopy.} = object
     version*: cuint
@@ -167,7 +168,7 @@ const
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_status_init_options*(opts: ptr git_status_options; version: cuint): cint
+proc git_status_init_options*(opts: ptr git_status_options; version: cuint): cint  {.importc.}
 ## *
 ##  A status entry, providing the differences between the file as it exists
 ##  in HEAD and the index, and providing the differences between the index
@@ -206,8 +207,8 @@ type
 ##  @return 0 on success, non-zero callback return value, or error code
 ## 
 
-proc git_status_foreach*(repo: ptr git_repository; callback: git_status_cb;
-                        payload: pointer): cint
+proc git_status_foreach*(repo: ptr git_repository; callback: git_status_cb; 
+                        payload: pointer): cint {.importc.}
 ## *
 ##  Gather file status information and run callbacks as requested.
 ## 
@@ -228,8 +229,8 @@ proc git_status_foreach*(repo: ptr git_repository; callback: git_status_cb;
 ##  @return 0 on success, non-zero callback return value, or error code
 ## 
 
-proc git_status_foreach_ext*(repo: ptr git_repository; opts: ptr git_status_options;
-                            callback: git_status_cb; payload: pointer): cint
+proc git_status_foreach_ext*(repo: ptr git_repository; opts: ptr git_status_options; 
+                            callback: git_status_cb; payload: pointer): cint {.importc.}
 ## *
 ##  Get file status for a single file.
 ## 
@@ -257,7 +258,7 @@ proc git_status_foreach_ext*(repo: ptr git_repository; opts: ptr git_status_opti
 ##       or if it refers to a folder, and -1 on other errors.
 ## 
 
-proc git_status_file*(status_flags: ptr cuint; repo: ptr git_repository; path: cstring): cint
+proc git_status_file*(status_flags: ptr cuint; repo: ptr git_repository; path: cstring): cint  {.importc.}
 ## *
 ##  Gather file status information and populate the `git_status_list`.
 ## 
@@ -272,8 +273,8 @@ proc git_status_file*(status_flags: ptr cuint; repo: ptr git_repository; path: c
 ##  @return 0 on success or error code
 ## 
 
-proc git_status_list_new*(`out`: ptr ptr git_status_list; repo: ptr git_repository;
-                         opts: ptr git_status_options): cint
+proc git_status_list_new*(`out`: ptr ptr git_status_list; repo: ptr git_repository; 
+                         opts: ptr git_status_options): cint {.importc.}
 ## *
 ##  Gets the count of status entries in this list.
 ## 
@@ -284,7 +285,7 @@ proc git_status_list_new*(`out`: ptr ptr git_status_list; repo: ptr git_reposito
 ##  @return the number of status entries
 ## 
 
-proc git_status_list_entrycount*(statuslist: ptr git_status_list): csize
+proc git_status_list_entrycount*(statuslist: ptr git_status_list): csize  {.importc.}
 ## *
 ##  Get a pointer to one of the entries in the status list.
 ## 
@@ -295,14 +296,14 @@ proc git_status_list_entrycount*(statuslist: ptr git_status_list): csize
 ##  @return Pointer to the entry; NULL if out of bounds
 ## 
 
-proc git_status_byindex*(statuslist: ptr git_status_list; idx: csize): ptr git_status_entry
+proc git_status_byindex*(statuslist: ptr git_status_list; idx: csize): ptr git_status_entry  {.importc.}
 ## *
 ##  Free an existing status list
 ## 
 ##  @param statuslist Existing status list object
 ## 
 
-proc git_status_list_free*(statuslist: ptr git_status_list)
+proc git_status_list_free*(statuslist: ptr git_status_list)  {.importc.}
 ## *
 ##  Test if the ignore rules apply to a given file.
 ## 
@@ -320,6 +321,6 @@ proc git_status_list_free*(statuslist: ptr git_status_list)
 ##          of whether it exists or not), or an error < 0 if they could not.
 ## 
 
-proc git_status_should_ignore*(ignored: ptr cint; repo: ptr git_repository;
-                              path: cstring): cint
+proc git_status_should_ignore*(ignored: ptr cint; repo: ptr git_repository; 
+                              path: cstring): cint {.importc.}
 ## * @}

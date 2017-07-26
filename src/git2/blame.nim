@@ -4,8 +4,7 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
-{.push dynlib: "libgit2".}
+
 import
   common, oid, types
 
@@ -83,7 +82,7 @@ const
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_blame_init_options*(opts: ptr git_blame_options; version: cuint): cint
+proc git_blame_init_options*(opts: ptr git_blame_options; version: cuint): cint  {.importc.}
 ## *
 ##  Structure that represents a blame hunk.
 ## 
@@ -124,7 +123,7 @@ type
 ##  Gets the number of hunks that exist in the blame structure.
 ## 
 
-proc git_blame_get_hunk_count*(blame: ptr git_blame): uint32
+proc git_blame_get_hunk_count*(blame: ptr git_blame): uint32  {.importc.}
 ## *
 ##  Gets the blame hunk at the given index.
 ## 
@@ -133,7 +132,7 @@ proc git_blame_get_hunk_count*(blame: ptr git_blame): uint32
 ##  @return the hunk at the given index, or NULL on error
 ## 
 
-proc git_blame_get_hunk_byindex*(blame: ptr git_blame; index: uint32): ptr git_blame_hunk
+proc git_blame_get_hunk_byindex*(blame: ptr git_blame; index: uint32): ptr git_blame_hunk  {.importc.}
 ## *
 ##  Gets the hunk that relates to the given line number in the newest commit.
 ## 
@@ -142,7 +141,7 @@ proc git_blame_get_hunk_byindex*(blame: ptr git_blame; index: uint32): ptr git_b
 ##  @return the hunk that contains the given line, or NULL on error
 ## 
 
-proc git_blame_get_hunk_byline*(blame: ptr git_blame; lineno: csize): ptr git_blame_hunk
+proc git_blame_get_hunk_byline*(blame: ptr git_blame; lineno: csize): ptr git_blame_hunk  {.importc.}
 ## *
 ##  Get the blame for a single file.
 ## 
@@ -155,8 +154,8 @@ proc git_blame_get_hunk_byline*(blame: ptr git_blame; lineno: csize): ptr git_bl
 ##          about the error.)
 ## 
 
-proc git_blame_file*(`out`: ptr ptr git_blame; repo: ptr git_repository; path: cstring;
-                    options: ptr git_blame_options): cint
+proc git_blame_file*(`out`: ptr ptr git_blame; repo: ptr git_repository; path: cstring; 
+                    options: ptr git_blame_options): cint {.importc.}
 ## *
 ##  Get blame data for a file that has been modified in memory. The `reference`
 ##  parameter is a pre-calculated blame for the in-odb history of the file. This
@@ -175,13 +174,13 @@ proc git_blame_file*(`out`: ptr ptr git_blame; repo: ptr git_repository; path: c
 ##          about the error)
 ## 
 
-proc git_blame_buffer*(`out`: ptr ptr git_blame; reference: ptr git_blame;
-                      buffer: cstring; buffer_len: csize): cint
+proc git_blame_buffer*(`out`: ptr ptr git_blame; reference: ptr git_blame; 
+                      buffer: cstring; buffer_len: csize): cint {.importc.}
 ## *
 ##  Free memory allocated by git_blame_file or git_blame_buffer.
 ## 
 ##  @param blame the blame structure to free
 ## 
 
-proc git_blame_free*(blame: ptr git_blame)
+proc git_blame_free*(blame: ptr git_blame)  {.importc.}
 ## * @}

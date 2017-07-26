@@ -27,7 +27,7 @@ import
 ##  @see git_commit_create
 ## 
 
-proc git_commit_create_from_ids*(id: ptr git_oid; repo: ptr git_repository;
+proc git_commit_create_from_ids*(id: ptr git_oid; repo: ptr git_repository; 
                                 update_ref: cstring; author: ptr git_signature;
                                 committer: ptr git_signature;
                                 message_encoding: cstring; message: cstring;
@@ -42,7 +42,7 @@ proc git_commit_create_from_ids*(id: ptr git_oid; repo: ptr git_repository;
 ## 
 
 type
-  git_commit_parent_callback* = proc (idx: csize; payload: pointer): ptr git_oid
+  git_commit_parent_callback* = proc (idx: csize; payload: pointer): ptr git_oid  {.importc.}
 
 ## *
 ##  Create a new commit in the repository with an callback to supply parents.
@@ -56,7 +56,7 @@ type
 ##  @see git_commit_create
 ## 
 
-proc git_commit_create_from_callback*(id: ptr git_oid; repo: ptr git_repository;
+proc git_commit_create_from_callback*(id: ptr git_oid; repo: ptr git_repository; 
                                      update_ref: cstring;
                                      author: ptr git_signature;
                                      committer: ptr git_signature;

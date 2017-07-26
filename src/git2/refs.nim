@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types, oid, strarray
 
@@ -30,8 +31,8 @@ import
 ##  @return 0 on success, GIT_ENOTFOUND, GIT_EINVALIDSPEC or an error code.
 ## 
 
-proc git_reference_lookup*(`out`: ptr ptr git_reference; repo: ptr git_repository;
-                          name: cstring): cint
+proc git_reference_lookup*(`out`: ptr ptr git_reference; repo: ptr git_repository; 
+                          name: cstring): cint {.importc.}
 ## *
 ##  Lookup a reference by name and resolve immediately to OID.
 ## 
@@ -48,8 +49,8 @@ proc git_reference_lookup*(`out`: ptr ptr git_reference; repo: ptr git_repositor
 ##  @return 0 on success, GIT_ENOTFOUND, GIT_EINVALIDSPEC or an error code.
 ## 
 
-proc git_reference_name_to_id*(`out`: ptr git_oid; repo: ptr git_repository;
-                              name: cstring): cint
+proc git_reference_name_to_id*(`out`: ptr git_oid; repo: ptr git_repository; 
+                              name: cstring): cint {.importc.}
 ## *
 ##  Lookup a reference by DWIMing its short name
 ## 
@@ -62,8 +63,8 @@ proc git_reference_name_to_id*(`out`: ptr git_oid; repo: ptr git_repository;
 ##  @return 0 or an error code
 ## 
 
-proc git_reference_dwim*(`out`: ptr ptr git_reference; repo: ptr git_repository;
-                        shorthand: cstring): cint
+proc git_reference_dwim*(`out`: ptr ptr git_reference; repo: ptr git_repository; 
+                        shorthand: cstring): cint {.importc.}
 ## *
 ##  Conditionally create a new symbolic reference.
 ## 
@@ -104,9 +105,9 @@ proc git_reference_dwim*(`out`: ptr ptr git_reference; repo: ptr git_repository;
 ##  @return 0 on success, GIT_EEXISTS, GIT_EINVALIDSPEC, GIT_EMODIFIED or an error code
 ## 
 
-proc git_reference_symbolic_create_matching*(`out`: ptr ptr git_reference;
+proc git_reference_symbolic_create_matching*(`out`: ptr ptr git_reference; 
     repo: ptr git_repository; name: cstring; target: cstring; force: cint;
-    current_value: cstring; log_message: cstring): cint
+    current_value: cstring; log_message: cstring): cint {.importc.}
 ## *
 ##  Create a new symbolic reference.
 ## 
@@ -142,10 +143,10 @@ proc git_reference_symbolic_create_matching*(`out`: ptr ptr git_reference;
 ##  @return 0 on success, GIT_EEXISTS, GIT_EINVALIDSPEC or an error code
 ## 
 
-proc git_reference_symbolic_create*(`out`: ptr ptr git_reference;
+proc git_reference_symbolic_create*(`out`: ptr ptr git_reference; 
                                    repo: ptr git_repository; name: cstring;
                                    target: cstring; force: cint;
-                                   log_message: cstring): cint
+                                   log_message: cstring): cint {.importc.}
 ## *
 ##  Create a new direct reference.
 ## 
@@ -182,9 +183,9 @@ proc git_reference_symbolic_create*(`out`: ptr ptr git_reference;
 ##  @return 0 on success, GIT_EEXISTS, GIT_EINVALIDSPEC or an error code
 ## 
 
-proc git_reference_create*(`out`: ptr ptr git_reference; repo: ptr git_repository;
+proc git_reference_create*(`out`: ptr ptr git_reference; repo: ptr git_repository; 
                           name: cstring; id: ptr git_oid; force: cint;
-                          log_message: cstring): cint
+                          log_message: cstring): cint {.importc.}
 ## *
 ##  Conditionally create new direct reference
 ## 
@@ -227,10 +228,10 @@ proc git_reference_create*(`out`: ptr ptr git_reference; repo: ptr git_repositor
 ##  has changed, GIT_EEXISTS, GIT_EINVALIDSPEC or an error code
 ## 
 
-proc git_reference_create_matching*(`out`: ptr ptr git_reference;
+proc git_reference_create_matching*(`out`: ptr ptr git_reference; 
                                    repo: ptr git_repository; name: cstring;
                                    id: ptr git_oid; force: cint;
-                                   current_id: ptr git_oid; log_message: cstring): cint
+                                   current_id: ptr git_oid; log_message: cstring): cint {.importc.}
 ## *
 ##  Get the OID pointed to by a direct reference.
 ## 
@@ -245,7 +246,7 @@ proc git_reference_create_matching*(`out`: ptr ptr git_reference;
 ##  @return a pointer to the oid if available, NULL otherwise
 ## 
 
-proc git_reference_target*(`ref`: ptr git_reference): ptr git_oid
+proc git_reference_target*(`ref`: ptr git_reference): ptr git_oid  {.importc.}
 ## *
 ##  Return the peeled OID target of this reference.
 ## 
@@ -256,7 +257,7 @@ proc git_reference_target*(`ref`: ptr git_reference): ptr git_oid
 ##  @return a pointer to the oid if available, NULL otherwise
 ## 
 
-proc git_reference_target_peel*(`ref`: ptr git_reference): ptr git_oid
+proc git_reference_target_peel*(`ref`: ptr git_reference): ptr git_oid  {.importc.}
 ## *
 ##  Get full name to the reference pointed to by a symbolic reference.
 ## 
@@ -266,7 +267,7 @@ proc git_reference_target_peel*(`ref`: ptr git_reference): ptr git_oid
 ##  @return a pointer to the name if available, NULL otherwise
 ## 
 
-proc git_reference_symbolic_target*(`ref`: ptr git_reference): cstring
+proc git_reference_symbolic_target*(`ref`: ptr git_reference): cstring  {.importc.}
 ## *
 ##  Get the type of a reference.
 ## 
@@ -276,7 +277,7 @@ proc git_reference_symbolic_target*(`ref`: ptr git_reference): cstring
 ##  @return the type
 ## 
 
-proc git_reference_type*(`ref`: ptr git_reference): git_ref_t
+proc git_reference_type*(`ref`: ptr git_reference): git_ref_t  {.importc.}
 ## *
 ##  Get the full name of a reference.
 ## 
@@ -286,7 +287,7 @@ proc git_reference_type*(`ref`: ptr git_reference): git_ref_t
 ##  @return the full name for the ref
 ## 
 
-proc git_reference_name*(`ref`: ptr git_reference): cstring
+proc git_reference_name*(`ref`: ptr git_reference): cstring  {.importc.}
 ## *
 ##  Resolve a symbolic reference to a direct reference.
 ## 
@@ -304,7 +305,7 @@ proc git_reference_name*(`ref`: ptr git_reference): cstring
 ##  @return 0 or an error code
 ## 
 
-proc git_reference_resolve*(`out`: ptr ptr git_reference; `ref`: ptr git_reference): cint
+proc git_reference_resolve*(`out`: ptr ptr git_reference; `ref`: ptr git_reference): cint  {.importc.}
 ## *
 ##  Get the repository where a reference resides.
 ## 
@@ -312,7 +313,7 @@ proc git_reference_resolve*(`out`: ptr ptr git_reference; `ref`: ptr git_referen
 ##  @return a pointer to the repo
 ## 
 
-proc git_reference_owner*(`ref`: ptr git_reference): ptr git_repository
+proc git_reference_owner*(`ref`: ptr git_reference): ptr git_repository  {.importc.}
 ## *
 ##  Create a new reference with the same name as the given reference but a
 ##  different symbolic target. The reference must be a symbolic reference,
@@ -334,9 +335,9 @@ proc git_reference_owner*(`ref`: ptr git_reference): ptr git_repository
 ##  @return 0 on success, GIT_EINVALIDSPEC or an error code
 ## 
 
-proc git_reference_symbolic_set_target*(`out`: ptr ptr git_reference;
+proc git_reference_symbolic_set_target*(`out`: ptr ptr git_reference; 
                                        `ref`: ptr git_reference; target: cstring;
-                                       log_message: cstring): cint
+                                       log_message: cstring): cint {.importc.}
 ## *
 ##  Conditionally create a new reference with the same name as the given reference but a
 ##  different OID target. The reference must be a direct reference, otherwise
@@ -352,9 +353,9 @@ proc git_reference_symbolic_set_target*(`out`: ptr ptr git_reference;
 ##  has changed since it was read, or an error code
 ## 
 
-proc git_reference_set_target*(`out`: ptr ptr git_reference;
+proc git_reference_set_target*(`out`: ptr ptr git_reference; 
                               `ref`: ptr git_reference; id: ptr git_oid;
-                              log_message: cstring): cint
+                              log_message: cstring): cint {.importc.}
 ## *
 ##  Rename an existing reference.
 ## 
@@ -379,8 +380,8 @@ proc git_reference_set_target*(`out`: ptr ptr git_reference;
 ## 
 ## 
 
-proc git_reference_rename*(new_ref: ptr ptr git_reference; `ref`: ptr git_reference;
-                          new_name: cstring; force: cint; log_message: cstring): cint
+proc git_reference_rename*(new_ref: ptr ptr git_reference; `ref`: ptr git_reference; 
+                          new_name: cstring; force: cint; log_message: cstring): cint {.importc.}
 ## *
 ##  Delete an existing reference.
 ## 
@@ -395,7 +396,7 @@ proc git_reference_rename*(new_ref: ptr ptr git_reference; `ref`: ptr git_refere
 ##  @return 0, GIT_EMODIFIED or an error code
 ## 
 
-proc git_reference_delete*(`ref`: ptr git_reference): cint
+proc git_reference_delete*(`ref`: ptr git_reference): cint  {.importc.}
 ## *
 ##  Delete an existing reference by name
 ## 
@@ -406,7 +407,7 @@ proc git_reference_delete*(`ref`: ptr git_reference): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_reference_remove*(repo: ptr git_repository; name: cstring): cint
+proc git_reference_remove*(repo: ptr git_repository; name: cstring): cint  {.importc.}
 ## *
 ##  Fill a list with all the references that can be found in a repository.
 ## 
@@ -420,7 +421,7 @@ proc git_reference_remove*(repo: ptr git_repository; name: cstring): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_reference_list*(array: ptr git_strarray; repo: ptr git_repository): cint
+proc git_reference_list*(array: ptr git_strarray; repo: ptr git_repository): cint {.importc.}
 type
   git_reference_foreach_cb* = proc (reference: ptr git_reference; payload: pointer): cint
   git_reference_foreach_name_cb* = proc (name: cstring; payload: pointer): cint
@@ -439,8 +440,8 @@ type
 ##  @return 0 on success, non-zero callback return value, or error code
 ## 
 
-proc git_reference_foreach*(repo: ptr git_repository;
-                           callback: git_reference_foreach_cb; payload: pointer): cint
+proc git_reference_foreach*(repo: ptr git_repository; 
+                           callback: git_reference_foreach_cb; payload: pointer): cint {.importc.}
 ## *
 ##  Perform a callback on the fully-qualified name of each reference.
 ## 
@@ -455,9 +456,9 @@ proc git_reference_foreach*(repo: ptr git_repository;
 ##  @return 0 on success, non-zero callback return value, or error code
 ## 
 
-proc git_reference_foreach_name*(repo: ptr git_repository;
+proc git_reference_foreach_name*(repo: ptr git_repository; 
                                 callback: git_reference_foreach_name_cb;
-                                payload: pointer): cint
+                                payload: pointer): cint {.importc.}
 ## *
 ##  Create a copy of an existing reference.
 ## 
@@ -468,14 +469,14 @@ proc git_reference_foreach_name*(repo: ptr git_repository;
 ##  @return 0 or an error code
 ## 
 
-proc git_reference_dup*(dest: ptr ptr git_reference; source: ptr git_reference): cint
+proc git_reference_dup*(dest: ptr ptr git_reference; source: ptr git_reference): cint  {.importc.}
 ## *
 ##  Free the given reference.
 ## 
 ##  @param ref git_reference
 ## 
 
-proc git_reference_free*(`ref`: ptr git_reference)
+proc git_reference_free*(`ref`: ptr git_reference)  {.importc.}
 ## *
 ##  Compare two references.
 ## 
@@ -484,7 +485,7 @@ proc git_reference_free*(`ref`: ptr git_reference)
 ##  @return 0 if the same, else a stable but meaningless ordering.
 ## 
 
-proc git_reference_cmp*(ref1: ptr git_reference; ref2: ptr git_reference): cint
+proc git_reference_cmp*(ref1: ptr git_reference; ref2: ptr git_reference): cint  {.importc.}
 ## *
 ##  Create an iterator for the repo's references
 ## 
@@ -493,8 +494,8 @@ proc git_reference_cmp*(ref1: ptr git_reference; ref2: ptr git_reference): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_reference_iterator_new*(`out`: ptr ptr git_reference_iterator;
-                                repo: ptr git_repository): cint
+proc git_reference_iterator_new*(`out`: ptr ptr git_reference_iterator; 
+                                repo: ptr git_repository): cint {.importc.}
 ## *
 ##  Create an iterator for the repo's references that match the
 ##  specified glob
@@ -505,8 +506,8 @@ proc git_reference_iterator_new*(`out`: ptr ptr git_reference_iterator;
 ##  @return 0 or an error code
 ## 
 
-proc git_reference_iterator_glob_new*(`out`: ptr ptr git_reference_iterator;
-                                     repo: ptr git_repository; glob: cstring): cint
+proc git_reference_iterator_glob_new*(`out`: ptr ptr git_reference_iterator; 
+                                     repo: ptr git_repository; glob: cstring): cint {.importc.}
 ## *
 ##  Get the next reference
 ## 
@@ -515,8 +516,8 @@ proc git_reference_iterator_glob_new*(`out`: ptr ptr git_reference_iterator;
 ##  @return 0, GIT_ITEROVER if there are no more; or an error code
 ## 
 
-proc git_reference_next*(`out`: ptr ptr git_reference;
-                        iter: ptr git_reference_iterator): cint
+proc git_reference_next*(`out`: ptr ptr git_reference; 
+                        iter: ptr git_reference_iterator): cint {.importc.}
 ## *
 ##  Get the next reference's name
 ## 
@@ -529,14 +530,14 @@ proc git_reference_next*(`out`: ptr ptr git_reference;
 ##  @return 0, GIT_ITEROVER if there are no more; or an error code
 ## 
 
-proc git_reference_next_name*(`out`: cstringArray; iter: ptr git_reference_iterator): cint
+proc git_reference_next_name*(`out`: cstringArray; iter: ptr git_reference_iterator): cint  {.importc.}
 ## *
 ##  Free the iterator and its associated resources
 ## 
 ##  @param iter the iterator to free
 ## 
 
-proc git_reference_iterator_free*(iter: ptr git_reference_iterator)
+proc git_reference_iterator_free*(iter: ptr git_reference_iterator)  {.importc.}
 ## *
 ##  Perform a callback on each reference in the repository whose name
 ##  matches the given pattern.
@@ -556,9 +557,9 @@ proc git_reference_iterator_free*(iter: ptr git_reference_iterator)
 ##  @return 0 on success, GIT_EUSER on non-zero callback, or error code
 ## 
 
-proc git_reference_foreach_glob*(repo: ptr git_repository; glob: cstring;
+proc git_reference_foreach_glob*(repo: ptr git_repository; glob: cstring; 
                                 callback: git_reference_foreach_name_cb;
-                                payload: pointer): cint
+                                payload: pointer): cint {.importc.}
 ## *
 ##  Check if a reflog exists for the specified reference.
 ## 
@@ -568,7 +569,7 @@ proc git_reference_foreach_glob*(repo: ptr git_repository; glob: cstring;
 ##  otherwise an error code.
 ## 
 
-proc git_reference_has_log*(repo: ptr git_repository; refname: cstring): cint
+proc git_reference_has_log*(repo: ptr git_repository; refname: cstring): cint  {.importc.}
 ## *
 ##  Ensure there is a reflog for a particular reference.
 ## 
@@ -580,7 +581,7 @@ proc git_reference_has_log*(repo: ptr git_repository; refname: cstring): cint
 ##  @return 0 or an error code.
 ## 
 
-proc git_reference_ensure_log*(repo: ptr git_repository; refname: cstring): cint
+proc git_reference_ensure_log*(repo: ptr git_repository; refname: cstring): cint  {.importc.}
 ## *
 ##  Check if a reference is a local branch.
 ## 
@@ -590,7 +591,7 @@ proc git_reference_ensure_log*(repo: ptr git_repository; refname: cstring): cint
 ##  namespace; 0 otherwise.
 ## 
 
-proc git_reference_is_branch*(`ref`: ptr git_reference): cint
+proc git_reference_is_branch*(`ref`: ptr git_reference): cint  {.importc.}
 ## *
 ##  Check if a reference is a remote tracking branch
 ## 
@@ -600,7 +601,7 @@ proc git_reference_is_branch*(`ref`: ptr git_reference): cint
 ##  namespace; 0 otherwise.
 ## 
 
-proc git_reference_is_remote*(`ref`: ptr git_reference): cint
+proc git_reference_is_remote*(`ref`: ptr git_reference): cint  {.importc.}
 ## *
 ##  Check if a reference is a tag
 ## 
@@ -610,7 +611,7 @@ proc git_reference_is_remote*(`ref`: ptr git_reference): cint
 ##  namespace; 0 otherwise.
 ## 
 
-proc git_reference_is_tag*(`ref`: ptr git_reference): cint
+proc git_reference_is_tag*(`ref`: ptr git_reference): cint  {.importc.}
 ## *
 ##  Check if a reference is a note
 ## 
@@ -620,7 +621,7 @@ proc git_reference_is_tag*(`ref`: ptr git_reference): cint
 ##  namespace; 0 otherwise.
 ## 
 
-proc git_reference_is_note*(`ref`: ptr git_reference): cint
+proc git_reference_is_note*(`ref`: ptr git_reference): cint  {.importc.}
 ## *
 ##  Normalization options for reference lookup
 ## 
@@ -671,8 +672,8 @@ type                          ## *
 ##  or an error code.
 ## 
 
-proc git_reference_normalize_name*(buffer_out: cstring; buffer_size: csize;
-                                  name: cstring; flags: cuint): cint
+proc git_reference_normalize_name*(buffer_out: cstring; buffer_size: csize; 
+                                  name: cstring; flags: cuint): cint {.importc.}
 ## *
 ##  Recursively peel reference until object of the specified type is found.
 ## 
@@ -689,8 +690,8 @@ proc git_reference_normalize_name*(buffer_out: cstring; buffer_size: csize;
 ##  @return 0 on success, GIT_EAMBIGUOUS, GIT_ENOTFOUND or an error code
 ## 
 
-proc git_reference_peel*(`out`: ptr ptr git_object; `ref`: ptr git_reference;
-                        `type`: git_otype): cint
+proc git_reference_peel*(`out`: ptr ptr git_object; `ref`: ptr git_reference; 
+                        `type`: git_otype): cint {.importc.}
 ## *
 ##  Ensure the reference name is well-formed.
 ## 
@@ -706,7 +707,7 @@ proc git_reference_peel*(`out`: ptr ptr git_object; `ref`: ptr git_reference;
 ##  @return 1 if the reference name is acceptable; 0 if it isn't
 ## 
 
-proc git_reference_is_valid_name*(refname: cstring): cint
+proc git_reference_is_valid_name*(refname: cstring): cint  {.importc.}
 ## *
 ##  Get the reference's short name
 ## 
@@ -720,5 +721,5 @@ proc git_reference_is_valid_name*(refname: cstring): cint
 ##  @return the human-readable version of the name
 ## 
 
-proc git_reference_shorthand*(`ref`: ptr git_reference): cstring
+proc git_reference_shorthand*(`ref`: ptr git_reference): cstring  {.importc.}
 ## * @}

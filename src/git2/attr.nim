@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types
 
@@ -107,7 +108,7 @@ type
 ##  @return the value type for the attribute
 ## 
 
-proc git_attr_value*(attr: cstring): git_attr_t
+proc git_attr_value*(attr: cstring): git_attr_t  {.importc.}
 ## *
 ##  Check attribute flags: Reading values from index and working directory.
 ## 
@@ -154,8 +155,8 @@ const
 ##  @param name The name of the attribute to look up.
 ## 
 
-proc git_attr_get*(value_out: cstringArray; repo: ptr git_repository; flags: uint32;
-                  path: cstring; name: cstring): cint
+proc git_attr_get*(value_out: cstringArray; repo: ptr git_repository; flags: uint32; 
+                  path: cstring; name: cstring): cint {.importc.}
 ## *
 ##  Look up a list of git attributes for path.
 ## 
@@ -186,9 +187,9 @@ proc git_attr_get*(value_out: cstringArray; repo: ptr git_repository; flags: uin
 ##  @param names An array of num_attr strings containing attribute names.
 ## 
 
-proc git_attr_get_many*(values_out: cstringArray; repo: ptr git_repository;
+proc git_attr_get_many*(values_out: cstringArray; repo: ptr git_repository; 
                        flags: uint32; path: cstring; num_attr: csize;
-                       names: cstringArray): cint
+                       names: cstringArray): cint {.importc.}
 type
   git_attr_foreach_cb* = proc (name: cstring; value: cstring; payload: pointer): cint
 
@@ -211,8 +212,8 @@ type
 ##  @return 0 on success, non-zero callback return value, or error code
 ## 
 
-proc git_attr_foreach*(repo: ptr git_repository; flags: uint32; path: cstring;
-                      callback: git_attr_foreach_cb; payload: pointer): cint
+proc git_attr_foreach*(repo: ptr git_repository; flags: uint32; path: cstring; 
+                      callback: git_attr_foreach_cb; payload: pointer): cint {.importc.}
 ## *
 ##  Flush the gitattributes cache.
 ## 
@@ -222,7 +223,7 @@ proc git_attr_foreach*(repo: ptr git_repository; flags: uint32; path: cstring;
 ##  access function is called.
 ## 
 
-proc git_attr_cache_flush*(repo: ptr git_repository)
+proc git_attr_cache_flush*(repo: ptr git_repository) {.importc.}
 ## *
 ##  Add a macro definition.
 ## 
@@ -234,5 +235,5 @@ proc git_attr_cache_flush*(repo: ptr git_repository)
 ##      git_attr_add_macro(repo, "binary", "-diff -crlf");
 ## 
 
-proc git_attr_add_macro*(repo: ptr git_repository; name: cstring; values: cstring): cint
+proc git_attr_add_macro*(repo: ptr git_repository; name: cstring; values: cstring): cint  {.importc.}
 ## * @}

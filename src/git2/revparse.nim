@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types
 
@@ -32,8 +33,8 @@ import
 ##  @return 0 on success, GIT_ENOTFOUND, GIT_EAMBIGUOUS, GIT_EINVALIDSPEC or an error code
 ## 
 
-proc git_revparse_single*(`out`: ptr ptr git_object; repo: ptr git_repository;
-                         spec: cstring): cint
+proc git_revparse_single*(`out`: ptr ptr git_object; repo: ptr git_repository; 
+                         spec: cstring): cint {.importc.}
 ## *
 ##  Find a single object and intermediate reference by a revision string.
 ## 
@@ -56,9 +57,9 @@ proc git_revparse_single*(`out`: ptr ptr git_object; repo: ptr git_repository;
 ##  or an error code
 ## 
 
-proc git_revparse_ext*(object_out: ptr ptr git_object;
+proc git_revparse_ext*(object_out: ptr ptr git_object; 
                       reference_out: ptr ptr git_reference;
-                      repo: ptr git_repository; spec: cstring): cint
+                      repo: ptr git_repository; spec: cstring): cint {.importc.}
 ## *
 ##  Revparse flags.  These indicate the intended behavior of the spec passed to
 ##  git_revparse.
@@ -97,5 +98,5 @@ type
 ##  @return 0 on success, GIT_INVALIDSPEC, GIT_ENOTFOUND, GIT_EAMBIGUOUS or an error code
 ## 
 
-proc git_revparse*(revspec: ptr git_revspec; repo: ptr git_repository; spec: cstring): cint
+proc git_revparse*(revspec: ptr git_revspec; repo: ptr git_repository; spec: cstring): cint  {.importc.}
 ## * @}

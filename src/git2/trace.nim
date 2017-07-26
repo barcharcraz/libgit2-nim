@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types
 
@@ -37,7 +38,7 @@ type                          ## * No tracing will be performed.
 ## 
 
 type
-  git_trace_callback* = proc (level: git_trace_level_t; msg: cstring)
+  git_trace_callback* = proc (level: git_trace_level_t; msg: cstring) 
 
 ## *
 ##  Sets the system tracing configuration to the specified level with the
@@ -49,5 +50,5 @@ type
 ##  @return 0 or an error code
 ## 
 
-proc git_trace_set*(level: git_trace_level_t; cb: git_trace_callback): cint
+proc git_trace_set*(level: git_trace_level_t; cb: git_trace_callback): cint  {.importc.}
 ## * @}

@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   transport
 
@@ -40,6 +41,6 @@ type
 ##         interpreted as a `git_cred_userpass_payload*`.)
 ## 
 
-proc git_cred_userpass*(cred: ptr ptr git_cred; url: cstring; user_from_url: cstring;
-                       allowed_types: cuint; payload: pointer): cint
+proc git_cred_userpass*(cred: ptr ptr git_cred; url: cstring; user_from_url: cstring; 
+                       allowed_types: cuint; payload: pointer): cint {.importc.}
 ## * @}

@@ -34,10 +34,10 @@ type
                 ##  Return the current entry and advance the iterator. The
                 ##  memory belongs to the library.
                 ## 
-    next*: proc (entry: ptr ptr git_config_entry; iter: ptr git_config_iterator): cint ## *
+    next*: proc (entry: ptr ptr git_config_entry; iter: ptr git_config_iterator): cint ## *  {.importc.}
                                                                              ##  Free the iterator
                                                                              ## 
-    free*: proc (iter: ptr git_config_iterator)
+    free*: proc (iter: ptr git_config_iterator) 
 
 
 ## *
@@ -50,15 +50,15 @@ type
     version*: cuint            ## * True if this backend is for a snapshot
     readonly*: cint
     cfg*: ptr git_config        ##  Open means open the file/database and parse if necessary
-    open*: proc (a2: ptr git_config_backend; level: git_config_level_t): cint
-    get*: proc (a2: ptr git_config_backend; key: cstring;
-              entry: ptr ptr git_config_entry): cint
-    set*: proc (a2: ptr git_config_backend; key: cstring; value: cstring): cint
-    set_multivar*: proc (cfg: ptr git_config_backend; name: cstring; regexp: cstring;
-                       value: cstring): cint
-    del*: proc (a2: ptr git_config_backend; key: cstring): cint
-    del_multivar*: proc (a2: ptr git_config_backend; key: cstring; regexp: cstring): cint
-    `iterator`*: proc (a2: ptr ptr git_config_iterator; a3: ptr git_config_backend): cint ## 
+    open*: proc (a2: ptr git_config_backend; level: git_config_level_t): cint 
+    get*: proc (a2: ptr git_config_backend; key: cstring; 
+              entry: ptr ptr git_config_entry): cint {.importc.}
+    set*: proc (a2: ptr git_config_backend; key: cstring; value: cstring): cint 
+    set_multivar*: proc (cfg: ptr git_config_backend; name: cstring; regexp: cstring; 
+                       value: cstring): cint {.importc.}
+    del*: proc (a2: ptr git_config_backend; key: cstring): cint 
+    del_multivar*: proc (a2: ptr git_config_backend; key: cstring; regexp: cstring): cint 
+    `iterator`*: proc (a2: ptr ptr git_config_iterator; a3: ptr git_config_backend): cint ##   {.importc.}
                                                                                 ## * 
                                                                                 ## Produce 
                                                                                 ## a 
@@ -67,20 +67,20 @@ type
                                                                                 ## of 
                                                                                 ## this 
                                                                                 ## backend
-    snapshot*: proc (a2: ptr ptr git_config_backend; a3: ptr git_config_backend): cint ## *
+    snapshot*: proc (a2: ptr ptr git_config_backend; a3: ptr git_config_backend): cint ## *  {.importc.}
                                                                              ##  Lock this backend.
                                                                              ## 
                                                                              ##  Prevent any writes to the data store backing this
                                                                              ##  backend. Any updates must not be visible to any other
                                                                              ##  readers.
                                                                              ## 
-    lock*: proc (a2: ptr git_config_backend): cint ## *
+    lock*: proc (a2: ptr git_config_backend): cint ## *  {.importc.}
                                              ##  Unlock the data store backing this backend. If success is
                                              ##  true, the changes should be committed, otherwise rolled
                                              ##  back.
                                              ## 
-    unlock*: proc (a2: ptr git_config_backend; success: cint): cint
-    free*: proc (a2: ptr git_config_backend)
+    unlock*: proc (a2: ptr git_config_backend; success: cint): cint  {.importc.}
+    free*: proc (a2: ptr git_config_backend) 
 
 
 const
@@ -95,7 +95,7 @@ const
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_config_init_backend*(backend: ptr git_config_backend; version: cuint): cint
+proc git_config_init_backend*(backend: ptr git_config_backend; version: cuint): cint  {.importc.}
 ## *
 ##  Add a generic config file instance to an existing config
 ## 
@@ -115,6 +115,6 @@ proc git_config_init_backend*(backend: ptr git_config_backend; version: cuint): 
 ##   for a given priority level (and force_replace set to 0), or error code
 ## 
 
-proc git_config_add_backend*(cfg: ptr git_config; file: ptr git_config_backend;
-                            level: git_config_level_t; force: cint): cint
+proc git_config_add_backend*(cfg: ptr git_config; file: ptr git_config_backend; 
+                            level: git_config_level_t; force: cint): cint {.importc.}
 ## * @}

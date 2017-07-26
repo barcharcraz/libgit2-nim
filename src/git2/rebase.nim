@@ -4,10 +4,11 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
-  common, types, oid, annotated_commit
+  common, types, oid, annotated_commit,merge, checkout
 
 ## *
 ##  @file git2/rebase.h
@@ -97,7 +98,7 @@ const
 ## * Indicates that a rebase operation is not (yet) in progress.
 
 const
-  GIT_REBASE_NO_OPERATION* = SIZE_MAX
+  GIT_REBASE_NO_OPERATION* = high(csize)
 
 ## *
 ##  A rebase operation
@@ -130,7 +131,7 @@ type
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_rebase_init_options*(opts: ptr git_rebase_options; version: cuint): cint
+proc git_rebase_init_options*(opts: ptr git_rebase_options; version: cuint): cint  {.importc.}
 ## *
 ##  Initializes a rebase operation to rebase the changes in `branch`
 ##  relative to `upstream` onto another branch.  To begin the rebase
@@ -149,7 +150,7 @@ proc git_rebase_init_options*(opts: ptr git_rebase_options; version: cuint): cin
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_rebase_init*(`out`: ptr ptr git_rebase; repo: ptr git_repository;
+proc git_rebase_init*(`out`: ptr ptr git_rebase; repo: ptr git_repository; 
                      branch: ptr git_annotated_commit;
                      upstream: ptr git_annotated_commit;
                      onto: ptr git_annotated_commit; opts: ptr git_rebase_options): cint
@@ -163,8 +164,8 @@ proc git_rebase_init*(`out`: ptr ptr git_rebase; repo: ptr git_repository;
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_rebase_open*(`out`: ptr ptr git_rebase; repo: ptr git_repository;
-                     opts: ptr git_rebase_options): cint
+proc git_rebase_open*(`out`: ptr ptr git_rebase; repo: ptr git_repository; 
+                     opts: ptr git_rebase_options): cint {.importc.}
 ## *
 ##  Gets the count of rebase operations that are to be applied.
 ## 
@@ -172,7 +173,7 @@ proc git_rebase_open*(`out`: ptr ptr git_rebase; repo: ptr git_repository;
 ##  @return The number of rebase operations in total
 ## 
 
-proc git_rebase_operation_entrycount*(rebase: ptr git_rebase): csize
+proc git_rebase_operation_entrycount*(rebase: ptr git_rebase): csize  {.importc.}
 ## *
 ##  Gets the index of the rebase operation that is currently being applied.
 ##  If the first operation has not yet been applied (because you have
@@ -183,7 +184,7 @@ proc git_rebase_operation_entrycount*(rebase: ptr git_rebase): csize
 ##  @return The index of the rebase operation currently being applied.
 ## 
 
-proc git_rebase_operation_current*(rebase: ptr git_rebase): csize
+proc git_rebase_operation_current*(rebase: ptr git_rebase): csize  {.importc.}
 ## *
 ##  Gets the rebase operation specified by the given index.
 ## 
@@ -192,7 +193,7 @@ proc git_rebase_operation_current*(rebase: ptr git_rebase): csize
 ##  @return The rebase operation or NULL if `idx` was out of bounds
 ## 
 
-proc git_rebase_operation_byindex*(rebase: ptr git_rebase; idx: csize): ptr git_rebase_operation
+proc git_rebase_operation_byindex*(rebase: ptr git_rebase; idx: csize): ptr git_rebase_operation  {.importc.}
 ## *
 ##  Performs the next rebase operation and returns the information about it.
 ##  If the operation is one that applies a patch (which is any operation except
@@ -205,7 +206,7 @@ proc git_rebase_operation_byindex*(rebase: ptr git_rebase; idx: csize): ptr git_
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_rebase_next*(operation: ptr ptr git_rebase_operation; rebase: ptr git_rebase): cint
+proc git_rebase_next*(operation: ptr ptr git_rebase_operation; rebase: ptr git_rebase): cint  {.importc.}
 ## *
 ##  Gets the index produced by the last operation, which is the result
 ##  of `git_rebase_next` and which will be committed by the next
@@ -218,7 +219,7 @@ proc git_rebase_next*(operation: ptr ptr git_rebase_operation; rebase: ptr git_r
 ##  index.
 ## 
 
-proc git_rebase_inmemory_index*(index: ptr ptr git_index; rebase: ptr git_rebase): cint
+proc git_rebase_inmemory_index*(index: ptr ptr git_index; rebase: ptr git_rebase): cint  {.importc.}
 ## *
 ##  Commits the current patch.  You must have resolved any conflicts that
 ##  were introduced during the patch application from the `git_rebase_next`
@@ -242,9 +243,9 @@ proc git_rebase_inmemory_index*(index: ptr ptr git_index; rebase: ptr git_rebase
 ##         -1 on failure.
 ## 
 
-proc git_rebase_commit*(id: ptr git_oid; rebase: ptr git_rebase;
+proc git_rebase_commit*(id: ptr git_oid; rebase: ptr git_rebase; 
                        author: ptr git_signature; committer: ptr git_signature;
-                       message_encoding: cstring; message: cstring): cint
+                       message_encoding: cstring; message: cstring): cint {.importc.}
 ## *
 ##  Aborts a rebase that is currently in progress, resetting the repository
 ##  and working directory to their state before rebase began.
@@ -254,7 +255,7 @@ proc git_rebase_commit*(id: ptr git_oid; rebase: ptr git_rebase;
 ##          -1 on other errors.
 ## 
 
-proc git_rebase_abort*(rebase: ptr git_rebase): cint
+proc git_rebase_abort*(rebase: ptr git_rebase): cint  {.importc.}
 ## *
 ##  Finishes a rebase that is currently in progress once all patches have
 ##  been applied.
@@ -264,12 +265,12 @@ proc git_rebase_abort*(rebase: ptr git_rebase): cint
 ##  @return Zero on success; -1 on error
 ## 
 
-proc git_rebase_finish*(rebase: ptr git_rebase; signature: ptr git_signature): cint
+proc git_rebase_finish*(rebase: ptr git_rebase; signature: ptr git_signature): cint  {.importc.}
 ## *
 ##  Frees the `git_rebase` object.
 ## 
 ##  @param rebase The rebase object
 ## 
 
-proc git_rebase_free*(rebase: ptr git_rebase)
+proc git_rebase_free*(rebase: ptr git_rebase)  {.importc.}
 ## * @}

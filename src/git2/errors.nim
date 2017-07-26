@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common
 
@@ -85,12 +86,12 @@ type
 ##  @return A git_error object.
 ## 
 
-proc giterr_last*(): ptr git_error
+proc giterr_last*(): ptr git_error  {.importc.}
 ## *
 ##  Clear the last library error that occurred for this thread.
 ## 
 
-proc giterr_clear*()
+proc giterr_clear*()  {.importc.}
 ## *
 ##  Set the error message string for this thread.
 ## 
@@ -108,7 +109,7 @@ proc giterr_clear*()
 ##  @param string The formatted error message to keep
 ## 
 
-proc giterr_set_str*(error_class: cint; string: cstring)
+proc giterr_set_str*(error_class: cint; string: cstring)  {.importc.}
 ## *
 ##  Set the error message to a special value for memory allocation failure.
 ## 
@@ -119,5 +120,5 @@ proc giterr_set_str*(error_class: cint; string: cstring)
 ##  internal value.
 ## 
 
-proc giterr_set_oom*()
+proc giterr_set_oom*()  {.importc.}
 ## * @}

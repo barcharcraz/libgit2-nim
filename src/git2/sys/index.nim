@@ -42,7 +42,7 @@ type
 ##  @return integer of count of current filename conflict entries
 ## 
 
-proc git_index_name_entrycount*(index: ptr git_index): csize
+proc git_index_name_entrycount*(index: ptr git_index): csize  {.importc.}
 ## *
 ##  Get a filename conflict entry from the index.
 ## 
@@ -54,7 +54,7 @@ proc git_index_name_entrycount*(index: ptr git_index): csize
 ##  @return a pointer to the filename conflict entry; NULL if out of bounds
 ## 
 
-proc git_index_name_get_byindex*(index: ptr git_index; n: csize): ptr git_index_name_entry
+proc git_index_name_get_byindex*(index: ptr git_index; n: csize): ptr git_index_name_entry  {.importc.}
 ## *
 ##  Record the filenames involved in a rename conflict.
 ## 
@@ -64,15 +64,15 @@ proc git_index_name_get_byindex*(index: ptr git_index; n: csize): ptr git_index_
 ##  @param theirs the path of the file as it existed in their tree
 ## 
 
-proc git_index_name_add*(index: ptr git_index; ancestor: cstring; ours: cstring;
-                        theirs: cstring): cint
+proc git_index_name_add*(index: ptr git_index; ancestor: cstring; ours: cstring; 
+                        theirs: cstring): cint {.importc.}
 ## *
 ##  Remove all filename conflict entries.
 ## 
 ##  @param index an existing index object
 ## 
 
-proc git_index_name_clear*(index: ptr git_index)
+proc git_index_name_clear*(index: ptr git_index)  {.importc.}
 ## *@}
 ## * @name Resolve Undo (REUC) index entry manipulation.
 ## 
@@ -87,7 +87,7 @@ proc git_index_name_clear*(index: ptr git_index)
 ##  @return integer of count of current resolve undo entries
 ## 
 
-proc git_index_reuc_entrycount*(index: ptr git_index): csize
+proc git_index_reuc_entrycount*(index: ptr git_index): csize  {.importc.}
 ## *
 ##  Finds the resolve undo entry that points to the given path in the Git
 ##  index.
@@ -98,7 +98,7 @@ proc git_index_reuc_entrycount*(index: ptr git_index): csize
 ##  @return 0 if found, < 0 otherwise (GIT_ENOTFOUND)
 ## 
 
-proc git_index_reuc_find*(at_pos: ptr csize; index: ptr git_index; path: cstring): cint
+proc git_index_reuc_find*(at_pos: ptr csize; index: ptr git_index; path: cstring): cint  {.importc.}
 ## *
 ##  Get a resolve undo entry from the index.
 ## 
@@ -110,7 +110,7 @@ proc git_index_reuc_find*(at_pos: ptr csize; index: ptr git_index; path: cstring
 ##  @return the resolve undo entry; NULL if not found
 ## 
 
-proc git_index_reuc_get_bypath*(index: ptr git_index; path: cstring): ptr git_index_reuc_entry
+proc git_index_reuc_get_bypath*(index: ptr git_index; path: cstring): ptr git_index_reuc_entry  {.importc.}
 ## *
 ##  Get a resolve undo entry from the index.
 ## 
@@ -122,7 +122,7 @@ proc git_index_reuc_get_bypath*(index: ptr git_index; path: cstring): ptr git_in
 ##  @return a pointer to the resolve undo entry; NULL if out of bounds
 ## 
 
-proc git_index_reuc_get_byindex*(index: ptr git_index; n: csize): ptr git_index_reuc_entry
+proc git_index_reuc_get_byindex*(index: ptr git_index; n: csize): ptr git_index_reuc_entry  {.importc.}
 ## *
 ##  Adds a resolve undo entry for a file based on the given parameters.
 ## 
@@ -146,9 +146,9 @@ proc git_index_reuc_get_byindex*(index: ptr git_index; n: csize): ptr git_index_
 ##  @return 0 or an error code
 ## 
 
-proc git_index_reuc_add*(index: ptr git_index; path: cstring; ancestor_mode: cint;
+proc git_index_reuc_add*(index: ptr git_index; path: cstring; ancestor_mode: cint; 
                         ancestor_id: ptr git_oid; our_mode: cint;
-                        our_id: ptr git_oid; their_mode: cint; their_id: ptr git_oid): cint
+                        our_id: ptr git_oid; their_mode: cint; their_id: ptr git_oid): cint {.importc.}
 ## *
 ##  Remove an resolve undo entry from the index
 ## 
@@ -157,13 +157,13 @@ proc git_index_reuc_add*(index: ptr git_index; path: cstring; ancestor_mode: cin
 ##  @return 0 or an error code
 ## 
 
-proc git_index_reuc_remove*(index: ptr git_index; n: csize): cint
+proc git_index_reuc_remove*(index: ptr git_index; n: csize): cint  {.importc.}
 ## *
 ##  Remove all resolve undo entries from the index
 ## 
 ##  @param index an existing index object
 ## 
 
-proc git_index_reuc_clear*(index: ptr git_index)
+proc git_index_reuc_clear*(index: ptr git_index)  {.importc.}
 ## *@}
 ## * @}

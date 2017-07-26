@@ -21,7 +21,7 @@
 ##  @return Pointer to the merge driver object or NULL if not found
 ## 
 
-proc git_merge_driver_lookup*(name: cstring): ptr git_merge_driver
+proc git_merge_driver_lookup*(name: cstring): ptr git_merge_driver  {.importc.}
 const
   GIT_MERGE_DRIVER_TEXT* = "text"
   GIT_MERGE_DRIVER_BINARY* = "binary"
@@ -34,19 +34,19 @@ const
 
 ## * Get the repository that the source data is coming from.
 
-proc git_merge_driver_source_repo*(src: ptr git_merge_driver_source): ptr git_repository
+proc git_merge_driver_source_repo*(src: ptr git_merge_driver_source): ptr git_repository  {.importc.}
 ## * Gets the ancestor of the file to merge.
 
-proc git_merge_driver_source_ancestor*(src: ptr git_merge_driver_source): ptr git_index_entry
+proc git_merge_driver_source_ancestor*(src: ptr git_merge_driver_source): ptr git_index_entry  {.importc.}
 ## * Gets the ours side of the file to merge.
 
-proc git_merge_driver_source_ours*(src: ptr git_merge_driver_source): ptr git_index_entry
+proc git_merge_driver_source_ours*(src: ptr git_merge_driver_source): ptr git_index_entry  {.importc.}
 ## * Gets the theirs side of the file to merge.
 
-proc git_merge_driver_source_theirs*(src: ptr git_merge_driver_source): ptr git_index_entry
+proc git_merge_driver_source_theirs*(src: ptr git_merge_driver_source): ptr git_index_entry  {.importc.}
 ## * Gets the merge file options that the merge was invoked with
 
-proc git_merge_driver_source_file_options*(src: ptr git_merge_driver_source): ptr git_merge_file_options
+proc git_merge_driver_source_file_options*(src: ptr git_merge_driver_source): ptr git_merge_file_options  {.importc.}
 ## *
 ##  Initialize callback on merge driver
 ## 
@@ -61,7 +61,7 @@ proc git_merge_driver_source_file_options*(src: ptr git_merge_driver_source): pt
 ## 
 
 type
-  git_merge_driver_init_fn* = proc (self: ptr git_merge_driver): cint
+  git_merge_driver_init_fn* = proc (self: ptr git_merge_driver): cint  {.importc.}
 
 ## *
 ##  Shutdown callback on merge driver
@@ -75,7 +75,7 @@ type
 ## 
 
 type
-  git_merge_driver_shutdown_fn* = proc (self: ptr git_merge_driver)
+  git_merge_driver_shutdown_fn* = proc (self: ptr git_merge_driver) 
 
 ## *
 ##  Callback to perform the merge.
@@ -97,7 +97,7 @@ type
 ## 
 
 type
-  git_merge_driver_apply_fn* = proc (self: ptr git_merge_driver;
+  git_merge_driver_apply_fn* = proc (self: ptr git_merge_driver; 
                                   path_out: cstringArray; mode_out: ptr uint32;
                                   merged_out: ptr git_buf; filter_name: cstring;
                                   src: ptr git_merge_driver_source): cint
@@ -146,7 +146,7 @@ const
 ##  @return 0 on successful registry, error code <0 on failure
 ## 
 
-proc git_merge_driver_register*(name: cstring; driver: ptr git_merge_driver): cint
+proc git_merge_driver_register*(name: cstring; driver: ptr git_merge_driver): cint  {.importc.}
 ## *
 ##  Remove the merge driver with the given name.
 ## 
@@ -161,5 +161,5 @@ proc git_merge_driver_register*(name: cstring; driver: ptr git_merge_driver): ci
 ##  @return 0 on success, error code <0 on failure
 ## 
 
-proc git_merge_driver_unregister*(name: cstring): cint
+proc git_merge_driver_unregister*(name: cstring): cint  {.importc.}
 ## * @}

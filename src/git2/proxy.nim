@@ -4,10 +4,11 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
-  common, transport
+  common, transport, types
 
 ## *
 ##  The type of proxy to use.
@@ -74,4 +75,4 @@ const
 ##  @param version the version of the struct, use `GIT_PROXY_OPTIONS_VERSION`
 ## 
 
-proc git_proxy_init_options*(opts: ptr git_proxy_options; version: cuint): cint
+proc git_proxy_init_options*(opts: ptr git_proxy_options; version: cuint): cint  {.importc.}

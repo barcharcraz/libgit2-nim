@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types
 
@@ -32,8 +33,8 @@ import
 ##  @return 0 or an error code
 ## 
 
-proc git_signature_new*(`out`: ptr ptr git_signature; name: cstring; email: cstring;
-                       time: git_time_t; offset: cint): cint
+proc git_signature_new*(`out`: ptr ptr git_signature; name: cstring; email: cstring; 
+                       time: git_time_t; offset: cint): cint {.importc.}
 ## *
 ##  Create a new action signature with a timestamp of 'now'.
 ## 
@@ -45,7 +46,7 @@ proc git_signature_new*(`out`: ptr ptr git_signature; name: cstring; email: cstr
 ##  @return 0 or an error code
 ## 
 
-proc git_signature_now*(`out`: ptr ptr git_signature; name: cstring; email: cstring): cint
+proc git_signature_now*(`out`: ptr ptr git_signature; name: cstring; email: cstring): cint  {.importc.}
 ## *
 ##  Create a new action signature with default user and now timestamp.
 ## 
@@ -59,7 +60,7 @@ proc git_signature_now*(`out`: ptr ptr git_signature; name: cstring; email: cstr
 ##  @return 0 on success, GIT_ENOTFOUND if config is missing, or error code
 ## 
 
-proc git_signature_default*(`out`: ptr ptr git_signature; repo: ptr git_repository): cint
+proc git_signature_default*(`out`: ptr ptr git_signature; repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Create a new signature by parsing the given buffer, which is
 ##  expected to be in the format "Real Name <email> timestamp tzoffset",
@@ -72,7 +73,7 @@ proc git_signature_default*(`out`: ptr ptr git_signature; repo: ptr git_reposito
 ##  @return 0 on success, or an error code
 ## 
 
-proc git_signature_from_buffer*(`out`: ptr ptr git_signature; buf: cstring): cint
+proc git_signature_from_buffer*(`out`: ptr ptr git_signature; buf: cstring): cint  {.importc.}
 ## *
 ##  Create a copy of an existing signature.  All internal strings are also
 ##  duplicated.
@@ -84,7 +85,7 @@ proc git_signature_from_buffer*(`out`: ptr ptr git_signature; buf: cstring): cin
 ##  @return 0 or an error code
 ## 
 
-proc git_signature_dup*(dest: ptr ptr git_signature; sig: ptr git_signature): cint
+proc git_signature_dup*(dest: ptr ptr git_signature; sig: ptr git_signature): cint  {.importc.}
 ## *
 ##  Free an existing signature.
 ## 
@@ -95,5 +96,5 @@ proc git_signature_dup*(dest: ptr ptr git_signature; sig: ptr git_signature): ci
 ##  @param sig signature to free
 ## 
 
-proc git_signature_free*(sig: ptr git_signature)
+proc git_signature_free*(sig: ptr git_signature)  {.importc.}
 ## * @}

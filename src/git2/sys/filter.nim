@@ -22,7 +22,7 @@ import
 ##  @return Pointer to the filter object or NULL if not found
 ## 
 
-proc git_filter_lookup*(name: cstring): ptr git_filter
+proc git_filter_lookup*(name: cstring): ptr git_filter  {.importc.}
 const
   GIT_FILTER_CRLF* = "crlf"
   GIT_FILTER_IDENT* = "ident"
@@ -59,8 +59,8 @@ const
 ##  your own chains of filters.
 ## 
 
-proc git_filter_list_new*(`out`: ptr ptr git_filter_list; repo: ptr git_repository;
-                         mode: git_filter_mode_t; options: uint32): cint
+proc git_filter_list_new*(`out`: ptr ptr git_filter_list; repo: ptr git_repository; 
+                         mode: git_filter_mode_t; options: uint32): cint {.importc.}
 ## *
 ##  Add a filter to a filter list with the given payload.
 ## 
@@ -75,8 +75,8 @@ proc git_filter_list_new*(`out`: ptr ptr git_filter_list; repo: ptr git_reposito
 ##  may fail with a NULL payload.  Good luck!
 ## 
 
-proc git_filter_list_push*(fl: ptr git_filter_list; filter: ptr git_filter;
-                          payload: pointer): cint
+proc git_filter_list_push*(fl: ptr git_filter_list; filter: ptr git_filter; 
+                          payload: pointer): cint {.importc.}
 ## *
 ##  Look up how many filters are in the list
 ## 
@@ -89,7 +89,7 @@ proc git_filter_list_push*(fl: ptr git_filter_list; filter: ptr git_filter;
 ##  @return The number of filters in the list
 ## 
 
-proc git_filter_list_length*(fl: ptr git_filter_list): csize
+proc git_filter_list_length*(fl: ptr git_filter_list): csize  {.importc.}
 ## *
 ##  A filter source represents a file/blob to be processed
 ## 
@@ -99,35 +99,35 @@ proc git_filter_list_length*(fl: ptr git_filter_list): csize
 ##  Get the repository that the source data is coming from.
 ## 
 
-proc git_filter_source_repo*(src: ptr git_filter_source): ptr git_repository
+proc git_filter_source_repo*(src: ptr git_filter_source): ptr git_repository  {.importc.}
 ## *
 ##  Get the path that the source data is coming from.
 ## 
 
-proc git_filter_source_path*(src: ptr git_filter_source): cstring
+proc git_filter_source_path*(src: ptr git_filter_source): cstring  {.importc.}
 ## *
 ##  Get the file mode of the source file
 ##  If the mode is unknown, this will return 0
 ## 
 
-proc git_filter_source_filemode*(src: ptr git_filter_source): uint16
+proc git_filter_source_filemode*(src: ptr git_filter_source): uint16  {.importc.}
 ## *
 ##  Get the OID of the source
 ##  If the OID is unknown (often the case with GIT_FILTER_CLEAN) then
 ##  this will return NULL.
 ## 
 
-proc git_filter_source_id*(src: ptr git_filter_source): ptr git_oid
+proc git_filter_source_id*(src: ptr git_filter_source): ptr git_oid  {.importc.}
 ## *
 ##  Get the git_filter_mode_t to be used
 ## 
 
-proc git_filter_source_mode*(src: ptr git_filter_source): git_filter_mode_t
+proc git_filter_source_mode*(src: ptr git_filter_source): git_filter_mode_t  {.importc.}
 ## *
 ##  Get the combination git_filter_flag_t options to be applied
 ## 
 
-proc git_filter_source_flags*(src: ptr git_filter_source): uint32
+proc git_filter_source_flags*(src: ptr git_filter_source): uint32  {.importc.}
 ## *
 ##  Initialize callback on filter
 ## 
@@ -141,7 +141,7 @@ proc git_filter_source_flags*(src: ptr git_filter_source): uint32
 ## 
 
 type
-  git_filter_init_fn* = proc (self: ptr git_filter): cint
+  git_filter_init_fn* = proc (self: ptr git_filter): cint  {.importc.}
 
 ## *
 ##  Shutdown callback on filter
@@ -155,7 +155,7 @@ type
 ## 
 
 type
-  git_filter_shutdown_fn* = proc (self: ptr git_filter)
+  git_filter_shutdown_fn* = proc (self: ptr git_filter) 
 
 ## *
 ##  Callback to decide if a given source needs this filter
@@ -179,8 +179,8 @@ type
 ## 
 
 type
-  git_filter_check_fn* = proc (self: ptr git_filter; payload: ptr pointer;
-                            src: ptr git_filter_source; attr_values: cstringArray): cint ##  points to NULL ptr on entry, may be set
+  git_filter_check_fn* = proc (self: ptr git_filter; payload: ptr pointer; 
+                            src: ptr git_filter_source; attr_values: cstringArray): cint ##  points to NULL ptr on entry, may be set {.importc.}
 
 ## *
 ##  Callback to actually perform the data filtering
@@ -196,12 +196,12 @@ type
 ## 
 
 type
-  git_filter_apply_fn* = proc (self: ptr git_filter; payload: ptr pointer;
+  git_filter_apply_fn* = proc (self: ptr git_filter; payload: ptr pointer; 
                             to: ptr git_buf; `from`: ptr git_buf;
-                            src: ptr git_filter_source): cint ##  may be read and/or set
-  git_filter_stream_fn* = proc (`out`: ptr ptr git_writestream; self: ptr git_filter;
+                            src: ptr git_filter_source): cint ##  may be read and/or set {.importc.}
+  git_filter_stream_fn* = proc (`out`: ptr ptr git_writestream; self: ptr git_filter; 
                              payload: ptr pointer; src: ptr git_filter_source;
-                             next: ptr git_writestream): cint
+                             next: ptr git_writestream): cint {.importc.}
 
 ## *
 ##  Callback to clean up after filtering has been applied
@@ -213,7 +213,7 @@ type
 ## 
 
 type
-  git_filter_cleanup_fn* = proc (self: ptr git_filter; payload: pointer)
+  git_filter_cleanup_fn* = proc (self: ptr git_filter; payload: pointer) 
 
 ## *
 ##  Filter structure used to register custom filters.
@@ -269,7 +269,7 @@ const
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_filter_init*(filter: ptr git_filter; version: cuint): cint
+proc git_filter_init*(filter: ptr git_filter; version: cuint): cint  {.importc.}
 ## *
 ##  Register a filter under a given name with a given priority.
 ## 
@@ -297,7 +297,7 @@ proc git_filter_init*(filter: ptr git_filter; version: cuint): cint
 ##  @return 0 on successful registry, error code <0 on failure
 ## 
 
-proc git_filter_register*(name: cstring; filter: ptr git_filter; priority: cint): cint
+proc git_filter_register*(name: cstring; filter: ptr git_filter; priority: cint): cint  {.importc.}
 ## *
 ##  Remove the filter with the given name
 ## 
@@ -312,5 +312,5 @@ proc git_filter_register*(name: cstring; filter: ptr git_filter; priority: cint)
 ##  @return 0 on success, error code <0 on failure
 ## 
 
-proc git_filter_unregister*(name: cstring): cint
+proc git_filter_unregister*(name: cstring): cint  {.importc.}
 ## * @}

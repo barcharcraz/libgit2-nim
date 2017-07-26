@@ -4,10 +4,11 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
-  common, types, oid, g_object
+  common, types, oid, g_object, buffer
 
 ## *
 ##  @file git2/commit.h
@@ -29,8 +30,8 @@ import
 ##  @return 0 or an error code
 ## 
 
-proc git_commit_lookup*(commit: ptr ptr git_commit; repo: ptr git_repository;
-                       id: ptr git_oid): cint
+proc git_commit_lookup*(commit: ptr ptr git_commit; repo: ptr git_repository; 
+                       id: ptr git_oid): cint {.importc.}
 ## *
 ##  Lookup a commit object from a repository, given a prefix of its
 ##  identifier (short id).
@@ -48,8 +49,8 @@ proc git_commit_lookup*(commit: ptr ptr git_commit; repo: ptr git_repository;
 ##  @return 0 or an error code
 ## 
 
-proc git_commit_lookup_prefix*(commit: ptr ptr git_commit; repo: ptr git_repository;
-                              id: ptr git_oid; len: csize): cint
+proc git_commit_lookup_prefix*(commit: ptr ptr git_commit; repo: ptr git_repository; 
+                              id: ptr git_oid; len: csize): cint {.importc.}
 ## *
 ##  Close an open commit
 ## 
@@ -62,7 +63,7 @@ proc git_commit_lookup_prefix*(commit: ptr ptr git_commit; repo: ptr git_reposit
 ##  @param commit the commit to close
 ## 
 
-proc git_commit_free*(commit: ptr git_commit)
+proc git_commit_free*(commit: ptr git_commit)  {.importc.}
 ## *
 ##  Get the id of a commit.
 ## 
@@ -70,7 +71,7 @@ proc git_commit_free*(commit: ptr git_commit)
 ##  @return object identity for the commit.
 ## 
 
-proc git_commit_id*(commit: ptr git_commit): ptr git_oid
+proc git_commit_id*(commit: ptr git_commit): ptr git_oid  {.importc.}
 ## *
 ##  Get the repository that contains the commit.
 ## 
@@ -78,7 +79,7 @@ proc git_commit_id*(commit: ptr git_commit): ptr git_oid
 ##  @return Repository that contains this commit.
 ## 
 
-proc git_commit_owner*(commit: ptr git_commit): ptr git_repository
+proc git_commit_owner*(commit: ptr git_commit): ptr git_repository  {.importc.}
 ## *
 ##  Get the encoding for the message of a commit,
 ##  as a string representing a standard encoding name.
@@ -90,7 +91,7 @@ proc git_commit_owner*(commit: ptr git_commit): ptr git_repository
 ##  @return NULL, or the encoding
 ## 
 
-proc git_commit_message_encoding*(commit: ptr git_commit): cstring
+proc git_commit_message_encoding*(commit: ptr git_commit): cstring  {.importc.}
 ## *
 ##  Get the full message of a commit.
 ## 
@@ -101,7 +102,7 @@ proc git_commit_message_encoding*(commit: ptr git_commit): cstring
 ##  @return the message of a commit
 ## 
 
-proc git_commit_message*(commit: ptr git_commit): cstring
+proc git_commit_message*(commit: ptr git_commit): cstring  {.importc.}
 ## *
 ##  Get the full raw message of a commit.
 ## 
@@ -109,7 +110,7 @@ proc git_commit_message*(commit: ptr git_commit): cstring
 ##  @return the raw message of a commit
 ## 
 
-proc git_commit_message_raw*(commit: ptr git_commit): cstring
+proc git_commit_message_raw*(commit: ptr git_commit): cstring  {.importc.}
 ## *
 ##  Get the short "summary" of the git commit message.
 ## 
@@ -120,7 +121,7 @@ proc git_commit_message_raw*(commit: ptr git_commit): cstring
 ##  @return the summary of a commit or NULL on error
 ## 
 
-proc git_commit_summary*(commit: ptr git_commit): cstring
+proc git_commit_summary*(commit: ptr git_commit): cstring  {.importc.}
 ## *
 ##  Get the long "body" of the git commit message.
 ## 
@@ -133,7 +134,7 @@ proc git_commit_summary*(commit: ptr git_commit): cstring
 ##    consists of a summary
 ## 
 
-proc git_commit_body*(commit: ptr git_commit): cstring
+proc git_commit_body*(commit: ptr git_commit): cstring  {.importc.}
 ## *
 ##  Get the commit time (i.e. committer time) of a commit.
 ## 
@@ -141,7 +142,7 @@ proc git_commit_body*(commit: ptr git_commit): cstring
 ##  @return the time of a commit
 ## 
 
-proc git_commit_time*(commit: ptr git_commit): git_time_t
+proc git_commit_time*(commit: ptr git_commit): git_time_t  {.importc.}
 ## *
 ##  Get the commit timezone offset (i.e. committer's preferred timezone) of a commit.
 ## 
@@ -149,7 +150,7 @@ proc git_commit_time*(commit: ptr git_commit): git_time_t
 ##  @return positive or negative timezone offset, in minutes from UTC
 ## 
 
-proc git_commit_time_offset*(commit: ptr git_commit): cint
+proc git_commit_time_offset*(commit: ptr git_commit): cint  {.importc.}
 ## *
 ##  Get the committer of a commit.
 ## 
@@ -157,7 +158,7 @@ proc git_commit_time_offset*(commit: ptr git_commit): cint
 ##  @return the committer of a commit
 ## 
 
-proc git_commit_committer*(commit: ptr git_commit): ptr git_signature
+proc git_commit_committer*(commit: ptr git_commit): ptr git_signature  {.importc.}
 ## *
 ##  Get the author of a commit.
 ## 
@@ -165,7 +166,7 @@ proc git_commit_committer*(commit: ptr git_commit): ptr git_signature
 ##  @return the author of a commit
 ## 
 
-proc git_commit_author*(commit: ptr git_commit): ptr git_signature
+proc git_commit_author*(commit: ptr git_commit): ptr git_signature  {.importc.}
 ## *
 ##  Get the full raw text of the commit header.
 ## 
@@ -173,7 +174,7 @@ proc git_commit_author*(commit: ptr git_commit): ptr git_signature
 ##  @return the header text of the commit
 ## 
 
-proc git_commit_raw_header*(commit: ptr git_commit): cstring
+proc git_commit_raw_header*(commit: ptr git_commit): cstring  {.importc.}
 ## *
 ##  Get the tree pointed to by a commit.
 ## 
@@ -182,7 +183,7 @@ proc git_commit_raw_header*(commit: ptr git_commit): cstring
 ##  @return 0 or an error code
 ## 
 
-proc git_commit_tree*(tree_out: ptr ptr git_tree; commit: ptr git_commit): cint
+proc git_commit_tree*(tree_out: ptr ptr git_tree; commit: ptr git_commit): cint  {.importc.}
 ## *
 ##  Get the id of the tree pointed to by a commit. This differs from
 ##  `git_commit_tree` in that no attempts are made to fetch an object
@@ -192,7 +193,7 @@ proc git_commit_tree*(tree_out: ptr ptr git_tree; commit: ptr git_commit): cint
 ##  @return the id of tree pointed to by commit.
 ## 
 
-proc git_commit_tree_id*(commit: ptr git_commit): ptr git_oid
+proc git_commit_tree_id*(commit: ptr git_commit): ptr git_oid  {.importc.}
 ## *
 ##  Get the number of parents of this commit
 ## 
@@ -200,7 +201,7 @@ proc git_commit_tree_id*(commit: ptr git_commit): ptr git_oid
 ##  @return integer of count of parents
 ## 
 
-proc git_commit_parentcount*(commit: ptr git_commit): cuint
+proc git_commit_parentcount*(commit: ptr git_commit): cuint  {.importc.}
 ## *
 ##  Get the specified parent of the commit.
 ## 
@@ -210,7 +211,7 @@ proc git_commit_parentcount*(commit: ptr git_commit): cuint
 ##  @return 0 or an error code
 ## 
 
-proc git_commit_parent*(`out`: ptr ptr git_commit; commit: ptr git_commit; n: cuint): cint
+proc git_commit_parent*(`out`: ptr ptr git_commit; commit: ptr git_commit; n: cuint): cint  {.importc.}
 ## *
 ##  Get the oid of a specified parent for a commit. This is different from
 ##  `git_commit_parent`, which will attempt to load the parent commit from
@@ -221,7 +222,7 @@ proc git_commit_parent*(`out`: ptr ptr git_commit; commit: ptr git_commit; n: cu
 ##  @return the id of the parent, NULL on error.
 ## 
 
-proc git_commit_parent_id*(commit: ptr git_commit; n: cuint): ptr git_oid
+proc git_commit_parent_id*(commit: ptr git_commit; n: cuint): ptr git_oid  {.importc.}
 ## *
 ##  Get the commit object that is the <n>th generation ancestor
 ##  of the named commit object, following only the first parents.
@@ -237,8 +238,8 @@ proc git_commit_parent_id*(commit: ptr git_commit; n: cuint): ptr git_oid
 ##  or an error code
 ## 
 
-proc git_commit_nth_gen_ancestor*(ancestor: ptr ptr git_commit;
-                                 commit: ptr git_commit; n: cuint): cint
+proc git_commit_nth_gen_ancestor*(ancestor: ptr ptr git_commit; 
+                                 commit: ptr git_commit; n: cuint): cint {.importc.}
 ## *
 ##  Get an arbitrary header field
 ## 
@@ -250,8 +251,8 @@ proc git_commit_nth_gen_ancestor*(ancestor: ptr ptr git_commit;
 ##  or an error code
 ## 
 
-proc git_commit_header_field*(`out`: ptr git_buf; commit: ptr git_commit;
-                             field: cstring): cint
+proc git_commit_header_field*(`out`: ptr git_buf; commit: ptr git_commit; 
+                             field: cstring): cint {.importc.}
 ## *
 ##  Extract the signature from a commit
 ## 
@@ -271,9 +272,9 @@ proc git_commit_header_field*(`out`: ptr git_buf; commit: ptr git_commit;
 ##  or the commit does not have a signature.
 ## 
 
-proc git_commit_extract_signature*(signature: ptr git_buf; signed_data: ptr git_buf;
+proc git_commit_extract_signature*(signature: ptr git_buf; signed_data: ptr git_buf; 
                                   repo: ptr git_repository; commit_id: ptr git_oid;
-                                  field: cstring): cint
+                                  field: cstring): cint {.importc.}
 ## *
 ##  Create new commit in the repository from a list of `git_object` pointers
 ## 
@@ -319,7 +320,7 @@ proc git_commit_extract_signature*(signature: ptr git_buf; signed_data: ptr git_
 ## 	the given reference will be updated to point to it
 ## 
 
-proc git_commit_create*(id: ptr git_oid; repo: ptr git_repository; update_ref: cstring;
+proc git_commit_create*(id: ptr git_oid; repo: ptr git_repository; update_ref: cstring; 
                        author: ptr git_signature; committer: ptr git_signature;
                        message_encoding: cstring; message: cstring;
                        tree: ptr git_tree; parent_count: csize;
@@ -339,7 +340,7 @@ proc git_commit_create*(id: ptr git_oid; repo: ptr git_repository; update_ref: c
 ##  @see git_commit_create
 ## 
 
-proc git_commit_create_v*(id: ptr git_oid; repo: ptr git_repository;
+proc git_commit_create_v*(id: ptr git_oid; repo: ptr git_repository; 
                          update_ref: cstring; author: ptr git_signature;
                          committer: ptr git_signature; message_encoding: cstring;
                          message: cstring; tree: ptr git_tree; parent_count: csize): cint {.
@@ -366,7 +367,7 @@ proc git_commit_create_v*(id: ptr git_oid; repo: ptr git_repository;
 ##  @see git_commit_create
 ## 
 
-proc git_commit_amend*(id: ptr git_oid; commit_to_amend: ptr git_commit;
+proc git_commit_amend*(id: ptr git_oid; commit_to_amend: ptr git_commit; 
                       update_ref: cstring; author: ptr git_signature;
                       committer: ptr git_signature; message_encoding: cstring;
                       message: cstring; tree: ptr git_tree): cint
@@ -406,7 +407,7 @@ proc git_commit_amend*(id: ptr git_oid; commit_to_amend: ptr git_commit;
 ##  @return 0 or an error code
 ## 
 
-proc git_commit_create_buffer*(`out`: ptr git_buf; repo: ptr git_repository;
+proc git_commit_create_buffer*(`out`: ptr git_buf; repo: ptr git_repository; 
                               author: ptr git_signature;
                               committer: ptr git_signature;
                               message_encoding: cstring; message: cstring;
@@ -427,9 +428,9 @@ proc git_commit_create_buffer*(`out`: ptr git_buf; repo: ptr git_repository;
 ##  @return 0 or an error code
 ## 
 
-proc git_commit_create_with_signature*(`out`: ptr git_oid; repo: ptr git_repository;
+proc git_commit_create_with_signature*(`out`: ptr git_oid; repo: ptr git_repository; 
                                       commit_content: cstring; signature: cstring;
-                                      signature_field: cstring): cint
+                                      signature_field: cstring): cint {.importc.}
 ## *
 ##  Create an in-memory copy of a commit. The copy must be explicitly
 ##  free'd or it will leak.
@@ -438,5 +439,5 @@ proc git_commit_create_with_signature*(`out`: ptr git_oid; repo: ptr git_reposit
 ##  @param source Original commit to copy
 ## 
 
-proc git_commit_dup*(`out`: ptr ptr git_commit; source: ptr git_commit): cint
+proc git_commit_dup*(`out`: ptr ptr git_commit; source: ptr git_commit): cint  {.importc.}
 ## * @}

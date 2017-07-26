@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types, oid
 
@@ -23,9 +24,9 @@ import
 ##  @param progress_cb_payload payload for the progress callback
 ## 
 
-proc git_indexer_new*(`out`: ptr ptr git_indexer; path: cstring; mode: cuint;
+proc git_indexer_new*(`out`: ptr ptr git_indexer; path: cstring; mode: cuint; 
                      odb: ptr git_odb; progress_cb: git_transfer_progress_cb;
-                     progress_cb_payload: pointer): cint
+                     progress_cb_payload: pointer): cint {.importc.}
 ## *
 ##  Add data to the indexer
 ## 
@@ -35,8 +36,8 @@ proc git_indexer_new*(`out`: ptr ptr git_indexer; path: cstring; mode: cuint;
 ##  @param stats stat storage
 ## 
 
-proc git_indexer_append*(idx: ptr git_indexer; data: pointer; size: csize;
-                        stats: ptr git_transfer_progress): cint
+proc git_indexer_append*(idx: ptr git_indexer; data: pointer; size: csize; 
+                        stats: ptr git_transfer_progress): cint {.importc.}
 ## *
 ##  Finalize the pack and index
 ## 
@@ -45,7 +46,7 @@ proc git_indexer_append*(idx: ptr git_indexer; data: pointer; size: csize;
 ##  @param idx the indexer
 ## 
 
-proc git_indexer_commit*(idx: ptr git_indexer; stats: ptr git_transfer_progress): cint
+proc git_indexer_commit*(idx: ptr git_indexer; stats: ptr git_transfer_progress): cint  {.importc.}
 ## *
 ##  Get the packfile's hash
 ## 
@@ -55,11 +56,11 @@ proc git_indexer_commit*(idx: ptr git_indexer; stats: ptr git_transfer_progress)
 ##  @param idx the indexer instance
 ## 
 
-proc git_indexer_hash*(idx: ptr git_indexer): ptr git_oid
+proc git_indexer_hash*(idx: ptr git_indexer): ptr git_oid  {.importc.}
 ## *
 ##  Free the indexer and its resources
 ## 
 ##  @param idx the indexer to free
 ## 
 
-proc git_indexer_free*(idx: ptr git_indexer)
+proc git_indexer_free*(idx: ptr git_indexer)  {.importc.}

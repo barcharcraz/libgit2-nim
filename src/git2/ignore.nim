@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types
 
@@ -32,7 +33,7 @@ import
 ##  @return 0 on success
 ## 
 
-proc git_ignore_add_rule*(repo: ptr git_repository; rules: cstring): cint
+proc git_ignore_add_rule*(repo: ptr git_repository; rules: cstring): cint  {.importc.}
 ## *
 ##  Clear ignore rules that were explicitly added.
 ## 
@@ -45,7 +46,7 @@ proc git_ignore_add_rule*(repo: ptr git_repository; rules: cstring): cint
 ##  @return 0 on success
 ## 
 
-proc git_ignore_clear_internal_rules*(repo: ptr git_repository): cint
+proc git_ignore_clear_internal_rules*(repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Test if the ignore rules apply to a given path.
 ## 
@@ -63,5 +64,5 @@ proc git_ignore_clear_internal_rules*(repo: ptr git_repository): cint
 ##          of whether it exists or not), or an error < 0 if they could not.
 ## 
 
-proc git_ignore_path_is_ignored*(ignored: ptr cint; repo: ptr git_repository;
-                                path: cstring): cint
+proc git_ignore_path_is_ignored*(ignored: ptr cint; repo: ptr git_repository; 
+                                path: cstring): cint {.importc.}

@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, oid, types
 
@@ -54,6 +55,6 @@ type
 ## 
 
 type
-  git_headlist_cb* = proc (rhead: ptr git_remote_head; payload: pointer): cint
+  git_headlist_cb* = proc (rhead: ptr git_remote_head; payload: pointer): cint  {.importc.}
 
 ## * @}

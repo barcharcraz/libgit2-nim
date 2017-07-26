@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types, oid, g_object, buffer
 
@@ -25,7 +26,7 @@ import
 ##  @return 0 or an error code
 ## 
 
-proc git_blob_lookup*(blob: ptr ptr git_blob; repo: ptr git_repository; id: ptr git_oid): cint
+proc git_blob_lookup*(blob: ptr ptr git_blob; repo: ptr git_repository; id: ptr git_oid): cint  {.importc.}
 ## *
 ##  Lookup a blob object from a repository,
 ##  given a prefix of its identifier (short id).
@@ -39,8 +40,8 @@ proc git_blob_lookup*(blob: ptr ptr git_blob; repo: ptr git_repository; id: ptr 
 ##  @return 0 or an error code
 ## 
 
-proc git_blob_lookup_prefix*(blob: ptr ptr git_blob; repo: ptr git_repository;
-                            id: ptr git_oid; len: csize): cint
+proc git_blob_lookup_prefix*(blob: ptr ptr git_blob; repo: ptr git_repository; 
+                            id: ptr git_oid; len: csize): cint {.importc.}
 ## *
 ##  Close an open blob
 ## 
@@ -53,7 +54,7 @@ proc git_blob_lookup_prefix*(blob: ptr ptr git_blob; repo: ptr git_repository;
 ##  @param blob the blob to close
 ## 
 
-proc git_blob_free*(blob: ptr git_blob)
+proc git_blob_free*(blob: ptr git_blob)  {.importc.}
 ## *
 ##  Get the id of a blob.
 ## 
@@ -61,7 +62,7 @@ proc git_blob_free*(blob: ptr git_blob)
 ##  @return SHA1 hash for this blob.
 ## 
 
-proc git_blob_id*(blob: ptr git_blob): ptr git_oid
+proc git_blob_id*(blob: ptr git_blob): ptr git_oid  {.importc.}
 ## *
 ##  Get the repository that contains the blob.
 ## 
@@ -69,7 +70,7 @@ proc git_blob_id*(blob: ptr git_blob): ptr git_oid
 ##  @return Repository that contains this blob.
 ## 
 
-proc git_blob_owner*(blob: ptr git_blob): ptr git_repository
+proc git_blob_owner*(blob: ptr git_blob): ptr git_repository  {.importc.}
 ## *
 ##  Get a read-only buffer with the raw content of a blob.
 ## 
@@ -82,7 +83,7 @@ proc git_blob_owner*(blob: ptr git_blob): ptr git_repository
 ##  @return the pointer
 ## 
 
-proc git_blob_rawcontent*(blob: ptr git_blob): pointer
+proc git_blob_rawcontent*(blob: ptr git_blob): pointer  {.importc.}
 ## *
 ##  Get the size in bytes of the contents of a blob
 ## 
@@ -90,7 +91,7 @@ proc git_blob_rawcontent*(blob: ptr git_blob): pointer
 ##  @return size on bytes
 ## 
 
-proc git_blob_rawsize*(blob: ptr git_blob): git_off_t
+proc git_blob_rawsize*(blob: ptr git_blob): git_off_t  {.importc.}
 ## *
 ##  Get a buffer with the filtered content of a blob.
 ## 
@@ -115,8 +116,8 @@ proc git_blob_rawsize*(blob: ptr git_blob): git_off_t
 ##  @return 0 on success or an error code
 ## 
 
-proc git_blob_filtered_content*(`out`: ptr git_buf; blob: ptr git_blob;
-                               as_path: cstring; check_for_binary_data: cint): cint
+proc git_blob_filtered_content*(`out`: ptr git_buf; blob: ptr git_blob; 
+                               as_path: cstring; check_for_binary_data: cint): cint {.importc.}
 ## *
 ##  Read a file from the working folder of a repository
 ##  and write it to the Object Database as a loose blob
@@ -129,8 +130,8 @@ proc git_blob_filtered_content*(`out`: ptr git_buf; blob: ptr git_blob;
 ##  @return 0 or an error code
 ## 
 
-proc git_blob_create_fromworkdir*(id: ptr git_oid; repo: ptr git_repository;
-                                 relative_path: cstring): cint
+proc git_blob_create_fromworkdir*(id: ptr git_oid; repo: ptr git_repository; 
+                                 relative_path: cstring): cint {.importc.}
 ## *
 ##  Read a file from the filesystem and write its content
 ##  to the Object Database as a loose blob
@@ -142,7 +143,7 @@ proc git_blob_create_fromworkdir*(id: ptr git_oid; repo: ptr git_repository;
 ##  @return 0 or an error code
 ## 
 
-proc git_blob_create_fromdisk*(id: ptr git_oid; repo: ptr git_repository; path: cstring): cint
+proc git_blob_create_fromdisk*(id: ptr git_oid; repo: ptr git_repository; path: cstring): cint  {.importc.}
 ## *
 ##  Create a stream to write a new blob into the object db
 ## 
@@ -169,8 +170,8 @@ proc git_blob_create_fromdisk*(id: ptr git_oid; repo: ptr git_repository; path: 
 ##  @return 0 or error code
 ## 
 
-proc git_blob_create_fromstream*(`out`: ptr ptr git_writestream;
-                                repo: ptr git_repository; hintpath: cstring): cint
+proc git_blob_create_fromstream*(`out`: ptr ptr git_writestream; 
+                                repo: ptr git_repository; hintpath: cstring): cint {.importc.}
 ## *
 ##  Close the stream and write the blob to the object db
 ## 
@@ -181,8 +182,8 @@ proc git_blob_create_fromstream*(`out`: ptr ptr git_writestream;
 ##  @return 0 or an error code
 ## 
 
-proc git_blob_create_fromstream_commit*(`out`: ptr git_oid;
-                                       stream: ptr git_writestream): cint
+proc git_blob_create_fromstream_commit*(`out`: ptr git_oid; 
+                                       stream: ptr git_writestream): cint {.importc.}
 ## *
 ##  Write an in-memory buffer to the ODB as a blob
 ## 
@@ -193,8 +194,8 @@ proc git_blob_create_fromstream_commit*(`out`: ptr git_oid;
 ##  @return 0 or an error code
 ## 
 
-proc git_blob_create_frombuffer*(id: ptr git_oid; repo: ptr git_repository;
-                                buffer: pointer; len: csize): cint
+proc git_blob_create_frombuffer*(id: ptr git_oid; repo: ptr git_repository; 
+                                buffer: pointer; len: csize): cint {.importc.}
 ## *
 ##  Determine if the blob content is most certainly binary or not.
 ## 
@@ -207,7 +208,7 @@ proc git_blob_create_frombuffer*(id: ptr git_oid; repo: ptr git_repository;
 ##  as binary; 0 otherwise.
 ## 
 
-proc git_blob_is_binary*(blob: ptr git_blob): cint
+proc git_blob_is_binary*(blob: ptr git_blob): cint  {.importc.}
 ## *
 ##  Create an in-memory copy of a blob. The copy must be explicitly
 ##  free'd or it will leak.
@@ -216,5 +217,5 @@ proc git_blob_is_binary*(blob: ptr git_blob): cint
 ##  @param source Original object to copy
 ## 
 
-proc git_blob_dup*(`out`: ptr ptr git_blob; source: ptr git_blob): cint
+proc git_blob_dup*(`out`: ptr ptr git_blob; source: ptr git_blob): cint  {.importc.}
 ## * @}

@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   indexer, net, types
 
@@ -19,8 +20,8 @@ import
 ## * Signature of a function which creates a transport
 
 type
-  git_transport_cb* = proc (`out`: ptr ptr git_transport; owner: ptr git_remote;
-                         param: pointer): cint
+  git_transport_cb* = proc (`out`: ptr ptr git_transport; owner: ptr git_remote; 
+                         param: pointer): cint {.importc.}
 
 ## *
 ##  Type of SSH host fingerprint
@@ -98,7 +99,7 @@ type                          ##  git_cred_userpass_plaintext
 type
   git_cred* {.bycopy.} = object
     credtype*: git_credtype_t
-    free*: proc (cred: ptr git_cred)
+    free*: proc (cred: ptr git_cred) 
 
 
 ## * A plaintext username and password
@@ -117,14 +118,14 @@ type
 
 when not defined(LIBSSH2_VERSION):
   type
-    LIBSSH2_SESSION* = _LIBSSH2_SESSION
-    LIBSSH2_USERAUTH_KBDINT_PROMPT* = _LIBSSH2_USERAUTH_KBDINT_PROMPT
-    LIBSSH2_USERAUTH_KBDINT_RESPONSE* = _LIBSSH2_USERAUTH_KBDINT_RESPONSE
+    LIBSSH2_SESSION* = object
+    LIBSSH2_USERAUTH_KBDINT_PROMPT* = object
+    LIBSSH2_USERAUTH_KBDINT_RESPONSE* = object
 type
-  git_cred_sign_callback* = proc (session: ptr LIBSSH2_SESSION; sig: ptr ptr cuchar;
+  git_cred_sign_callback* = proc (session: ptr LIBSSH2_SESSION; sig: ptr ptr cuchar; 
                                sig_len: ptr csize; data: ptr cuchar; data_len: csize;
-                               abstract: ptr pointer): cint
-  git_cred_ssh_interactive_callback* = proc (name: cstring; name_len: cint;
+                               abstract: ptr pointer): cint {.importc.}
+  git_cred_ssh_interactive_callback* = proc (name: cstring; name_len: cint; 
       instruction: cstring; instruction_len: cint; num_prompts: cint;
       prompts: ptr LIBSSH2_USERAUTH_KBDINT_PROMPT;
       responses: ptr LIBSSH2_USERAUTH_KBDINT_RESPONSE; abstract: ptr pointer)
@@ -188,7 +189,7 @@ type
 ##  @return 1 if the credential object has non-NULL username, 0 otherwise
 ## 
 
-proc git_cred_has_username*(cred: ptr git_cred): cint
+proc git_cred_has_username*(cred: ptr git_cred): cint  {.importc.}
 ## *
 ##  Create a new plain-text username and password credential object.
 ##  The supplied credential parameter will be internally duplicated.
@@ -199,8 +200,8 @@ proc git_cred_has_username*(cred: ptr git_cred): cint
 ##  @return 0 for success or an error code for failure
 ## 
 
-proc git_cred_userpass_plaintext_new*(`out`: ptr ptr git_cred; username: cstring;
-                                     password: cstring): cint
+proc git_cred_userpass_plaintext_new*(`out`: ptr ptr git_cred; username: cstring; 
+                                     password: cstring): cint {.importc.}
 ## *
 ##  Create a new passphrase-protected ssh key credential object.
 ##  The supplied credential parameter will be internally duplicated.
@@ -213,9 +214,9 @@ proc git_cred_userpass_plaintext_new*(`out`: ptr ptr git_cred; username: cstring
 ##  @return 0 for success or an error code for failure
 ## 
 
-proc git_cred_ssh_key_new*(`out`: ptr ptr git_cred; username: cstring;
+proc git_cred_ssh_key_new*(`out`: ptr ptr git_cred; username: cstring; 
                           publickey: cstring; privatekey: cstring;
-                          passphrase: cstring): cint
+                          passphrase: cstring): cint {.importc.}
 ## *
 ##  Create a new ssh keyboard-interactive based credential object.
 ##  The supplied credential parameter will be internally duplicated.
@@ -226,8 +227,8 @@ proc git_cred_ssh_key_new*(`out`: ptr ptr git_cred; username: cstring;
 ##  @return 0 for success or an error code for failure.
 ## 
 
-proc git_cred_ssh_interactive_new*(`out`: ptr ptr git_cred; username: cstring;
-    prompt_callback: git_cred_ssh_interactive_callback; payload: pointer): cint
+proc git_cred_ssh_interactive_new*(`out`: ptr ptr git_cred; username: cstring; 
+    prompt_callback: git_cred_ssh_interactive_callback; payload: pointer): cint {.importc.}
 ## *
 ##  Create a new ssh key credential object used for querying an ssh-agent.
 ##  The supplied credential parameter will be internally duplicated.
@@ -237,7 +238,7 @@ proc git_cred_ssh_interactive_new*(`out`: ptr ptr git_cred; username: cstring;
 ##  @return 0 for success or an error code for failure
 ## 
 
-proc git_cred_ssh_key_from_agent*(`out`: ptr ptr git_cred; username: cstring): cint
+proc git_cred_ssh_key_from_agent*(`out`: ptr ptr git_cred; username: cstring): cint  {.importc.}
 ## *
 ##  Create an ssh key credential with a custom signing function.
 ## 
@@ -257,7 +258,7 @@ proc git_cred_ssh_key_from_agent*(`out`: ptr ptr git_cred; username: cstring): c
 ##  @return 0 for success or an error code for failure
 ## 
 
-proc git_cred_ssh_custom_new*(`out`: ptr ptr git_cred; username: cstring;
+proc git_cred_ssh_custom_new*(`out`: ptr ptr git_cred; username: cstring; 
                              publickey: cstring; publickey_len: csize;
                              sign_callback: git_cred_sign_callback;
                              payload: pointer): cint
@@ -268,7 +269,7 @@ proc git_cred_ssh_custom_new*(`out`: ptr ptr git_cred; username: cstring;
 ##  @return 0 for success or an error code for failure
 ## 
 
-proc git_cred_default_new*(`out`: ptr ptr git_cred): cint
+proc git_cred_default_new*(`out`: ptr ptr git_cred): cint  {.importc.}
 ## *
 ##  Create a credential to specify a username.
 ## 
@@ -276,7 +277,7 @@ proc git_cred_default_new*(`out`: ptr ptr git_cred): cint
 ##  none is specified in the url.
 ## 
 
-proc git_cred_username_new*(cred: ptr ptr git_cred; username: cstring): cint
+proc git_cred_username_new*(cred: ptr ptr git_cred; username: cstring): cint  {.importc.}
 ## *
 ##  Create a new ssh key credential object reading the keys from memory.
 ## 
@@ -288,9 +289,9 @@ proc git_cred_username_new*(cred: ptr ptr git_cred; username: cstring): cint
 ##  @return 0 for success or an error code for failure
 ## 
 
-proc git_cred_ssh_key_memory_new*(`out`: ptr ptr git_cred; username: cstring;
+proc git_cred_ssh_key_memory_new*(`out`: ptr ptr git_cred; username: cstring; 
                                  publickey: cstring; privatekey: cstring;
-                                 passphrase: cstring): cint
+                                 passphrase: cstring): cint {.importc.}
 ## *
 ##  Free a credential.
 ## 
@@ -300,7 +301,7 @@ proc git_cred_ssh_key_memory_new*(`out`: ptr ptr git_cred; username: cstring;
 ##  @param cred the object to free
 ## 
 
-proc git_cred_free*(cred: ptr git_cred)
+proc git_cred_free*(cred: ptr git_cred)  {.importc.}
 ## *
 ##  Signature of a function which acquires a credential object.
 ## 
@@ -315,8 +316,8 @@ proc git_cred_free*(cred: ptr git_cred)
 ## 
 
 type
-  git_cred_acquire_cb* = proc (cred: ptr ptr git_cred; url: cstring;
+  git_cred_acquire_cb* = proc (cred: ptr ptr git_cred; url: cstring; 
                             username_from_url: cstring; allowed_types: cuint;
-                            payload: pointer): cint
+                            payload: pointer): cint {.importc.}
 
 ## * @}

@@ -52,8 +52,8 @@ type                          ## *
 ##  error code.
 ## 
 
-proc git_hashsig_create*(`out`: ptr ptr git_hashsig; buf: cstring; buflen: csize;
-                        opts: git_hashsig_option_t): cint
+proc git_hashsig_create*(`out`: ptr ptr git_hashsig; buf: cstring; buflen: csize; 
+                        opts: git_hashsig_option_t): cint {.importc.}
 ## *
 ##  Compute a similarity signature for a text file
 ## 
@@ -68,15 +68,15 @@ proc git_hashsig_create*(`out`: ptr ptr git_hashsig; buf: cstring; buflen: csize
 ##  error code.
 ## 
 
-proc git_hashsig_create_fromfile*(`out`: ptr ptr git_hashsig; path: cstring;
-                                 opts: git_hashsig_option_t): cint
+proc git_hashsig_create_fromfile*(`out`: ptr ptr git_hashsig; path: cstring; 
+                                 opts: git_hashsig_option_t): cint {.importc.}
 ## *
 ##  Release memory for a content similarity signature
 ## 
 ##  @param sig The similarity signature to free.
 ## 
 
-proc git_hashsig_free*(sig: ptr git_hashsig)
+proc git_hashsig_free*(sig: ptr git_hashsig)  {.importc.}
 ## *
 ##  Measure similarity score between two similarity signatures
 ## 
@@ -85,4 +85,4 @@ proc git_hashsig_free*(sig: ptr git_hashsig)
 ##  @return [0 to 100] on success as the similarity score, or error code.
 ## 
 
-proc git_hashsig_compare*(a: ptr git_hashsig; b: ptr git_hashsig): cint
+proc git_hashsig_compare*(a: ptr git_hashsig; b: ptr git_hashsig): cint  {.importc.}

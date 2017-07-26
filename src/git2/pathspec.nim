@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types, strarray, diff
 
@@ -57,14 +58,14 @@ type
 ##  @return 0 on success, <0 on failure
 ## 
 
-proc git_pathspec_new*(`out`: ptr ptr git_pathspec; pathspec: ptr git_strarray): cint
+proc git_pathspec_new*(`out`: ptr ptr git_pathspec; pathspec: ptr git_strarray): cint  {.importc.}
 ## *
 ##  Free a pathspec
 ## 
 ##  @param ps The compiled pathspec
 ## 
 
-proc git_pathspec_free*(ps: ptr git_pathspec)
+proc git_pathspec_free*(ps: ptr git_pathspec)  {.importc.}
 ## *
 ##  Try to match a path against a pathspec
 ## 
@@ -79,7 +80,7 @@ proc git_pathspec_free*(ps: ptr git_pathspec)
 ##  @return 1 is path matches spec, 0 if it does not
 ## 
 
-proc git_pathspec_matches_path*(ps: ptr git_pathspec; flags: uint32; path: cstring): cint
+proc git_pathspec_matches_path*(ps: ptr git_pathspec; flags: uint32; path: cstring): cint  {.importc.}
 ## *
 ##  Match a pathspec against the working directory of a repository.
 ## 
@@ -103,9 +104,9 @@ proc git_pathspec_matches_path*(ps: ptr git_pathspec; flags: uint32; path: cstri
 ##          the GIT_PATHSPEC_NO_MATCH_ERROR flag was given
 ## 
 
-proc git_pathspec_match_workdir*(`out`: ptr ptr git_pathspec_match_list;
+proc git_pathspec_match_workdir*(`out`: ptr ptr git_pathspec_match_list; 
                                 repo: ptr git_repository; flags: uint32;
-                                ps: ptr git_pathspec): cint
+                                ps: ptr git_pathspec): cint {.importc.}
 ## *
 ##  Match a pathspec against entries in an index.
 ## 
@@ -130,9 +131,9 @@ proc git_pathspec_match_workdir*(`out`: ptr ptr git_pathspec_match_list;
 ##          the GIT_PATHSPEC_NO_MATCH_ERROR flag is used
 ## 
 
-proc git_pathspec_match_index*(`out`: ptr ptr git_pathspec_match_list;
+proc git_pathspec_match_index*(`out`: ptr ptr git_pathspec_match_list; 
                               index: ptr git_index; flags: uint32;
-                              ps: ptr git_pathspec): cint
+                              ps: ptr git_pathspec): cint {.importc.}
 ## *
 ##  Match a pathspec against files in a tree.
 ## 
@@ -152,9 +153,9 @@ proc git_pathspec_match_index*(`out`: ptr ptr git_pathspec_match_list;
 ##          the GIT_PATHSPEC_NO_MATCH_ERROR flag is used
 ## 
 
-proc git_pathspec_match_tree*(`out`: ptr ptr git_pathspec_match_list;
+proc git_pathspec_match_tree*(`out`: ptr ptr git_pathspec_match_list; 
                              tree: ptr git_tree; flags: uint32;
-                             ps: ptr git_pathspec): cint
+                             ps: ptr git_pathspec): cint {.importc.}
 ## *
 ##  Match a pathspec against files in a diff list.
 ## 
@@ -174,16 +175,16 @@ proc git_pathspec_match_tree*(`out`: ptr ptr git_pathspec_match_list;
 ##          the GIT_PATHSPEC_NO_MATCH_ERROR flag is used
 ## 
 
-proc git_pathspec_match_diff*(`out`: ptr ptr git_pathspec_match_list;
+proc git_pathspec_match_diff*(`out`: ptr ptr git_pathspec_match_list; 
                              diff: ptr git_diff; flags: uint32;
-                             ps: ptr git_pathspec): cint
+                             ps: ptr git_pathspec): cint {.importc.}
 ## *
 ##  Free memory associates with a git_pathspec_match_list
 ## 
 ##  @param m The git_pathspec_match_list to be freed
 ## 
 
-proc git_pathspec_match_list_free*(m: ptr git_pathspec_match_list)
+proc git_pathspec_match_list_free*(m: ptr git_pathspec_match_list)  {.importc.}
 ## *
 ##  Get the number of items in a match list.
 ## 
@@ -191,7 +192,7 @@ proc git_pathspec_match_list_free*(m: ptr git_pathspec_match_list)
 ##  @return Number of items in match list
 ## 
 
-proc git_pathspec_match_list_entrycount*(m: ptr git_pathspec_match_list): csize
+proc git_pathspec_match_list_entrycount*(m: ptr git_pathspec_match_list): csize  {.importc.}
 ## *
 ##  Get a matching filename by position.
 ## 
@@ -203,7 +204,7 @@ proc git_pathspec_match_list_entrycount*(m: ptr git_pathspec_match_list): csize
 ##  @return The filename of the match
 ## 
 
-proc git_pathspec_match_list_entry*(m: ptr git_pathspec_match_list; pos: csize): cstring
+proc git_pathspec_match_list_entry*(m: ptr git_pathspec_match_list; pos: csize): cstring  {.importc.}
 ## *
 ##  Get a matching diff delta by position.
 ## 
@@ -215,7 +216,7 @@ proc git_pathspec_match_list_entry*(m: ptr git_pathspec_match_list; pos: csize):
 ##  @return The filename of the match
 ## 
 
-proc git_pathspec_match_list_diff_entry*(m: ptr git_pathspec_match_list; pos: csize): ptr git_diff_delta
+proc git_pathspec_match_list_diff_entry*(m: ptr git_pathspec_match_list; pos: csize): ptr git_diff_delta  {.importc.}
 ## *
 ##  Get the number of pathspec items that did not match.
 ## 
@@ -226,7 +227,7 @@ proc git_pathspec_match_list_diff_entry*(m: ptr git_pathspec_match_list; pos: cs
 ##  @return Number of items in original pathspec that had no matches
 ## 
 
-proc git_pathspec_match_list_failed_entrycount*(m: ptr git_pathspec_match_list): csize
+proc git_pathspec_match_list_failed_entrycount*(m: ptr git_pathspec_match_list): csize  {.importc.}
 ## *
 ##  Get an original pathspec string that had no matches.
 ## 
@@ -237,5 +238,5 @@ proc git_pathspec_match_list_failed_entrycount*(m: ptr git_pathspec_match_list):
 ##  @return The pathspec pattern that didn't match anything
 ## 
 
-proc git_pathspec_match_list_failed_entry*(m: ptr git_pathspec_match_list;
-    pos: csize): cstring
+proc git_pathspec_match_list_failed_entry*(m: ptr git_pathspec_match_list; 
+    pos: csize): cstring {.importc.}

@@ -28,15 +28,15 @@ type
     version*: cint
     encrypted*: cint
     proxy_support*: cint
-    connect*: proc (a2: ptr git_stream): cint
-    certificate*: proc (a2: ptr ptr git_cert; a3: ptr git_stream): cint
-    set_proxy*: proc (a2: ptr git_stream; proxy_opts: ptr git_proxy_options): cint
-    read*: proc (a2: ptr git_stream; a3: pointer; a4: csize): ssize_t
-    write*: proc (a2: ptr git_stream; a3: cstring; a4: csize; a5: cint): ssize_t
-    close*: proc (a2: ptr git_stream): cint
-    free*: proc (a2: ptr git_stream)
+    connect*: proc (a2: ptr git_stream): cint 
+    certificate*: proc (a2: ptr ptr git_cert; a3: ptr git_stream): cint 
+    set_proxy*: proc (a2: ptr git_stream; proxy_opts: ptr git_proxy_options): cint  {.importc.}
+    read*: proc (a2: ptr git_stream; a3: pointer; a4: csize): ssize_t 
+    write*: proc (a2: ptr git_stream; a3: cstring; a4: csize; a5: cint): ssize_t 
+    close*: proc (a2: ptr git_stream): cint  {.importc.}
+    free*: proc (a2: ptr git_stream) 
 
-  git_stream_cb* = proc (`out`: ptr ptr git_stream; host: cstring; port: cstring): cint
+  git_stream_cb* = proc (`out`: ptr ptr git_stream; host: cstring; port: cstring): cint  {.importc.}
 
 ## *
 ##  Register a TLS stream constructor for the library to use
@@ -48,4 +48,4 @@ type
 ##  @return 0 or an error code
 ## 
 
-proc git_stream_register_tls*(ctor: git_stream_cb): cint
+proc git_stream_register_tls*(ctor: git_stream_cb): cint  {.importc.}

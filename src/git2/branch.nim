@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, oid, types, buffer
 
@@ -44,8 +45,8 @@ import
 ##  pointing to the provided target commit.
 ## 
 
-proc git_branch_create*(`out`: ptr ptr git_reference; repo: ptr git_repository;
-                       branch_name: cstring; target: ptr git_commit; force: cint): cint
+proc git_branch_create*(`out`: ptr ptr git_reference; repo: ptr git_repository; 
+                       branch_name: cstring; target: ptr git_commit; force: cint): cint {.importc.}
 ## *
 ##  Create a new branch pointing at a target commit
 ## 
@@ -58,10 +59,10 @@ proc git_branch_create*(`out`: ptr ptr git_reference; repo: ptr git_repository;
 ##  @see git_branch_create
 ## 
 
-proc git_branch_create_from_annotated*(ref_out: ptr ptr git_reference;
+proc git_branch_create_from_annotated*(ref_out: ptr ptr git_reference; 
                                       repository: ptr git_repository;
                                       branch_name: cstring;
-                                      commit: ptr git_annotated_commit; force: cint): cint
+                                      commit: ptr git_annotated_commit; force: cint): cint {.importc.}
 ## *
 ##  Delete an existing branch reference.
 ## 
@@ -73,7 +74,7 @@ proc git_branch_create_from_annotated*(ref_out: ptr ptr git_reference;
 ##  @return 0 on success, or an error code.
 ## 
 
-proc git_branch_delete*(branch: ptr git_reference): cint
+proc git_branch_delete*(branch: ptr git_reference): cint  {.importc.}
 ## * Iterator type for branches
 
 
@@ -89,8 +90,8 @@ proc git_branch_delete*(branch: ptr git_reference): cint
 ##  @return 0 on success  or an error code
 ## 
 
-proc git_branch_iterator_new*(`out`: ptr ptr git_branch_iterator;
-                             repo: ptr git_repository; list_flags: git_branch_t): cint
+proc git_branch_iterator_new*(`out`: ptr ptr git_branch_iterator; 
+                             repo: ptr git_repository; list_flags: git_branch_t): cint {.importc.}
 ## *
 ##  Retrieve the next branch from the iterator
 ## 
@@ -100,15 +101,15 @@ proc git_branch_iterator_new*(`out`: ptr ptr git_branch_iterator;
 ##  @return 0 on success, GIT_ITEROVER if there are no more branches or an error code.
 ## 
 
-proc git_branch_next*(`out`: ptr ptr git_reference; out_type: ptr git_branch_t;
-                     iter: ptr git_branch_iterator): cint
+proc git_branch_next*(`out`: ptr ptr git_reference; out_type: ptr git_branch_t; 
+                     iter: ptr git_branch_iterator): cint {.importc.}
 ## *
 ##  Free a branch iterator
 ## 
 ##  @param iter the iterator to free
 ## 
 
-proc git_branch_iterator_free*(iter: ptr git_branch_iterator)
+proc git_branch_iterator_free*(iter: ptr git_branch_iterator)  {.importc.}
 ## *
 ##  Move/rename an existing local branch reference.
 ## 
@@ -125,8 +126,8 @@ proc git_branch_iterator_free*(iter: ptr git_branch_iterator)
 ##  @return 0 on success, GIT_EINVALIDSPEC or an error code.
 ## 
 
-proc git_branch_move*(`out`: ptr ptr git_reference; branch: ptr git_reference;
-                     new_branch_name: cstring; force: cint): cint
+proc git_branch_move*(`out`: ptr ptr git_reference; branch: ptr git_reference; 
+                     new_branch_name: cstring; force: cint): cint {.importc.}
 ## *
 ##  Lookup a branch by its name in a repository.
 ## 
@@ -149,8 +150,8 @@ proc git_branch_move*(`out`: ptr ptr git_reference; branch: ptr git_reference;
 ##  exists, GIT_EINVALIDSPEC, otherwise an error code.
 ## 
 
-proc git_branch_lookup*(`out`: ptr ptr git_reference; repo: ptr git_repository;
-                       branch_name: cstring; branch_type: git_branch_t): cint
+proc git_branch_lookup*(`out`: ptr ptr git_reference; repo: ptr git_repository; 
+                       branch_name: cstring; branch_type: git_branch_t): cint {.importc.}
 ## *
 ##  Return the name of the given local or remote branch.
 ## 
@@ -167,7 +168,7 @@ proc git_branch_lookup*(`out`: ptr ptr git_reference; repo: ptr git_repository;
 ##   ref is no local or remote branch).
 ## 
 
-proc git_branch_name*(`out`: cstringArray; `ref`: ptr git_reference): cint
+proc git_branch_name*(`out`: cstringArray; `ref`: ptr git_reference): cint  {.importc.}
 ## *
 ##  Return the reference supporting the remote tracking branch,
 ##  given a local branch reference.
@@ -181,7 +182,7 @@ proc git_branch_name*(`out`: cstringArray; `ref`: ptr git_reference): cint
 ##  reference exists, otherwise an error code.
 ## 
 
-proc git_branch_upstream*(`out`: ptr ptr git_reference; branch: ptr git_reference): cint
+proc git_branch_upstream*(`out`: ptr ptr git_reference; branch: ptr git_reference): cint  {.importc.}
 ## *
 ##  Set the upstream configuration for a given local branch
 ## 
@@ -193,7 +194,7 @@ proc git_branch_upstream*(`out`: ptr ptr git_reference; branch: ptr git_referenc
 ##  @return 0 or an error code
 ## 
 
-proc git_branch_set_upstream*(branch: ptr git_reference; upstream_name: cstring): cint
+proc git_branch_set_upstream*(branch: ptr git_reference; upstream_name: cstring): cint  {.importc.}
 ## *
 ##  Return the name of the reference supporting the remote tracking branch,
 ##  given the name of a local branch reference.
@@ -209,8 +210,8 @@ proc git_branch_set_upstream*(branch: ptr git_reference; upstream_name: cstring)
 ##      otherwise an error code.
 ## 
 
-proc git_branch_upstream_name*(`out`: ptr git_buf; repo: ptr git_repository;
-                              refname: cstring): cint
+proc git_branch_upstream_name*(`out`: ptr git_buf; repo: ptr git_repository; 
+                              refname: cstring): cint {.importc.}
 ## *
 ##  Determine if the current local branch is pointed at by HEAD.
 ## 
@@ -220,7 +221,7 @@ proc git_branch_upstream_name*(`out`: ptr git_buf; repo: ptr git_repository;
 ##  error code otherwise.
 ## 
 
-proc git_branch_is_head*(branch: ptr git_reference): cint
+proc git_branch_is_head*(branch: ptr git_reference): cint  {.importc.}
 ## *
 ##  Determine if the current branch is checked out in any linked
 ##  repository.
@@ -231,7 +232,7 @@ proc git_branch_is_head*(branch: ptr git_reference): cint
 ##  error code otherwise.
 ## 
 
-proc git_branch_is_checked_out*(branch: ptr git_reference): cint
+proc git_branch_is_checked_out*(branch: ptr git_reference): cint  {.importc.}
 ## *
 ##  Return the name of remote that the remote tracking branch belongs to.
 ## 
@@ -247,8 +248,8 @@ proc git_branch_is_checked_out*(branch: ptr git_reference): cint
 ##      otherwise an error code.
 ## 
 
-proc git_branch_remote_name*(`out`: ptr git_buf; repo: ptr git_repository;
-                            canonical_branch_name: cstring): cint
+proc git_branch_remote_name*(`out`: ptr git_buf; repo: ptr git_repository; 
+                            canonical_branch_name: cstring): cint {.importc.}
 ## *
 ##  Retrieve the name fo the upstream remote of a local branch
 ## 
@@ -258,6 +259,6 @@ proc git_branch_remote_name*(`out`: ptr git_buf; repo: ptr git_repository;
 ##  @return 0 or an error code
 ## 
 
-proc git_branch_upstream_remote*(buf: ptr git_buf; repo: ptr git_repository;
-                                refname: cstring): cint
+proc git_branch_upstream_remote*(buf: ptr git_buf; repo: ptr git_repository; 
+                                refname: cstring): cint {.importc.}
 ## * @}

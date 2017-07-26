@@ -4,10 +4,11 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
-  common, types, oid, tree, refs
+  common, types, oid, tree, refs, strarray, buffer
 
 ## *
 ##  @file git2/diff.h
@@ -301,7 +302,7 @@ type
 ## 
 
 type
-  git_diff_notify_cb* = proc (diff_so_far: ptr git_diff;
+  git_diff_notify_cb* = proc (diff_so_far: ptr git_diff; 
                            delta_to_add: ptr git_diff_delta;
                            matched_pathspec: cstring; payload: pointer): cint
 
@@ -317,7 +318,7 @@ type
 ## 
 
 type
-  git_diff_progress_cb* = proc (diff_so_far: ptr git_diff; old_path: cstring;
+  git_diff_progress_cb* = proc (diff_so_far: ptr git_diff; old_path: cstring; 
                              new_path: cstring; payload: pointer): cint
 
 ## *
@@ -384,7 +385,7 @@ const
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_diff_init_options*(opts: ptr git_diff_options; version: cuint): cint
+proc git_diff_init_options*(opts: ptr git_diff_options; version: cuint): cint  {.importc.}
 ## *
 ##  When iterating over a diff, callback that will be made per file.
 ## 
@@ -394,7 +395,7 @@ proc git_diff_init_options*(opts: ptr git_diff_options; version: cuint): cint
 ## 
 
 type
-  git_diff_file_cb* = proc (delta: ptr git_diff_delta; progress: cfloat;
+  git_diff_file_cb* = proc (delta: ptr git_diff_delta; progress: cfloat; 
                          payload: pointer): cint
 
 const
@@ -446,7 +447,7 @@ type
 ## 
 
 type
-  git_diff_binary_cb* = proc (delta: ptr git_diff_delta; binary: ptr git_diff_binary;
+  git_diff_binary_cb* = proc (delta: ptr git_diff_delta; binary: ptr git_diff_binary; 
                            payload: pointer): cint
 
 ## *
@@ -468,7 +469,7 @@ type
 ## 
 
 type
-  git_diff_hunk_cb* = proc (delta: ptr git_diff_delta; hunk: ptr git_diff_hunk;
+  git_diff_hunk_cb* = proc (delta: ptr git_diff_delta; hunk: ptr git_diff_hunk; 
                          payload: pointer): cint
 
 ## *
@@ -482,16 +483,20 @@ type
 ## 
 
 type                          ##  These values will be sent to `git_diff_line_cb` along with the line
-  git_diff_line_t* = enum
-    GIT_DIFF_LINE_CONTEXT = ' ', GIT_DIFF_LINE_ADDITION = '+',
-    GIT_DIFF_LINE_DELETION = '-', GIT_DIFF_LINE_CONTEXT_EOFNL = '=', ## *< Both files have no LF at end
-    GIT_DIFF_LINE_ADD_EOFNL = '>', ## *< Old has no LF at end, new does
-    GIT_DIFF_LINE_DEL_EOFNL = '<', ## *< Old has LF at end, new does not
+  git_diff_line_t* = int32
+const
+    GIT_DIFF_LINE_CONTEXT* = ' ' 
+    GIT_DIFF_LINE_ADDITION* = '+'
+    GIT_DIFF_LINE_DELETION* = '-'
+    GIT_DIFF_LINE_CONTEXT_EOFNL* = '=' ## *< Both files have no LF at end
+    GIT_DIFF_LINE_ADD_EOFNL* = '>' ## *< Old has no LF at end, new does
+    GIT_DIFF_LINE_DEL_EOFNL* = '<' ## *< Old has LF at end, new does not
                                 ##  The following values will only be sent to a `git_diff_line_cb` when
                                 ##  the content of a diff is being formatted through `git_diff_print`.
                                 ## 
-    GIT_DIFF_LINE_FILE_HDR = 'F', GIT_DIFF_LINE_HUNK_HDR = 'H',
-    GIT_DIFF_LINE_BINARY = 'B'
+    GIT_DIFF_LINE_FILE_HDR* = 'F'
+    GIT_DIFF_LINE_HUNK_HDR* = 'H'
+    GIT_DIFF_LINE_BINARY* = 'B'
 
 
 ## *
@@ -519,8 +524,8 @@ type
 ## 
 
 type
-  git_diff_line_cb* = proc (delta: ptr git_diff_delta; hunk: ptr git_diff_hunk;
-                         line: ptr git_diff_line; payload: pointer): cint ## *< delta that contains this data
+  git_diff_line_cb* = proc (delta: ptr git_diff_delta; hunk: ptr git_diff_hunk; 
+                         line: ptr git_diff_line; payload: pointer): cint ## *< delta that contains this data {.importc.}
                                                                     ## *< hunk containing this data
                                                                     ## *< line data
 
@@ -542,8 +547,8 @@ type                          ## * Obey `diff.renames`. Overridden by any other 
     GIT_DIFF_FIND_COPIES_FROM_UNMODIFIED = (1 shl 3), ## * Mark significant rewrites for split (`--break-rewrites=/M`)
     GIT_DIFF_FIND_REWRITES = (1 shl 4), ## * Actually split large rewrites into delete/add pairs
     GIT_DIFF_BREAK_REWRITES = (1 shl 5), ## * Mark rewrites for split and break into delete/add pairs
-    GIT_DIFF_FIND_AND_BREAK_REWRITES = (GIT_DIFF_FIND_REWRITES or
-        GIT_DIFF_BREAK_REWRITES), ## * Find renames/copies for UNTRACKED items in working directory.
+    GIT_DIFF_FIND_AND_BREAK_REWRITES = (ord(GIT_DIFF_FIND_REWRITES) or
+        ord(GIT_DIFF_BREAK_REWRITES)), ## * Find renames/copies for UNTRACKED items in working directory.
                                  ## 
                                  ##  For this to work correctly, use GIT_DIFF_INCLUDE_UNTRACKED when the
                                  ##  initial `git_diff` is being generated (and obviously the diff must
@@ -576,7 +581,7 @@ type                          ## * Obey `diff.renames`. Overridden by any other 
     GIT_DIFF_FIND_REMOVE_UNMODIFIED = (1 shl 16)
 
 const
-  GIT_DIFF_FIND_IGNORE_LEADING_WHITESPACE = GIT_DIFF_FIND_BY_CONFIG
+  GIT_DIFF_FIND_IGNORE_LEADING_WHITESPACE* = GIT_DIFF_FIND_BY_CONFIG
 
 ## *
 ##  Pluggable similarity metric
@@ -584,11 +589,11 @@ const
 
 type
   git_diff_similarity_metric* {.bycopy.} = object
-    file_signature*: proc (`out`: ptr pointer; file: ptr git_diff_file;
+    file_signature*: proc (`out`: ptr pointer; file: ptr git_diff_file; 
                          fullpath: cstring; payload: pointer): cint
-    buffer_signature*: proc (`out`: ptr pointer; file: ptr git_diff_file; buf: cstring;
+    buffer_signature*: proc (`out`: ptr pointer; file: ptr git_diff_file; buf: cstring; 
                            buflen: csize; payload: pointer): cint
-    free_signature*: proc (sig: pointer; payload: pointer)
+    free_signature*: proc (sig: pointer; payload: pointer) 
     similarity*: proc (score: ptr cint; siga: pointer; sigb: pointer; payload: pointer): cint
     payload*: pointer
 
@@ -644,7 +649,7 @@ const
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_diff_find_init_options*(opts: ptr git_diff_find_options; version: cuint): cint
+proc git_diff_find_init_options*(opts: ptr git_diff_find_options; version: cuint): cint  {.importc.}
 ## * @name Diff Generator Functions
 ## 
 ##  These are the functions you would use to create (or destroy) a
@@ -657,7 +662,7 @@ proc git_diff_find_init_options*(opts: ptr git_diff_find_options; version: cuint
 ##  @param diff The previously created diff; cannot be used after free.
 ## 
 
-proc git_diff_free*(diff: ptr git_diff)
+proc git_diff_free*(diff: ptr git_diff)  {.importc.}
 ## *
 ##  Create a diff with the difference between two tree objects.
 ## 
@@ -675,9 +680,9 @@ proc git_diff_free*(diff: ptr git_diff)
 ##  @param opts Structure with options to influence diff or NULL for defaults.
 ## 
 
-proc git_diff_tree_to_tree*(diff: ptr ptr git_diff; repo: ptr git_repository;
+proc git_diff_tree_to_tree*(diff: ptr ptr git_diff; repo: ptr git_repository; 
                            old_tree: ptr git_tree; new_tree: ptr git_tree;
-                           opts: ptr git_diff_options): cint
+                           opts: ptr git_diff_options): cint {.importc.}
 ## *< can be NULL for defaults
 ## *
 ##  Create a diff between a tree and repository index.
@@ -699,9 +704,9 @@ proc git_diff_tree_to_tree*(diff: ptr ptr git_diff; repo: ptr git_repository;
 ##  @param opts Structure with options to influence diff or NULL for defaults.
 ## 
 
-proc git_diff_tree_to_index*(diff: ptr ptr git_diff; repo: ptr git_repository;
+proc git_diff_tree_to_index*(diff: ptr ptr git_diff; repo: ptr git_repository; 
                             old_tree: ptr git_tree; index: ptr git_index;
-                            opts: ptr git_diff_options): cint
+                            opts: ptr git_diff_options): cint {.importc.}
 ## *< can be NULL for defaults
 ## *
 ##  Create a diff between the repository index and the workdir directory.
@@ -724,8 +729,8 @@ proc git_diff_tree_to_index*(diff: ptr ptr git_diff; repo: ptr git_repository;
 ##  @param opts Structure with options to influence diff or NULL for defaults.
 ## 
 
-proc git_diff_index_to_workdir*(diff: ptr ptr git_diff; repo: ptr git_repository;
-                               index: ptr git_index; opts: ptr git_diff_options): cint
+proc git_diff_index_to_workdir*(diff: ptr ptr git_diff; repo: ptr git_repository; 
+                               index: ptr git_index; opts: ptr git_diff_options): cint {.importc.}
 ## *< can be NULL for defaults
 ## *
 ##  Create a diff between a tree and the working directory.
@@ -751,8 +756,8 @@ proc git_diff_index_to_workdir*(diff: ptr ptr git_diff; repo: ptr git_repository
 ##  @param opts Structure with options to influence diff or NULL for defaults.
 ## 
 
-proc git_diff_tree_to_workdir*(diff: ptr ptr git_diff; repo: ptr git_repository;
-                              old_tree: ptr git_tree; opts: ptr git_diff_options): cint
+proc git_diff_tree_to_workdir*(diff: ptr ptr git_diff; repo: ptr git_repository; 
+                              old_tree: ptr git_tree; opts: ptr git_diff_options): cint {.importc.}
 ## *< can be NULL for defaults
 ## *
 ##  Create a diff between a tree and the working directory using index data
@@ -768,8 +773,8 @@ proc git_diff_tree_to_workdir*(diff: ptr ptr git_diff; repo: ptr git_repository;
 ##  @param opts Structure with options to influence diff or NULL for defaults.
 ## 
 
-proc git_diff_tree_to_workdir_with_index*(diff: ptr ptr git_diff;
-    repo: ptr git_repository; old_tree: ptr git_tree; opts: ptr git_diff_options): cint
+proc git_diff_tree_to_workdir_with_index*(diff: ptr ptr git_diff; 
+    repo: ptr git_repository; old_tree: ptr git_tree; opts: ptr git_diff_options): cint {.importc.}
 ## *< can be NULL for defaults
 ## *
 ##  Create a diff with the difference between two index objects.
@@ -784,9 +789,9 @@ proc git_diff_tree_to_workdir_with_index*(diff: ptr ptr git_diff;
 ##  @param opts Structure with options to influence diff or NULL for defaults.
 ## 
 
-proc git_diff_index_to_index*(diff: ptr ptr git_diff; repo: ptr git_repository;
+proc git_diff_index_to_index*(diff: ptr ptr git_diff; repo: ptr git_repository; 
                              old_index: ptr git_index; new_index: ptr git_index;
-                             opts: ptr git_diff_options): cint
+                             opts: ptr git_diff_options): cint {.importc.}
 ## *< can be NULL for defaults
 ## *
 ##  Merge one diff into another.
@@ -802,7 +807,7 @@ proc git_diff_index_to_index*(diff: ptr ptr git_diff; repo: ptr git_repository;
 ##  @param from Diff to merge.
 ## 
 
-proc git_diff_merge*(onto: ptr git_diff; `from`: ptr git_diff): cint
+proc git_diff_merge*(onto: ptr git_diff; `from`: ptr git_diff): cint  {.importc.}
 ## *
 ##  Transform a diff marking file renames, copies, etc.
 ## 
@@ -816,7 +821,7 @@ proc git_diff_merge*(onto: ptr git_diff; `from`: ptr git_diff): cint
 ##  @return 0 on success, -1 on failure
 ## 
 
-proc git_diff_find_similar*(diff: ptr git_diff; options: ptr git_diff_find_options): cint
+proc git_diff_find_similar*(diff: ptr git_diff; options: ptr git_diff_find_options): cint  {.importc.}
 ## *@}
 ## * @name Diff Processor Functions
 ## 
@@ -831,7 +836,7 @@ proc git_diff_find_similar*(diff: ptr git_diff; options: ptr git_diff_find_optio
 ##  @return Count of number of deltas in the list
 ## 
 
-proc git_diff_num_deltas*(diff: ptr git_diff): csize
+proc git_diff_num_deltas*(diff: ptr git_diff): csize  {.importc.}
 ## *
 ##  Query how many diff deltas are there in a diff filtered by type.
 ## 
@@ -844,7 +849,7 @@ proc git_diff_num_deltas*(diff: ptr git_diff): csize
 ##  @return Count of number of deltas matching delta_t type
 ## 
 
-proc git_diff_num_deltas_of_type*(diff: ptr git_diff; `type`: git_delta_t): csize
+proc git_diff_num_deltas_of_type*(diff: ptr git_diff; `type`: git_delta_t): csize  {.importc.}
 ## *
 ##  Return the diff delta for an entry in the diff list.
 ## 
@@ -863,7 +868,7 @@ proc git_diff_num_deltas_of_type*(diff: ptr git_diff; `type`: git_delta_t): csiz
 ##  @return Pointer to git_diff_delta (or NULL if `idx` out of range)
 ## 
 
-proc git_diff_get_delta*(diff: ptr git_diff; idx: csize): ptr git_diff_delta
+proc git_diff_get_delta*(diff: ptr git_diff; idx: csize): ptr git_diff_delta  {.importc.}
 ## *
 ##  Check if deltas are sorted case sensitively or insensitively.
 ## 
@@ -871,7 +876,7 @@ proc git_diff_get_delta*(diff: ptr git_diff; idx: csize): ptr git_diff_delta
 ##  @return 0 if case sensitive, 1 if case is ignored
 ## 
 
-proc git_diff_is_sorted_icase*(diff: ptr git_diff): cint
+proc git_diff_is_sorted_icase*(diff: ptr git_diff): cint  {.importc.}
 ## *
 ##  Loop over all deltas in a diff issuing callbacks.
 ## 
@@ -899,9 +904,9 @@ proc git_diff_is_sorted_icase*(diff: ptr git_diff): cint
 ##  @return 0 on success, non-zero callback return value, or error code
 ## 
 
-proc git_diff_foreach*(diff: ptr git_diff; file_cb: git_diff_file_cb;
+proc git_diff_foreach*(diff: ptr git_diff; file_cb: git_diff_file_cb; 
                       binary_cb: git_diff_binary_cb; hunk_cb: git_diff_hunk_cb;
-                      line_cb: git_diff_line_cb; payload: pointer): cint
+                      line_cb: git_diff_line_cb; payload: pointer): cint {.importc.}
 ## *
 ##  Look up the single character abbreviation for a delta status code.
 ## 
@@ -914,7 +919,7 @@ proc git_diff_foreach*(diff: ptr git_diff; file_cb: git_diff_file_cb;
 ##  @return The single character label for that code
 ## 
 
-proc git_diff_status_char*(status: git_delta_t): char
+proc git_diff_status_char*(status: git_delta_t): char  {.importc.}
 ## *
 ##  Possible output formats for diff data
 ## 
@@ -941,8 +946,8 @@ type
 ##  @return 0 on success, non-zero callback return value, or error code
 ## 
 
-proc git_diff_print*(diff: ptr git_diff; format: git_diff_format_t;
-                    print_cb: git_diff_line_cb; payload: pointer): cint
+proc git_diff_print*(diff: ptr git_diff; format: git_diff_format_t; 
+                    print_cb: git_diff_line_cb; payload: pointer): cint {.importc.}
 ## *
 ##  Produce the complete formatted text output from a diff into a
 ##  buffer.
@@ -954,7 +959,7 @@ proc git_diff_print*(diff: ptr git_diff; format: git_diff_format_t;
 ##  @return 0 on success or error code
 ## 
 
-proc git_diff_to_buf*(`out`: ptr git_buf; diff: ptr git_diff; format: git_diff_format_t): cint
+proc git_diff_to_buf*(`out`: ptr git_buf; diff: ptr git_diff; format: git_diff_format_t): cint  {.importc.}
 ## *@}
 ## 
 ##  Misc
@@ -988,11 +993,11 @@ proc git_diff_to_buf*(`out`: ptr git_buf; diff: ptr git_diff; format: git_diff_f
 ##  @return 0 on success, non-zero callback return value, or error code
 ## 
 
-proc git_diff_blobs*(old_blob: ptr git_blob; old_as_path: cstring;
+proc git_diff_blobs*(old_blob: ptr git_blob; old_as_path: cstring; 
                     new_blob: ptr git_blob; new_as_path: cstring;
                     options: ptr git_diff_options; file_cb: git_diff_file_cb;
                     binary_cb: git_diff_binary_cb; hunk_cb: git_diff_hunk_cb;
-                    line_cb: git_diff_line_cb; payload: pointer): cint
+                    line_cb: git_diff_line_cb; payload: pointer): cint {.importc.}
 ## *
 ##  Directly run a diff between a blob and a buffer.
 ## 
@@ -1019,14 +1024,14 @@ proc git_diff_blobs*(old_blob: ptr git_blob; old_as_path: cstring;
 ##  @return 0 on success, non-zero callback return value, or error code
 ## 
 
-proc git_diff_blob_to_buffer*(old_blob: ptr git_blob; old_as_path: cstring;
+proc git_diff_blob_to_buffer*(old_blob: ptr git_blob; old_as_path: cstring; 
                              buffer: cstring; buffer_len: csize;
                              buffer_as_path: cstring;
                              options: ptr git_diff_options;
                              file_cb: git_diff_file_cb;
                              binary_cb: git_diff_binary_cb;
                              hunk_cb: git_diff_hunk_cb; line_cb: git_diff_line_cb;
-                             payload: pointer): cint
+                             payload: pointer): cint {.importc.}
 ## *
 ##  Directly run a diff between two buffers.
 ## 
@@ -1049,11 +1054,11 @@ proc git_diff_blob_to_buffer*(old_blob: ptr git_blob; old_as_path: cstring;
 ##  @return 0 on success, non-zero callback return value, or error code
 ## 
 
-proc git_diff_buffers*(old_buffer: pointer; old_len: csize; old_as_path: cstring;
+proc git_diff_buffers*(old_buffer: pointer; old_len: csize; old_as_path: cstring; 
                       new_buffer: pointer; new_len: csize; new_as_path: cstring;
                       options: ptr git_diff_options; file_cb: git_diff_file_cb;
                       binary_cb: git_diff_binary_cb; hunk_cb: git_diff_hunk_cb;
-                      line_cb: git_diff_line_cb; payload: pointer): cint
+                      line_cb: git_diff_line_cb; payload: pointer): cint {.importc.}
 ## *
 ##  Read the contents of a git patch file into a `git_diff` object.
 ## 
@@ -1074,8 +1079,8 @@ proc git_diff_buffers*(old_buffer: pointer; old_len: csize; old_as_path: cstring
 ##  @return 0 or an error code
 ## 
 
-proc git_diff_from_buffer*(`out`: ptr ptr git_diff; content: cstring;
-                          content_len: csize): cint
+proc git_diff_from_buffer*(`out`: ptr ptr git_diff; content: cstring; 
+                          content_len: csize): cint {.importc.}
 ## *
 ##  This is an opaque structure which is allocated by `git_diff_get_stats`.
 ##  You are responsible for releasing the object memory when done, using the
@@ -1104,7 +1109,7 @@ type                          ## * No stats
 ##  @return 0 on success; non-zero on error
 ## 
 
-proc git_diff_get_stats*(`out`: ptr ptr git_diff_stats; diff: ptr git_diff): cint
+proc git_diff_get_stats*(`out`: ptr ptr git_diff_stats; diff: ptr git_diff): cint  {.importc.}
 ## *
 ##  Get the total number of files changed in a diff
 ## 
@@ -1112,7 +1117,7 @@ proc git_diff_get_stats*(`out`: ptr ptr git_diff_stats; diff: ptr git_diff): cin
 ##  @return total number of files changed in the diff
 ## 
 
-proc git_diff_stats_files_changed*(stats: ptr git_diff_stats): csize
+proc git_diff_stats_files_changed*(stats: ptr git_diff_stats): csize  {.importc.}
 ## *
 ##  Get the total number of insertions in a diff
 ## 
@@ -1120,7 +1125,7 @@ proc git_diff_stats_files_changed*(stats: ptr git_diff_stats): csize
 ##  @return total number of insertions in the diff
 ## 
 
-proc git_diff_stats_insertions*(stats: ptr git_diff_stats): csize
+proc git_diff_stats_insertions*(stats: ptr git_diff_stats): csize  {.importc.}
 ## *
 ##  Get the total number of deletions in a diff
 ## 
@@ -1128,7 +1133,7 @@ proc git_diff_stats_insertions*(stats: ptr git_diff_stats): csize
 ##  @return total number of deletions in the diff
 ## 
 
-proc git_diff_stats_deletions*(stats: ptr git_diff_stats): csize
+proc git_diff_stats_deletions*(stats: ptr git_diff_stats): csize  {.importc.}
 ## *
 ##  Print diff statistics to a `git_buf`.
 ## 
@@ -1139,8 +1144,8 @@ proc git_diff_stats_deletions*(stats: ptr git_diff_stats): csize
 ##  @return 0 on success; non-zero on error
 ## 
 
-proc git_diff_stats_to_buf*(`out`: ptr git_buf; stats: ptr git_diff_stats;
-                           format: git_diff_stats_format_t; width: csize): cint
+proc git_diff_stats_to_buf*(`out`: ptr git_buf; stats: ptr git_diff_stats; 
+                           format: git_diff_stats_format_t; width: csize): cint {.importc.}
 ## *
 ##  Deallocate a `git_diff_stats`.
 ## 
@@ -1148,7 +1153,7 @@ proc git_diff_stats_to_buf*(`out`: ptr git_buf; stats: ptr git_diff_stats;
 ##  cannot be used after free.
 ## 
 
-proc git_diff_stats_free*(stats: ptr git_diff_stats)
+proc git_diff_stats_free*(stats: ptr git_diff_stats)  {.importc.}
 ## *
 ##  Formatting options for diff e-mail generation
 ## 
@@ -1187,8 +1192,8 @@ const
 ##  @return 0 or an error code
 ## 
 
-proc git_diff_format_email*(`out`: ptr git_buf; diff: ptr git_diff;
-                           opts: ptr git_diff_format_email_options): cint
+proc git_diff_format_email*(`out`: ptr git_buf; diff: ptr git_diff; 
+                           opts: ptr git_diff_format_email_options): cint {.importc.}
 ## *
 ##  Create an e-mail ready patch for a commit.
 ## 
@@ -1204,11 +1209,11 @@ proc git_diff_format_email*(`out`: ptr git_buf; diff: ptr git_diff;
 ##  @return 0 or an error code
 ## 
 
-proc git_diff_commit_as_email*(`out`: ptr git_buf; repo: ptr git_repository;
+proc git_diff_commit_as_email*(`out`: ptr git_buf; repo: ptr git_repository; 
                               commit: ptr git_commit; patch_no: csize;
                               total_patches: csize;
                               flags: git_diff_format_email_flags_t;
-                              diff_opts: ptr git_diff_options): cint
+                              diff_opts: ptr git_diff_options): cint {.importc.}
 ## *
 ##  Initializes a `git_diff_format_email_options` with default values.
 ## 
@@ -1219,6 +1224,6 @@ proc git_diff_commit_as_email*(`out`: ptr git_buf; repo: ptr git_repository;
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_diff_format_email_init_options*(opts: ptr git_diff_format_email_options;
-                                        version: cuint): cint
+proc git_diff_format_email_init_options*(opts: ptr git_diff_format_email_options; 
+                                        version: cuint): cint {.importc.}
 ## * @}

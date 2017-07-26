@@ -29,4 +29,4 @@ import
 ##  built with OpenSSL and threading support.
 ## 
 
-proc git_openssl_set_locking*(): cint
+proc git_openssl_set_locking*(): cint  {.importc.}

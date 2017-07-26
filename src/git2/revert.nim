@@ -4,10 +4,11 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
-  common, types, merge
+  common, types, merge, checkout
 
 ## *
 ##  @file git2/revert.h
@@ -40,7 +41,7 @@ const
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_revert_init_options*(opts: ptr git_revert_options; version: cuint): cint
+proc git_revert_init_options*(opts: ptr git_revert_options; version: cuint): cint  {.importc.}
 ## *
 ##  Reverts the given commit against the given "our" commit, producing an
 ##  index that reflects the result of the revert.
@@ -56,9 +57,9 @@ proc git_revert_init_options*(opts: ptr git_revert_options; version: cuint): cin
 ##  @return zero on success, -1 on failure.
 ## 
 
-proc git_revert_commit*(`out`: ptr ptr git_index; repo: ptr git_repository;
+proc git_revert_commit*(`out`: ptr ptr git_index; repo: ptr git_repository; 
                        revert_commit: ptr git_commit; our_commit: ptr git_commit;
-                       mainline: cuint; merge_options: ptr git_merge_options): cint
+                       mainline: cuint; merge_options: ptr git_merge_options): cint {.importc.}
 ## *
 ##  Reverts the given commit, producing changes in the index and working directory.
 ## 
@@ -68,6 +69,6 @@ proc git_revert_commit*(`out`: ptr ptr git_index; repo: ptr git_repository;
 ##  @return zero on success, -1 on failure.
 ## 
 
-proc git_revert*(repo: ptr git_repository; commit: ptr git_commit;
-                given_opts: ptr git_revert_options): cint
+proc git_revert*(repo: ptr git_repository; commit: ptr git_commit; 
+                given_opts: ptr git_revert_options): cint {.importc.}
 ## * @}

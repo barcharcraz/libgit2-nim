@@ -4,10 +4,11 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
-  common, oid
+  common, oid, types, buffer
 
 ## *
 ##  @file git2/pack.h
@@ -60,7 +61,7 @@ type
 ##  @return 0 or an error code
 ## 
 
-proc git_packbuilder_new*(`out`: ptr ptr git_packbuilder; repo: ptr git_repository): cint
+proc git_packbuilder_new*(`out`: ptr ptr git_packbuilder; repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Set number of threads to spawn
 ## 
@@ -73,7 +74,7 @@ proc git_packbuilder_new*(`out`: ptr ptr git_packbuilder; repo: ptr git_reposito
 ##  @return number of actual threads to be used
 ## 
 
-proc git_packbuilder_set_threads*(pb: ptr git_packbuilder; n: cuint): cuint
+proc git_packbuilder_set_threads*(pb: ptr git_packbuilder; n: cuint): cuint  {.importc.}
 ## *
 ##  Insert a single object
 ## 
@@ -87,7 +88,7 @@ proc git_packbuilder_set_threads*(pb: ptr git_packbuilder; n: cuint): cuint
 ##  @return 0 or an error code
 ## 
 
-proc git_packbuilder_insert*(pb: ptr git_packbuilder; id: ptr git_oid; name: cstring): cint
+proc git_packbuilder_insert*(pb: ptr git_packbuilder; id: ptr git_oid; name: cstring): cint  {.importc.}
 ## *
 ##  Insert a root tree object
 ## 
@@ -99,7 +100,7 @@ proc git_packbuilder_insert*(pb: ptr git_packbuilder; id: ptr git_oid; name: cst
 ##  @return 0 or an error code
 ## 
 
-proc git_packbuilder_insert_tree*(pb: ptr git_packbuilder; id: ptr git_oid): cint
+proc git_packbuilder_insert_tree*(pb: ptr git_packbuilder; id: ptr git_oid): cint  {.importc.}
 ## *
 ##  Insert a commit object
 ## 
@@ -111,7 +112,7 @@ proc git_packbuilder_insert_tree*(pb: ptr git_packbuilder; id: ptr git_oid): cin
 ##  @return 0 or an error code
 ## 
 
-proc git_packbuilder_insert_commit*(pb: ptr git_packbuilder; id: ptr git_oid): cint
+proc git_packbuilder_insert_commit*(pb: ptr git_packbuilder; id: ptr git_oid): cint  {.importc.}
 ## *
 ##  Insert objects as given by the walk
 ## 
@@ -124,7 +125,7 @@ proc git_packbuilder_insert_commit*(pb: ptr git_packbuilder; id: ptr git_oid): c
 ##  @return 0 or an error code
 ## 
 
-proc git_packbuilder_insert_walk*(pb: ptr git_packbuilder; walk: ptr git_revwalk): cint
+proc git_packbuilder_insert_walk*(pb: ptr git_packbuilder; walk: ptr git_revwalk): cint  {.importc.}
 ## *
 ##  Recursively insert an object and its referenced objects
 ## 
@@ -136,8 +137,8 @@ proc git_packbuilder_insert_walk*(pb: ptr git_packbuilder; walk: ptr git_revwalk
 ##  @return 0 or an error code
 ## 
 
-proc git_packbuilder_insert_recur*(pb: ptr git_packbuilder; id: ptr git_oid;
-                                  name: cstring): cint
+proc git_packbuilder_insert_recur*(pb: ptr git_packbuilder; id: ptr git_oid; 
+                                  name: cstring): cint {.importc.}
 ## *
 ##  Write the contents of the packfile to an in-memory buffer
 ## 
@@ -148,7 +149,7 @@ proc git_packbuilder_insert_recur*(pb: ptr git_packbuilder; id: ptr git_oid;
 ##  @param pb The packbuilder
 ## 
 
-proc git_packbuilder_write_buf*(buf: ptr git_buf; pb: ptr git_packbuilder): cint
+proc git_packbuilder_write_buf*(buf: ptr git_buf; pb: ptr git_packbuilder): cint  {.importc.}
 ## *
 ##  Write the new pack and corresponding index file to path.
 ## 
@@ -161,9 +162,9 @@ proc git_packbuilder_write_buf*(buf: ptr git_buf; pb: ptr git_packbuilder): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_packbuilder_write*(pb: ptr git_packbuilder; path: cstring; mode: cuint;
+proc git_packbuilder_write*(pb: ptr git_packbuilder; path: cstring; mode: cuint; 
                            progress_cb: git_transfer_progress_cb;
-                           progress_cb_payload: pointer): cint
+                           progress_cb_payload: pointer): cint {.importc.}
 ## *
 ##  Get the packfile's hash
 ## 
@@ -173,9 +174,9 @@ proc git_packbuilder_write*(pb: ptr git_packbuilder; path: cstring; mode: cuint;
 ##  @param pb The packbuilder object
 ## 
 
-proc git_packbuilder_hash*(pb: ptr git_packbuilder): ptr git_oid
+proc git_packbuilder_hash*(pb: ptr git_packbuilder): ptr git_oid 
 type
-  git_packbuilder_foreach_cb* = proc (buf: pointer; size: csize; payload: pointer): cint
+  git_packbuilder_foreach_cb* = proc (buf: pointer; size: csize; payload: pointer): cint  {.importc.}
 
 ## *
 ##  Create the new pack and pass each object to the callback
@@ -186,8 +187,8 @@ type
 ##  @return 0 or an error code
 ## 
 
-proc git_packbuilder_foreach*(pb: ptr git_packbuilder;
-                             cb: git_packbuilder_foreach_cb; payload: pointer): cint
+proc git_packbuilder_foreach*(pb: ptr git_packbuilder; 
+                             cb: git_packbuilder_foreach_cb; payload: pointer): cint {.importc.}
 ## *
 ##  Get the total number of objects the packbuilder will write out
 ## 
@@ -195,7 +196,7 @@ proc git_packbuilder_foreach*(pb: ptr git_packbuilder;
 ##  @return the number of objects in the packfile
 ## 
 
-proc git_packbuilder_object_count*(pb: ptr git_packbuilder): csize
+proc git_packbuilder_object_count*(pb: ptr git_packbuilder): csize  {.importc.}
 ## *
 ##  Get the number of objects the packbuilder has already written out
 ## 
@@ -203,12 +204,12 @@ proc git_packbuilder_object_count*(pb: ptr git_packbuilder): csize
 ##  @return the number of objects which have already been written
 ## 
 
-proc git_packbuilder_written*(pb: ptr git_packbuilder): csize
+proc git_packbuilder_written*(pb: ptr git_packbuilder): csize  {.importc.}
 ## * Packbuilder progress notification function
 
 type
-  git_packbuilder_progress* = proc (stage: cint; current: uint32; total: uint32;
-                                 payload: pointer): cint
+  git_packbuilder_progress* = proc (stage: cint; current: uint32; total: uint32; 
+                                 payload: pointer): cint {.importc.}
 
 ## *
 ##  Set the callbacks for a packbuilder
@@ -221,14 +222,14 @@ type
 ##  @return 0 or an error code
 ## 
 
-proc git_packbuilder_set_callbacks*(pb: ptr git_packbuilder;
+proc git_packbuilder_set_callbacks*(pb: ptr git_packbuilder; 
                                    progress_cb: git_packbuilder_progress;
-                                   progress_cb_payload: pointer): cint
+                                   progress_cb_payload: pointer): cint {.importc.}
 ## *
 ##  Free the packbuilder and all associated data
 ## 
 ##  @param pb The packbuilder
 ## 
 
-proc git_packbuilder_free*(pb: ptr git_packbuilder)
+proc git_packbuilder_free*(pb: ptr git_packbuilder)  {.importc.}
 ## * @}

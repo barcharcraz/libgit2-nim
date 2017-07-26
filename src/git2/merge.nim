@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types, oid, oidarray, checkout, index, annotated_commit
 
@@ -44,7 +45,7 @@ const
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_merge_file_init_input*(opts: ptr git_merge_file_input; version: cuint): cint
+proc git_merge_file_init_input*(opts: ptr git_merge_file_input; version: cuint): cint  {.importc.}
 ## *
 ##  Flags for `git_merge` options.  A combination of these flags can be
 ##  passed in via the `flags` value in the `git_merge_options`.
@@ -157,7 +158,7 @@ const
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_merge_file_init_options*(opts: ptr git_merge_file_options; version: cuint): cint
+proc git_merge_file_init_options*(opts: ptr git_merge_file_options; version: cuint): cint  {.importc.}
 ## *
 ##  Information about file-level merging
 ## 
@@ -231,7 +232,7 @@ const
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_merge_init_options*(opts: ptr git_merge_options; version: cuint): cint
+proc git_merge_init_options*(opts: ptr git_merge_options; version: cuint): cint  {.importc.}
 ## *
 ##  The results of `git_merge_analysis` indicate the merge opportunities.
 ## 
@@ -290,7 +291,7 @@ type ## *
 ##  @return 0 on success or error code
 ## 
 
-proc git_merge_analysis*(analysis_out: ptr git_merge_analysis_t;
+proc git_merge_analysis*(analysis_out: ptr git_merge_analysis_t; 
                         preference_out: ptr git_merge_preference_t;
                         repo: ptr git_repository;
                         their_heads: ptr ptr git_annotated_commit;
@@ -305,8 +306,8 @@ proc git_merge_analysis*(analysis_out: ptr git_merge_analysis_t;
 ##  @return 0 on success, GIT_ENOTFOUND if not found or error code
 ## 
 
-proc git_merge_base*(`out`: ptr git_oid; repo: ptr git_repository; one: ptr git_oid;
-                    two: ptr git_oid): cint
+proc git_merge_base*(`out`: ptr git_oid; repo: ptr git_repository; one: ptr git_oid; 
+                    two: ptr git_oid): cint {.importc.}
 ## *
 ##  Find merge bases between two commits
 ## 
@@ -317,8 +318,8 @@ proc git_merge_base*(`out`: ptr git_oid; repo: ptr git_repository; one: ptr git_
 ##  @return 0 on success, GIT_ENOTFOUND if not found or error code
 ## 
 
-proc git_merge_bases*(`out`: ptr git_oidarray; repo: ptr git_repository;
-                     one: ptr git_oid; two: ptr git_oid): cint
+proc git_merge_bases*(`out`: ptr git_oidarray; repo: ptr git_repository; 
+                     one: ptr git_oid; two: ptr git_oid): cint {.importc.}
 ## *
 ##  Find a merge base given a list of commits
 ## 
@@ -329,8 +330,8 @@ proc git_merge_bases*(`out`: ptr git_oidarray; repo: ptr git_repository;
 ##  @return Zero on success; GIT_ENOTFOUND or -1 on failure.
 ## 
 
-proc git_merge_base_many*(`out`: ptr git_oid; repo: ptr git_repository; length: csize;
-                         input_array: ptr git_oid): cint
+proc git_merge_base_many*(`out`: ptr git_oid; repo: ptr git_repository; length: csize; 
+                         input_array: ptr git_oid): cint {.importc.}
 ## *
 ##  Find all merge bases given a list of commits
 ## 
@@ -341,8 +342,8 @@ proc git_merge_base_many*(`out`: ptr git_oid; repo: ptr git_repository; length: 
 ##  @return Zero on success; GIT_ENOTFOUND or -1 on failure.
 ## 
 
-proc git_merge_bases_many*(`out`: ptr git_oidarray; repo: ptr git_repository;
-                          length: csize; input_array: ptr git_oid): cint
+proc git_merge_bases_many*(`out`: ptr git_oidarray; repo: ptr git_repository; 
+                          length: csize; input_array: ptr git_oid): cint {.importc.}
 ## *
 ##  Find a merge base in preparation for an octopus merge
 ## 
@@ -353,8 +354,8 @@ proc git_merge_bases_many*(`out`: ptr git_oidarray; repo: ptr git_repository;
 ##  @return Zero on success; GIT_ENOTFOUND or -1 on failure.
 ## 
 
-proc git_merge_base_octopus*(`out`: ptr git_oid; repo: ptr git_repository;
-                            length: csize; input_array: ptr git_oid): cint
+proc git_merge_base_octopus*(`out`: ptr git_oid; repo: ptr git_repository; 
+                            length: csize; input_array: ptr git_oid): cint {.importc.}
 ## *
 ##  Merge two files as they exist in the in-memory data structures, using
 ##  the given common ancestor as the baseline, producing a
@@ -372,11 +373,11 @@ proc git_merge_base_octopus*(`out`: ptr git_oid; repo: ptr git_repository;
 ##  @return 0 on success or error code
 ## 
 
-proc git_merge_file*(`out`: ptr git_merge_file_result;
+proc git_merge_file*(`out`: ptr git_merge_file_result; 
                     ancestor: ptr git_merge_file_input;
                     ours: ptr git_merge_file_input;
                     theirs: ptr git_merge_file_input;
-                    opts: ptr git_merge_file_options): cint
+                    opts: ptr git_merge_file_options): cint {.importc.}
 ## *
 ##  Merge two files as they exist in the index, using the given common
 ##  ancestor as the baseline, producing a `git_merge_file_result` that
@@ -392,7 +393,7 @@ proc git_merge_file*(`out`: ptr git_merge_file_result;
 ##  @return 0 on success or error code
 ## 
 
-proc git_merge_file_from_index*(`out`: ptr git_merge_file_result;
+proc git_merge_file_from_index*(`out`: ptr git_merge_file_result; 
                                repo: ptr git_repository;
                                ancestor: ptr git_index_entry;
                                ours: ptr git_index_entry;
@@ -404,7 +405,7 @@ proc git_merge_file_from_index*(`out`: ptr git_merge_file_result;
 ##  @param result The result to free or `NULL`
 ## 
 
-proc git_merge_file_result_free*(result: ptr git_merge_file_result)
+proc git_merge_file_result_free*(result: ptr git_merge_file_result)  {.importc.}
 ## *
 ##  Merge two trees, producing a `git_index` that reflects the result of
 ##  the merge.  The index may be written as-is to the working directory
@@ -422,9 +423,9 @@ proc git_merge_file_result_free*(result: ptr git_merge_file_result)
 ##  @return 0 on success or error code
 ## 
 
-proc git_merge_trees*(`out`: ptr ptr git_index; repo: ptr git_repository;
+proc git_merge_trees*(`out`: ptr ptr git_index; repo: ptr git_repository; 
                      ancestor_tree: ptr git_tree; our_tree: ptr git_tree;
-                     their_tree: ptr git_tree; opts: ptr git_merge_options): cint
+                     their_tree: ptr git_tree; opts: ptr git_merge_options): cint {.importc.}
 ## *
 ##  Merge two commits, producing a `git_index` that reflects the result of
 ##  the merge.  The index may be written as-is to the working directory
@@ -441,9 +442,9 @@ proc git_merge_trees*(`out`: ptr ptr git_index; repo: ptr git_repository;
 ##  @return 0 on success or error code
 ## 
 
-proc git_merge_commits*(`out`: ptr ptr git_index; repo: ptr git_repository;
+proc git_merge_commits*(`out`: ptr ptr git_index; repo: ptr git_repository; 
                        our_commit: ptr git_commit; their_commit: ptr git_commit;
-                       opts: ptr git_merge_options): cint
+                       opts: ptr git_merge_options): cint {.importc.}
 ## *
 ##  Merges the given commit(s) into HEAD, writing the results into the working
 ##  directory.  Any changes are staged for commit and any conflicts are written
@@ -463,7 +464,7 @@ proc git_merge_commits*(`out`: ptr ptr git_index; repo: ptr git_repository;
 ##  @return 0 on success or error code
 ## 
 
-proc git_merge*(repo: ptr git_repository; their_heads: ptr ptr git_annotated_commit;
+proc git_merge*(repo: ptr git_repository; their_heads: ptr ptr git_annotated_commit; 
                their_heads_len: csize; merge_opts: ptr git_merge_options;
-               checkout_opts: ptr git_checkout_options): cint
+               checkout_opts: ptr git_checkout_options): cint {.importc.}
 ## * @}

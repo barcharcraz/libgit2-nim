@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common
 type git_repository* = object
@@ -13,6 +14,34 @@ type git_worktree* = object
 type git_odb* = object
 type git_reference* = object
 type git_config* = object
+type git_tag* = object
+type git_index_conflict_iterator* = object
+type git_diff_similarity_metric* = object
+type git_refspec* = object
+type git_transport* = object
+type git_rebase* = object
+type git_reflog* = object
+type git_reflog_entry* = object
+type git_remote* = object
+type git_remote_callbacks* = object
+type git_config_iterator* = object
+type git_status_list* = object
+type git_submodule* = object
+type git_patch* = object
+type git_pathspec* = object
+type git_pathspec_match_list* = object
+type git_config_backend* = object
+type git_note* = object
+type git_odb_object* = object
+type git_odb_stream* = object
+type git_odb_writepack* = object
+type git_odb_backend* = object
+type git_transaction* = object
+type git_describe_result* = object
+type git_filter_list* = object
+type git_iterator* = object
+type git_packbuilder* = object
+type git_revwalk* = object
 type git_refdb* = object
 type git_index* = object
 type git_annotated_commit* = object
@@ -20,6 +49,13 @@ type git_object* = object
 type git_blob* = object
 type git_blame* = object
 type git_commit* = object
+type git_tree* = object
+type git_tree_entry* = object
+type git_treebuilder* = object
+type git_reference_iterator* = object
+type git_diff* = object
+type git_diff_stats* = object
+type git_indexer* = object
 type git_branch_iterator* = object  
 
 ## *
@@ -332,7 +368,7 @@ type
 ## 
 
 type
-  git_transport_certificate_check_cb* = proc (cert: ptr git_cert; valid: cint;
+  git_transport_certificate_check_cb* = proc (cert: ptr git_cert; valid: cint; 
       host: cstring; payload: pointer): cint
 
 ## *
@@ -431,7 +467,7 @@ type
 ## * A type to write in a streaming fashion, for example, for filters.
 
 type
-  git_writestream* {.bycopy.} = object
+  git_writestream* = object
     write*: proc (stream: ptr git_writestream; buffer: cstring; len: csize): cint
     close*: proc (stream: ptr git_writestream): cint
     free*: proc (stream: ptr git_writestream)

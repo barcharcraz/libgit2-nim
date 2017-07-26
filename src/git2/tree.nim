@@ -4,10 +4,11 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
-  common, types, oid, `object`
+  common, types, oid, g_object, buffer
 
 ## *
 ##  @file git2/tree.h
@@ -25,7 +26,7 @@ import
 ##  @return 0 or an error code
 ## 
 
-proc git_tree_lookup*(`out`: ptr ptr git_tree; repo: ptr git_repository; id: ptr git_oid): cint
+proc git_tree_lookup*(`out`: ptr ptr git_tree; repo: ptr git_repository; id: ptr git_oid): cint {.importc.}
 ## *
 ##  Lookup a tree object from the repository,
 ##  given a prefix of its identifier (short id).
@@ -39,8 +40,8 @@ proc git_tree_lookup*(`out`: ptr ptr git_tree; repo: ptr git_repository; id: ptr
 ##  @return 0 or an error code
 ## 
 
-proc git_tree_lookup_prefix*(`out`: ptr ptr git_tree; repo: ptr git_repository;
-                            id: ptr git_oid; len: csize): cint
+proc git_tree_lookup_prefix*(`out`: ptr ptr git_tree; repo: ptr git_repository; 
+                            id: ptr git_oid; len: csize): cint {.importc.}
 ## *
 ##  Close an open tree
 ## 
@@ -52,7 +53,7 @@ proc git_tree_lookup_prefix*(`out`: ptr ptr git_tree; repo: ptr git_repository;
 ##  @param tree The tree to close
 ## 
 
-proc git_tree_free*(tree: ptr git_tree)
+proc git_tree_free*(tree: ptr git_tree)  {.importc.}
 ## *
 ##  Get the id of a tree.
 ## 
@@ -60,7 +61,7 @@ proc git_tree_free*(tree: ptr git_tree)
 ##  @return object identity for the tree.
 ## 
 
-proc git_tree_id*(tree: ptr git_tree): ptr git_oid
+proc git_tree_id*(tree: ptr git_tree): ptr git_oid  {.importc.}
 ## *
 ##  Get the repository that contains the tree.
 ## 
@@ -68,7 +69,7 @@ proc git_tree_id*(tree: ptr git_tree): ptr git_oid
 ##  @return Repository that contains this tree.
 ## 
 
-proc git_tree_owner*(tree: ptr git_tree): ptr git_repository
+proc git_tree_owner*(tree: ptr git_tree): ptr git_repository  {.importc.}
 ## *
 ##  Get the number of entries listed in a tree
 ## 
@@ -76,7 +77,7 @@ proc git_tree_owner*(tree: ptr git_tree): ptr git_repository
 ##  @return the number of entries in the tree
 ## 
 
-proc git_tree_entrycount*(tree: ptr git_tree): csize
+proc git_tree_entrycount*(tree: ptr git_tree): csize  {.importc.}
 ## *
 ##  Lookup a tree entry by its filename
 ## 
@@ -88,7 +89,7 @@ proc git_tree_entrycount*(tree: ptr git_tree): csize
 ##  @return the tree entry; NULL if not found
 ## 
 
-proc git_tree_entry_byname*(tree: ptr git_tree; filename: cstring): ptr git_tree_entry
+proc git_tree_entry_byname*(tree: ptr git_tree; filename: cstring): ptr git_tree_entry  {.importc.}
 ## *
 ##  Lookup a tree entry by its position in the tree
 ## 
@@ -100,7 +101,7 @@ proc git_tree_entry_byname*(tree: ptr git_tree; filename: cstring): ptr git_tree
 ##  @return the tree entry; NULL if not found
 ## 
 
-proc git_tree_entry_byindex*(tree: ptr git_tree; idx: csize): ptr git_tree_entry
+proc git_tree_entry_byindex*(tree: ptr git_tree; idx: csize): ptr git_tree_entry  {.importc.}
 ## *
 ##  Lookup a tree entry by SHA value.
 ## 
@@ -114,7 +115,7 @@ proc git_tree_entry_byindex*(tree: ptr git_tree; idx: csize): ptr git_tree_entry
 ##  @return the tree entry; NULL if not found
 ## 
 
-proc git_tree_entry_byid*(tree: ptr git_tree; id: ptr git_oid): ptr git_tree_entry
+proc git_tree_entry_byid*(tree: ptr git_tree; id: ptr git_oid): ptr git_tree_entry  {.importc.}
 ## *
 ##  Retrieve a tree entry contained in a tree or in any of its subtrees,
 ##  given its relative path.
@@ -128,8 +129,8 @@ proc git_tree_entry_byid*(tree: ptr git_tree; id: ptr git_oid): ptr git_tree_ent
 ##  @return 0 on success; GIT_ENOTFOUND if the path does not exist
 ## 
 
-proc git_tree_entry_bypath*(`out`: ptr ptr git_tree_entry; root: ptr git_tree;
-                           path: cstring): cint
+proc git_tree_entry_bypath*(`out`: ptr ptr git_tree_entry; root: ptr git_tree; 
+                           path: cstring): cint {.importc.}
 ## *
 ##  Duplicate a tree entry
 ## 
@@ -141,7 +142,7 @@ proc git_tree_entry_bypath*(`out`: ptr ptr git_tree_entry; root: ptr git_tree;
 ##  @return 0 or an error code
 ## 
 
-proc git_tree_entry_dup*(dest: ptr ptr git_tree_entry; source: ptr git_tree_entry): cint
+proc git_tree_entry_dup*(dest: ptr ptr git_tree_entry; source: ptr git_tree_entry): cint  {.importc.}
 ## *
 ##  Free a user-owned tree entry
 ## 
@@ -152,7 +153,7 @@ proc git_tree_entry_dup*(dest: ptr ptr git_tree_entry; source: ptr git_tree_entr
 ##  @param entry The entry to free
 ## 
 
-proc git_tree_entry_free*(entry: ptr git_tree_entry)
+proc git_tree_entry_free*(entry: ptr git_tree_entry)  {.importc.}
 ## *
 ##  Get the filename of a tree entry
 ## 
@@ -160,7 +161,7 @@ proc git_tree_entry_free*(entry: ptr git_tree_entry)
 ##  @return the name of the file
 ## 
 
-proc git_tree_entry_name*(entry: ptr git_tree_entry): cstring
+proc git_tree_entry_name*(entry: ptr git_tree_entry): cstring  {.importc.}
 ## *
 ##  Get the id of the object pointed by the entry
 ## 
@@ -168,7 +169,7 @@ proc git_tree_entry_name*(entry: ptr git_tree_entry): cstring
 ##  @return the oid of the object
 ## 
 
-proc git_tree_entry_id*(entry: ptr git_tree_entry): ptr git_oid
+proc git_tree_entry_id*(entry: ptr git_tree_entry): ptr git_oid  {.importc.}
 ## *
 ##  Get the type of the object pointed by the entry
 ## 
@@ -176,7 +177,7 @@ proc git_tree_entry_id*(entry: ptr git_tree_entry): ptr git_oid
 ##  @return the type of the pointed object
 ## 
 
-proc git_tree_entry_type*(entry: ptr git_tree_entry): git_otype
+proc git_tree_entry_type*(entry: ptr git_tree_entry): git_otype  {.importc.}
 ## *
 ##  Get the UNIX file attributes of a tree entry
 ## 
@@ -184,7 +185,7 @@ proc git_tree_entry_type*(entry: ptr git_tree_entry): git_otype
 ##  @return filemode as an integer
 ## 
 
-proc git_tree_entry_filemode*(entry: ptr git_tree_entry): git_filemode_t
+proc git_tree_entry_filemode*(entry: ptr git_tree_entry): git_filemode_t  {.importc.}
 ## *
 ##  Get the raw UNIX file attributes of a tree entry
 ## 
@@ -195,7 +196,7 @@ proc git_tree_entry_filemode*(entry: ptr git_tree_entry): git_filemode_t
 ##  @return filemode as an integer
 ## 
 
-proc git_tree_entry_filemode_raw*(entry: ptr git_tree_entry): git_filemode_t
+proc git_tree_entry_filemode_raw*(entry: ptr git_tree_entry): git_filemode_t  {.importc.}
 ## *
 ##  Compare two tree entries
 ## 
@@ -204,7 +205,7 @@ proc git_tree_entry_filemode_raw*(entry: ptr git_tree_entry): git_filemode_t
 ##  @return <0 if e1 is before e2, 0 if e1 == e2, >0 if e1 is after e2
 ## 
 
-proc git_tree_entry_cmp*(e1: ptr git_tree_entry; e2: ptr git_tree_entry): cint
+proc git_tree_entry_cmp*(e1: ptr git_tree_entry; e2: ptr git_tree_entry): cint  {.importc.}
 ## *
 ##  Convert a tree entry to the git_object it points to.
 ## 
@@ -216,8 +217,8 @@ proc git_tree_entry_cmp*(e1: ptr git_tree_entry; e2: ptr git_tree_entry): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_tree_entry_to_object*(object_out: ptr ptr git_object;
-                              repo: ptr git_repository; entry: ptr git_tree_entry): cint
+proc git_tree_entry_to_object*(object_out: ptr ptr git_object; 
+                              repo: ptr git_repository; entry: ptr git_tree_entry): cint {.importc.}
 ## *
 ##  Create a new tree builder.
 ## 
@@ -236,15 +237,15 @@ proc git_tree_entry_to_object*(object_out: ptr ptr git_object;
 ##  @return 0 on success; error code otherwise
 ## 
 
-proc git_treebuilder_new*(`out`: ptr ptr git_treebuilder; repo: ptr git_repository;
-                         source: ptr git_tree): cint
+proc git_treebuilder_new*(`out`: ptr ptr git_treebuilder; repo: ptr git_repository; 
+                         source: ptr git_tree): cint {.importc.}
 ## *
 ##  Clear all the entires in the builder
 ## 
 ##  @param bld Builder to clear
 ## 
 
-proc git_treebuilder_clear*(bld: ptr git_treebuilder)
+proc git_treebuilder_clear*(bld: ptr git_treebuilder)  {.importc.}
 ## *
 ##  Get the number of entries listed in a treebuilder
 ## 
@@ -252,7 +253,7 @@ proc git_treebuilder_clear*(bld: ptr git_treebuilder)
 ##  @return the number of entries in the treebuilder
 ## 
 
-proc git_treebuilder_entrycount*(bld: ptr git_treebuilder): cuint
+proc git_treebuilder_entrycount*(bld: ptr git_treebuilder): cuint  {.importc.}
 ## *
 ##  Free a tree builder
 ## 
@@ -263,7 +264,7 @@ proc git_treebuilder_entrycount*(bld: ptr git_treebuilder): cuint
 ##  @param bld Builder to free
 ## 
 
-proc git_treebuilder_free*(bld: ptr git_treebuilder)
+proc git_treebuilder_free*(bld: ptr git_treebuilder)  {.importc.}
 ## *
 ##  Get an entry from the builder from its filename
 ## 
@@ -275,7 +276,7 @@ proc git_treebuilder_free*(bld: ptr git_treebuilder)
 ##  @return pointer to the entry; NULL if not found
 ## 
 
-proc git_treebuilder_get*(bld: ptr git_treebuilder; filename: cstring): ptr git_tree_entry
+proc git_treebuilder_get*(bld: ptr git_treebuilder; filename: cstring): ptr git_tree_entry  {.importc.}
 ## *
 ##  Add or update an entry to the builder
 ## 
@@ -304,9 +305,9 @@ proc git_treebuilder_get*(bld: ptr git_treebuilder; filename: cstring): ptr git_
 ##  @return 0 or an error code
 ## 
 
-proc git_treebuilder_insert*(`out`: ptr ptr git_tree_entry; bld: ptr git_treebuilder;
+proc git_treebuilder_insert*(`out`: ptr ptr git_tree_entry; bld: ptr git_treebuilder; 
                             filename: cstring; id: ptr git_oid;
-                            filemode: git_filemode_t): cint
+                            filemode: git_filemode_t): cint {.importc.}
 ## *
 ##  Remove an entry from the builder by its filename
 ## 
@@ -314,7 +315,7 @@ proc git_treebuilder_insert*(`out`: ptr ptr git_tree_entry; bld: ptr git_treebui
 ##  @param filename Filename of the entry to remove
 ## 
 
-proc git_treebuilder_remove*(bld: ptr git_treebuilder; filename: cstring): cint
+proc git_treebuilder_remove*(bld: ptr git_treebuilder; filename: cstring): cint  {.importc.}
 ## *
 ##  Callback for git_treebuilder_filter
 ## 
@@ -324,7 +325,7 @@ proc git_treebuilder_remove*(bld: ptr git_treebuilder; filename: cstring): cint
 ## 
 
 type
-  git_treebuilder_filter_cb* = proc (entry: ptr git_tree_entry; payload: pointer): cint
+  git_treebuilder_filter_cb* = proc (entry: ptr git_tree_entry; payload: pointer): cint 
 
 ## *
 ##  Selectively remove entries in the tree
@@ -338,8 +339,8 @@ type
 ##  @param payload Extra data to pass to filter callback
 ## 
 
-proc git_treebuilder_filter*(bld: ptr git_treebuilder;
-                            filter: git_treebuilder_filter_cb; payload: pointer)
+proc git_treebuilder_filter*(bld: ptr git_treebuilder; 
+                            filter: git_treebuilder_filter_cb; payload: pointer) {.importc.}
 ## *
 ##  Write the contents of the tree builder as a tree object
 ## 
@@ -351,7 +352,7 @@ proc git_treebuilder_filter*(bld: ptr git_treebuilder;
 ##  @return 0 or an error code
 ## 
 
-proc git_treebuilder_write*(id: ptr git_oid; bld: ptr git_treebuilder): cint
+proc git_treebuilder_write*(id: ptr git_oid; bld: ptr git_treebuilder): cint  {.importc.}
 ## *
 ##  Write the contents of the tree builder as a tree object
 ##  using a shared git_buf.
@@ -364,8 +365,8 @@ proc git_treebuilder_write*(id: ptr git_oid; bld: ptr git_treebuilder): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_treebuilder_write_with_buffer*(oid: ptr git_oid; bld: ptr git_treebuilder;
-                                       tree: ptr git_buf): cint
+proc git_treebuilder_write_with_buffer*(oid: ptr git_oid; bld: ptr git_treebuilder; 
+                                       tree: ptr git_buf): cint {.importc.}
 ## * Callback for the tree traversal method
 
 type
@@ -397,8 +398,8 @@ type
 ##  @return 0 or an error code
 ## 
 
-proc git_tree_walk*(tree: ptr git_tree; mode: git_treewalk_mode;
-                   callback: git_treewalk_cb; payload: pointer): cint
+proc git_tree_walk*(tree: ptr git_tree; mode: git_treewalk_mode; 
+                   callback: git_treewalk_cb; payload: pointer): cint {.importc.}
 ## *
 ##  Create an in-memory copy of a tree. The copy must be explicitly
 ##  free'd or it will leak.
@@ -407,7 +408,7 @@ proc git_tree_walk*(tree: ptr git_tree; mode: git_treewalk_mode;
 ##  @param source Original tree to copy
 ## 
 
-proc git_tree_dup*(`out`: ptr ptr git_tree; source: ptr git_tree): cint
+proc git_tree_dup*(`out`: ptr ptr git_tree; source: ptr git_tree): cint  {.importc.}
 ## *
 ##  The kind of update to perform
 ## 
@@ -452,7 +453,7 @@ type
 ##  @param updates the list of updates to perform
 ## 
 
-proc git_tree_create_updated*(`out`: ptr git_oid; repo: ptr git_repository;
+proc git_tree_create_updated*(`out`: ptr git_oid; repo: ptr git_repository; 
                              baseline: ptr git_tree; nupdates: csize;
-                             updates: ptr git_tree_update): cint
+                             updates: ptr git_tree_update): cint {.importc.}
 ## * @}

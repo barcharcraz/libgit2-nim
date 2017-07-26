@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, repository, types, oid
 
@@ -29,7 +30,7 @@ import
 
 proc git_annotated_commit_from_ref*(`out`: ptr ptr git_annotated_commit;
                                    repo: ptr git_repository;
-                                   `ref`: ptr git_reference): cint
+                                   `ref`: ptr git_reference): cint {.importc.}
 ## *
 ##  Creates a `git_annotated_commit` from the given fetch head data.
 ##  The resulting git_annotated_commit must be freed with
@@ -43,9 +44,9 @@ proc git_annotated_commit_from_ref*(`out`: ptr ptr git_annotated_commit;
 ##  @return 0 on success or error code
 ## 
 
-proc git_annotated_commit_from_fetchhead*(`out`: ptr ptr git_annotated_commit;
+proc git_annotated_commit_from_fetchhead*(`out`: ptr ptr git_annotated_commit; 
     repo: ptr git_repository; branch_name: cstring; remote_url: cstring;
-    id: ptr git_oid): cint
+    id: ptr git_oid): cint {.importc.}
 ## *
 ##  Creates a `git_annotated_commit` from the given commit id.
 ##  The resulting git_annotated_commit must be freed with
@@ -65,8 +66,8 @@ proc git_annotated_commit_from_fetchhead*(`out`: ptr ptr git_annotated_commit;
 ##  @return 0 on success or error code
 ## 
 
-proc git_annotated_commit_lookup*(`out`: ptr ptr git_annotated_commit;
-                                 repo: ptr git_repository; id: ptr git_oid): cint
+proc git_annotated_commit_lookup*(`out`: ptr ptr git_annotated_commit; 
+                                 repo: ptr git_repository; id: ptr git_oid): cint {.importc.}
 ## *
 ##  Creates a `git_annotated_comit` from a revision string.
 ## 
@@ -80,8 +81,8 @@ proc git_annotated_commit_lookup*(`out`: ptr ptr git_annotated_commit;
 ##  @return 0 on success or error code
 ## 
 
-proc git_annotated_commit_from_revspec*(`out`: ptr ptr git_annotated_commit;
-                                       repo: ptr git_repository; revspec: cstring): cint
+proc git_annotated_commit_from_revspec*(`out`: ptr ptr git_annotated_commit; 
+                                       repo: ptr git_repository; revspec: cstring): cint {.importc.}
 ## *
 ##  Gets the commit ID that the given `git_annotated_commit` refers to.
 ## 
@@ -89,12 +90,12 @@ proc git_annotated_commit_from_revspec*(`out`: ptr ptr git_annotated_commit;
 ##  @return commit id
 ## 
 
-proc git_annotated_commit_id*(commit: ptr git_annotated_commit): ptr git_oid
+proc git_annotated_commit_id*(commit: ptr git_annotated_commit): ptr git_oid  {.importc.}
 ## *
 ##  Frees a `git_annotated_commit`.
 ## 
 ##  @param commit annotated commit to free
 ## 
 
-proc git_annotated_commit_free*(commit: ptr git_annotated_commit)
+proc git_annotated_commit_free*(commit: ptr git_annotated_commit) {.importc.}
 ## * @}

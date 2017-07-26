@@ -4,10 +4,11 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
-  common, repository, refspec, net, indexer, strarray, transport, pack, proxy
+  common, repository, refspec, net, indexer, strarray, transport, pack, proxy, types, oid, buffer
 
 ## *
 ##  @file git2/remote.h
@@ -26,8 +27,8 @@ import
 ##  @return 0, GIT_EINVALIDSPEC, GIT_EEXISTS or an error code
 ## 
 
-proc git_remote_create*(`out`: ptr ptr git_remote; repo: ptr git_repository;
-                       name: cstring; url: cstring): cint
+proc git_remote_create*(`out`: ptr ptr git_remote; repo: ptr git_repository; 
+                       name: cstring; url: cstring): cint {.importc.}
 ## *
 ##  Add a remote with the provided fetch refspec (or default if NULL) to the repository's
 ##  configuration.
@@ -40,9 +41,9 @@ proc git_remote_create*(`out`: ptr ptr git_remote; repo: ptr git_repository;
 ##  @return 0, GIT_EINVALIDSPEC, GIT_EEXISTS or an error code
 ## 
 
-proc git_remote_create_with_fetchspec*(`out`: ptr ptr git_remote;
+proc git_remote_create_with_fetchspec*(`out`: ptr ptr git_remote; 
                                       repo: ptr git_repository; name: cstring;
-                                      url: cstring; fetch: cstring): cint
+                                      url: cstring; fetch: cstring): cint {.importc.}
 ## *
 ##  Create an anonymous remote
 ## 
@@ -55,8 +56,8 @@ proc git_remote_create_with_fetchspec*(`out`: ptr ptr git_remote;
 ##  @return 0 or an error code
 ## 
 
-proc git_remote_create_anonymous*(`out`: ptr ptr git_remote;
-                                 repo: ptr git_repository; url: cstring): cint
+proc git_remote_create_anonymous*(`out`: ptr ptr git_remote; 
+                                 repo: ptr git_repository; url: cstring): cint {.importc.}
 ## *
 ##  Get the information for a particular remote
 ## 
@@ -69,8 +70,8 @@ proc git_remote_create_anonymous*(`out`: ptr ptr git_remote;
 ##  @return 0, GIT_ENOTFOUND, GIT_EINVALIDSPEC or an error code
 ## 
 
-proc git_remote_lookup*(`out`: ptr ptr git_remote; repo: ptr git_repository;
-                       name: cstring): cint
+proc git_remote_lookup*(`out`: ptr ptr git_remote; repo: ptr git_repository; 
+                       name: cstring): cint {.importc.}
 ## *
 ##  Create a copy of an existing remote.  All internal strings are also
 ##  duplicated. Callbacks are not duplicated.
@@ -82,7 +83,7 @@ proc git_remote_lookup*(`out`: ptr ptr git_remote; repo: ptr git_repository;
 ##  @return 0 or an error code
 ## 
 
-proc git_remote_dup*(dest: ptr ptr git_remote; source: ptr git_remote): cint
+proc git_remote_dup*(dest: ptr ptr git_remote; source: ptr git_remote): cint  {.importc.}
 ## *
 ##  Get the remote's repository
 ## 
@@ -90,7 +91,7 @@ proc git_remote_dup*(dest: ptr ptr git_remote; source: ptr git_remote): cint
 ##  @return a pointer to the repository
 ## 
 
-proc git_remote_owner*(remote: ptr git_remote): ptr git_repository
+proc git_remote_owner*(remote: ptr git_remote): ptr git_repository  {.importc.}
 ## *
 ##  Get the remote's name
 ## 
@@ -98,7 +99,7 @@ proc git_remote_owner*(remote: ptr git_remote): ptr git_repository
 ##  @return a pointer to the name or NULL for in-memory remotes
 ## 
 
-proc git_remote_name*(remote: ptr git_remote): cstring
+proc git_remote_name*(remote: ptr git_remote): cstring  {.importc.}
 ## *
 ##  Get the remote's url
 ## 
@@ -109,7 +110,7 @@ proc git_remote_name*(remote: ptr git_remote): cstring
 ##  @return a pointer to the url
 ## 
 
-proc git_remote_url*(remote: ptr git_remote): cstring
+proc git_remote_url*(remote: ptr git_remote): cstring  {.importc.}
 ## *
 ##  Get the remote's url for pushing
 ## 
@@ -120,7 +121,7 @@ proc git_remote_url*(remote: ptr git_remote): cstring
 ##  @return a pointer to the url or NULL if no special url for pushing is set
 ## 
 
-proc git_remote_pushurl*(remote: ptr git_remote): cstring
+proc git_remote_pushurl*(remote: ptr git_remote): cstring  {.importc.}
 ## *
 ##  Set the remote's url in the configuration
 ## 
@@ -133,7 +134,7 @@ proc git_remote_pushurl*(remote: ptr git_remote): cstring
 ##  @return 0 or an error value
 ## 
 
-proc git_remote_set_url*(repo: ptr git_repository; remote: cstring; url: cstring): cint
+proc git_remote_set_url*(repo: ptr git_repository; remote: cstring; url: cstring): cint  {.importc.}
 ## *
 ##  Set the remote's url for pushing in the configuration.
 ## 
@@ -146,7 +147,7 @@ proc git_remote_set_url*(repo: ptr git_repository; remote: cstring; url: cstring
 ##  @param url the url to set
 ## 
 
-proc git_remote_set_pushurl*(repo: ptr git_repository; remote: cstring; url: cstring): cint
+proc git_remote_set_pushurl*(repo: ptr git_repository; remote: cstring; url: cstring): cint  {.importc.}
 ## *
 ##  Add a fetch refspec to the remote's configuration
 ## 
@@ -159,7 +160,7 @@ proc git_remote_set_pushurl*(repo: ptr git_repository; remote: cstring; url: cst
 ##  @return 0, GIT_EINVALIDSPEC if refspec is invalid or an error value
 ## 
 
-proc git_remote_add_fetch*(repo: ptr git_repository; remote: cstring; refspec: cstring): cint
+proc git_remote_add_fetch*(repo: ptr git_repository; remote: cstring; refspec: cstring): cint  {.importc.}
 ## *
 ##  Get the remote's list of fetch refspecs
 ## 
@@ -170,7 +171,7 @@ proc git_remote_add_fetch*(repo: ptr git_repository; remote: cstring; refspec: c
 ##  @param remote the remote to query
 ## 
 
-proc git_remote_get_fetch_refspecs*(array: ptr git_strarray; remote: ptr git_remote): cint
+proc git_remote_get_fetch_refspecs*(array: ptr git_strarray; remote: ptr git_remote): cint  {.importc.}
 ## *
 ##  Add a push refspec to the remote's configuration
 ## 
@@ -183,7 +184,7 @@ proc git_remote_get_fetch_refspecs*(array: ptr git_strarray; remote: ptr git_rem
 ##  @return 0, GIT_EINVALIDSPEC if refspec is invalid or an error value
 ## 
 
-proc git_remote_add_push*(repo: ptr git_repository; remote: cstring; refspec: cstring): cint
+proc git_remote_add_push*(repo: ptr git_repository; remote: cstring; refspec: cstring): cint  {.importc.}
 ## *
 ##  Get the remote's list of push refspecs
 ## 
@@ -194,7 +195,7 @@ proc git_remote_add_push*(repo: ptr git_repository; remote: cstring; refspec: cs
 ##  @param remote the remote to query
 ## 
 
-proc git_remote_get_push_refspecs*(array: ptr git_strarray; remote: ptr git_remote): cint
+proc git_remote_get_push_refspecs*(array: ptr git_strarray; remote: ptr git_remote): cint  {.importc.}
 ## *
 ##  Get the number of refspecs for a remote
 ## 
@@ -202,7 +203,7 @@ proc git_remote_get_push_refspecs*(array: ptr git_strarray; remote: ptr git_remo
 ##  @return the amount of refspecs configured in this remote
 ## 
 
-proc git_remote_refspec_count*(remote: ptr git_remote): csize
+proc git_remote_refspec_count*(remote: ptr git_remote): csize  {.importc.}
 ## *
 ##  Get a refspec from the remote
 ## 
@@ -211,7 +212,7 @@ proc git_remote_refspec_count*(remote: ptr git_remote): csize
 ##  @return the nth refspec
 ## 
 
-proc git_remote_get_refspec*(remote: ptr git_remote; n: csize): ptr git_refspec
+proc git_remote_get_refspec*(remote: ptr git_remote; n: csize): ptr git_refspec  {.importc.}
 ## *
 ##  Open a connection to a remote
 ## 
@@ -228,7 +229,7 @@ proc git_remote_get_refspec*(remote: ptr git_remote; n: csize): ptr git_refspec
 ##  @return 0 or an error code
 ## 
 
-proc git_remote_connect*(remote: ptr git_remote; direction: git_direction;
+proc git_remote_connect*(remote: ptr git_remote; direction: git_direction; 
                         callbacks: ptr git_remote_callbacks;
                         proxy_opts: ptr git_proxy_options;
                         custom_headers: ptr git_strarray): cint
@@ -253,8 +254,8 @@ proc git_remote_connect*(remote: ptr git_remote; direction: git_direction;
 ##  @return 0 on success, or an error code
 ## 
 
-proc git_remote_ls*(`out`: ptr ptr ptr git_remote_head; size: ptr csize;
-                   remote: ptr git_remote): cint
+proc git_remote_ls*(`out`: ptr ptr ptr git_remote_head; size: ptr csize; 
+                   remote: ptr git_remote): cint {.importc.}
 ## *
 ##  Check whether the remote is connected
 ## 
@@ -265,7 +266,7 @@ proc git_remote_ls*(`out`: ptr ptr ptr git_remote_head; size: ptr csize;
 ##  @return 1 if it's connected, 0 otherwise.
 ## 
 
-proc git_remote_connected*(remote: ptr git_remote): cint
+proc git_remote_connected*(remote: ptr git_remote): cint  {.importc.}
 ## *
 ##  Cancel the operation
 ## 
@@ -275,7 +276,7 @@ proc git_remote_connected*(remote: ptr git_remote): cint
 ##  @param remote the remote
 ## 
 
-proc git_remote_stop*(remote: ptr git_remote)
+proc git_remote_stop*(remote: ptr git_remote)  {.importc.}
 ## *
 ##  Disconnect from the remote
 ## 
@@ -284,7 +285,7 @@ proc git_remote_stop*(remote: ptr git_remote)
 ##  @param remote the remote to disconnect from
 ## 
 
-proc git_remote_disconnect*(remote: ptr git_remote)
+proc git_remote_disconnect*(remote: ptr git_remote)  {.importc.}
 ## *
 ##  Free the memory associated with a remote
 ## 
@@ -294,7 +295,7 @@ proc git_remote_disconnect*(remote: ptr git_remote)
 ##  @param remote the remote to free
 ## 
 
-proc git_remote_free*(remote: ptr git_remote)
+proc git_remote_free*(remote: ptr git_remote)  {.importc.}
 ## *
 ##  Get a list of the configured remotes for a repo
 ## 
@@ -305,7 +306,7 @@ proc git_remote_free*(remote: ptr git_remote)
 ##  @return 0 or an error code
 ## 
 
-proc git_remote_list*(`out`: ptr git_strarray; repo: ptr git_repository): cint
+proc git_remote_list*(`out`: ptr git_strarray; repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Argument to the completion callback which tells it which operation
 ##  finished.
@@ -320,8 +321,8 @@ type
 ## * Push network progress notification function
 
 type
-  git_push_transfer_progress* = proc (current: cuint; total: cuint; bytes: csize;
-                                   payload: pointer): cint
+  git_push_transfer_progress* = proc (current: cuint; total: cuint; bytes: csize; 
+                                   payload: pointer): cint {.importc.}
 
 ## *
 ##  Represents an update which will be performed on the remote during push
@@ -354,8 +355,8 @@ type
 ## 
 
 type
-  git_push_negotiation* = proc (updates: ptr ptr git_push_update; len: csize;
-                             payload: pointer): cint
+  git_push_negotiation* = proc (updates: ptr ptr git_push_update; len: csize; 
+                             payload: pointer): cint {.importc.}
 
 ## *
 ##  The callback settings structure
@@ -375,7 +376,7 @@ type
                                                ##  Completion is called when different parts of the download
                                                ##  process are done (currently unused).
                                                ## 
-    completion*: proc (`type`: git_remote_completion_type; data: pointer): cint ## *
+    completion*: proc (`type`: git_remote_completion_type; data: pointer): cint ## *  {.importc.}
                                                                          ##  This will be called if the remote host requires
                                                                          ##  authentication in order to connect to it.
                                                                          ## 
@@ -397,7 +398,7 @@ type
                                                ##  Each time a reference is updated locally, this function
                                                ##  will be called with information about it.
                                                ## 
-    update_tips*: proc (refname: cstring; a: ptr git_oid; b: ptr git_oid; data: pointer): cint ## *
+    update_tips*: proc (refname: cstring; a: ptr git_oid; b: ptr git_oid; data: pointer): cint ## *  {.importc.}
                                                                                   ##  Function to call with progress information during pack
                                                                                   ##  building. Be aware that this is called inline with pack
                                                                                   ##  building operations, so performance may be affected.
@@ -413,7 +414,7 @@ type
                                                       ##  not `NULL`, the update was rejected by the remote server
                                                       ##  and `status` contains the reason given.
                                                       ## 
-    push_update_reference*: proc (refname: cstring; status: cstring; data: pointer): cint ## *
+    push_update_reference*: proc (refname: cstring; status: cstring; data: pointer): cint ## *  {.importc.}
                                                                                  ##  Called once between the negotiation step and the upload. It
                                                                                  ##  provides information about what updates will be performed.
                                                                                  ## 
@@ -440,7 +441,7 @@ const
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_remote_init_callbacks*(opts: ptr git_remote_callbacks; version: cuint): cint
+proc git_remote_init_callbacks*(opts: ptr git_remote_callbacks; version: cuint): cint  {.importc.}
 type                          ## *
     ##  Use the setting from the configuration
     ## 
@@ -527,7 +528,7 @@ const
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_fetch_init_options*(opts: ptr git_fetch_options; version: cuint): cint
+proc git_fetch_init_options*(opts: ptr git_fetch_options; version: cuint): cint  {.importc.}
 ## *
 ##  Controls the behavior of a git_push object.
 ## 
@@ -567,7 +568,7 @@ const
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_push_init_options*(opts: ptr git_push_options; version: cuint): cint
+proc git_push_init_options*(opts: ptr git_push_options; version: cuint): cint  {.importc.}
 ## *
 ##  Download and index the packfile
 ## 
@@ -585,8 +586,8 @@ proc git_push_init_options*(opts: ptr git_push_options; version: cuint): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_remote_download*(remote: ptr git_remote; refspecs: ptr git_strarray;
-                         opts: ptr git_fetch_options): cint
+proc git_remote_download*(remote: ptr git_remote; refspecs: ptr git_strarray; 
+                         opts: ptr git_fetch_options): cint {.importc.}
 ## *
 ##  Create a packfile and send it to the server
 ## 
@@ -600,8 +601,8 @@ proc git_remote_download*(remote: ptr git_remote; refspecs: ptr git_strarray;
 ##  @return 0 or an error code
 ## 
 
-proc git_remote_upload*(remote: ptr git_remote; refspecs: ptr git_strarray;
-                       opts: ptr git_push_options): cint
+proc git_remote_upload*(remote: ptr git_remote; refspecs: ptr git_strarray; 
+                       opts: ptr git_push_options): cint {.importc.}
 ## *
 ##  Update the tips to the new state
 ## 
@@ -617,7 +618,7 @@ proc git_remote_upload*(remote: ptr git_remote; refspecs: ptr git_strarray;
 ##  @return 0 or an error code
 ## 
 
-proc git_remote_update_tips*(remote: ptr git_remote;
+proc git_remote_update_tips*(remote: ptr git_remote; 
                             callbacks: ptr git_remote_callbacks;
                             update_fetchhead: cint;
                             download_tags: git_remote_autotag_option_t;
@@ -637,8 +638,8 @@ proc git_remote_update_tips*(remote: ptr git_remote;
 ##  @return 0 or an error code
 ## 
 
-proc git_remote_fetch*(remote: ptr git_remote; refspecs: ptr git_strarray;
-                      opts: ptr git_fetch_options; reflog_message: cstring): cint
+proc git_remote_fetch*(remote: ptr git_remote; refspecs: ptr git_strarray; 
+                      opts: ptr git_fetch_options; reflog_message: cstring): cint {.importc.}
 ## *
 ##  Prune tracking refs that are no longer present on remote
 ## 
@@ -647,7 +648,7 @@ proc git_remote_fetch*(remote: ptr git_remote; refspecs: ptr git_strarray;
 ##  @return 0 or an error code
 ## 
 
-proc git_remote_prune*(remote: ptr git_remote; callbacks: ptr git_remote_callbacks): cint
+proc git_remote_prune*(remote: ptr git_remote; callbacks: ptr git_remote_callbacks): cint  {.importc.}
 ## *
 ##  Perform a push
 ## 
@@ -659,13 +660,13 @@ proc git_remote_prune*(remote: ptr git_remote; callbacks: ptr git_remote_callbac
 ##  @param opts options to use for this push
 ## 
 
-proc git_remote_push*(remote: ptr git_remote; refspecs: ptr git_strarray;
-                     opts: ptr git_push_options): cint
+proc git_remote_push*(remote: ptr git_remote; refspecs: ptr git_strarray; 
+                     opts: ptr git_push_options): cint {.importc.}
 ## *
 ##  Get the statistics structure that is filled in by the fetch operation.
 ## 
 
-proc git_remote_stats*(remote: ptr git_remote): ptr git_transfer_progress
+proc git_remote_stats*(remote: ptr git_remote): ptr git_transfer_progress  {.importc.}
 ## *
 ##  Retrieve the tag auto-follow setting
 ## 
@@ -673,7 +674,7 @@ proc git_remote_stats*(remote: ptr git_remote): ptr git_transfer_progress
 ##  @return the auto-follow setting
 ## 
 
-proc git_remote_autotag*(remote: ptr git_remote): git_remote_autotag_option_t
+proc git_remote_autotag*(remote: ptr git_remote): git_remote_autotag_option_t  {.importc.}
 ## *
 ##  Set the remote's tag following setting.
 ## 
@@ -685,8 +686,8 @@ proc git_remote_autotag*(remote: ptr git_remote): git_remote_autotag_option_t
 ##  @param value the new value to take.
 ## 
 
-proc git_remote_set_autotag*(repo: ptr git_repository; remote: cstring;
-                            value: git_remote_autotag_option_t): cint
+proc git_remote_set_autotag*(repo: ptr git_repository; remote: cstring; 
+                            value: git_remote_autotag_option_t): cint {.importc.}
 ## *
 ##  Retrieve the ref-prune setting
 ## 
@@ -694,7 +695,7 @@ proc git_remote_set_autotag*(repo: ptr git_repository; remote: cstring;
 ##  @return the ref-prune setting
 ## 
 
-proc git_remote_prune_refs*(remote: ptr git_remote): cint
+proc git_remote_prune_refs*(remote: ptr git_remote): cint  {.importc.}
 ## *
 ##  Give the remote a new name
 ## 
@@ -716,8 +717,8 @@ proc git_remote_prune_refs*(remote: ptr git_remote): cint
 ##  @return 0, GIT_EINVALIDSPEC, GIT_EEXISTS or an error code
 ## 
 
-proc git_remote_rename*(problems: ptr git_strarray; repo: ptr git_repository;
-                       name: cstring; new_name: cstring): cint
+proc git_remote_rename*(problems: ptr git_strarray; repo: ptr git_repository; 
+                       name: cstring; new_name: cstring): cint {.importc.}
 ## *
 ##  Ensure the remote name is well-formed.
 ## 
@@ -725,7 +726,7 @@ proc git_remote_rename*(problems: ptr git_strarray; repo: ptr git_repository;
 ##  @return 1 if the reference name is acceptable; 0 if it isn't
 ## 
 
-proc git_remote_is_valid_name*(remote_name: cstring): cint
+proc git_remote_is_valid_name*(remote_name: cstring): cint  {.importc.}
 ## *
 ##  Delete an existing persisted remote.
 ## 
@@ -737,7 +738,7 @@ proc git_remote_is_valid_name*(remote_name: cstring): cint
 ##  @return 0 on success, or an error code.
 ## 
 
-proc git_remote_delete*(repo: ptr git_repository; name: cstring): cint
+proc git_remote_delete*(repo: ptr git_repository; name: cstring): cint  {.importc.}
 ## *
 ##  Retrieve the name of the remote's default branch
 ## 
@@ -755,5 +756,5 @@ proc git_remote_delete*(repo: ptr git_repository; name: cstring): cint
 ##  or none of them point to HEAD's commit, or an error message.
 ## 
 
-proc git_remote_default_branch*(`out`: ptr git_buf; remote: ptr git_remote): cint
+proc git_remote_default_branch*(`out`: ptr git_buf; remote: ptr git_remote): cint  {.importc.}
 ## * @}

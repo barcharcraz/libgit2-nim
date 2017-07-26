@@ -36,7 +36,7 @@ import
 ## 	@return 0 on success; error code otherwise
 ## 
 
-proc git_mempack_new*(`out`: ptr ptr git_odb_backend): cint
+proc git_mempack_new*(`out`: ptr ptr git_odb_backend): cint  {.importc.}
 ## *
 ## 	Dump all the queued in-memory writes to a packfile.
 ## 
@@ -59,8 +59,8 @@ proc git_mempack_new*(`out`: ptr ptr git_odb_backend): cint
 ## 	@return 0 on success; error code otherwise
 ## 
 
-proc git_mempack_dump*(pack: ptr git_buf; repo: ptr git_repository;
-                      backend: ptr git_odb_backend): cint
+proc git_mempack_dump*(pack: ptr git_buf; repo: ptr git_repository; 
+                      backend: ptr git_odb_backend): cint {.importc.}
 ## *
 ## 	Reset the memory packer by clearing all the queued objects.
 ## 
@@ -74,4 +74,4 @@ proc git_mempack_dump*(pack: ptr git_buf; repo: ptr git_repository;
 ## 	@param backend The mempack backend
 ## 
 
-proc git_mempack_reset*(backend: ptr git_odb_backend)
+proc git_mempack_reset*(backend: ptr git_odb_backend)  {.importc.}

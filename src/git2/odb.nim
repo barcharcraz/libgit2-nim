@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types, oid, oidarray
 
@@ -21,7 +22,7 @@ import
 ## 
 
 type
-  git_odb_foreach_cb* = proc (id: ptr git_oid; payload: pointer): cint
+  git_odb_foreach_cb* = proc (id: ptr git_oid; payload: pointer): cint  {.importc.}
 
 ## *
 ##  Create a new object database with no backends.
@@ -34,7 +35,7 @@ type
 ##  @return 0 or an error code
 ## 
 
-proc git_odb_new*(`out`: ptr ptr git_odb): cint
+proc git_odb_new*(`out`: ptr ptr git_odb): cint  {.importc.}
 ## *
 ##  Create a new object database and automatically add
 ##  the two default backends:
@@ -52,7 +53,7 @@ proc git_odb_new*(`out`: ptr ptr git_odb): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_odb_open*(`out`: ptr ptr git_odb; objects_dir: cstring): cint
+proc git_odb_open*(`out`: ptr ptr git_odb; objects_dir: cstring): cint  {.importc.}
 ## *
 ##  Add an on-disk alternate to an existing Object DB.
 ## 
@@ -69,14 +70,14 @@ proc git_odb_open*(`out`: ptr ptr git_odb; objects_dir: cstring): cint
 ##  @return 0 on success; error code otherwise
 ## 
 
-proc git_odb_add_disk_alternate*(odb: ptr git_odb; path: cstring): cint
+proc git_odb_add_disk_alternate*(odb: ptr git_odb; path: cstring): cint  {.importc.}
 ## *
 ##  Close an open object database.
 ## 
 ##  @param db database pointer to close. If NULL no action is taken.
 ## 
 
-proc git_odb_free*(db: ptr git_odb)
+proc git_odb_free*(db: ptr git_odb)  {.importc.}
 ## *
 ##  Read an object from the database.
 ## 
@@ -95,7 +96,7 @@ proc git_odb_free*(db: ptr git_odb)
 ##  - GIT_ENOTFOUND if the object is not in the database.
 ## 
 
-proc git_odb_read*(`out`: ptr ptr git_odb_object; db: ptr git_odb; id: ptr git_oid): cint
+proc git_odb_read*(`out`: ptr ptr git_odb_object; db: ptr git_odb; id: ptr git_oid): cint  {.importc.}
 ## *
 ##  Read an object from the database, given a prefix
 ##  of its identifier.
@@ -124,8 +125,8 @@ proc git_odb_read*(`out`: ptr ptr git_odb_object; db: ptr git_odb; id: ptr git_o
 ##  - GIT_EAMBIGUOUS if the prefix is ambiguous (several objects match the prefix)
 ## 
 
-proc git_odb_read_prefix*(`out`: ptr ptr git_odb_object; db: ptr git_odb;
-                         short_id: ptr git_oid; len: csize): cint
+proc git_odb_read_prefix*(`out`: ptr ptr git_odb_object; db: ptr git_odb; 
+                         short_id: ptr git_oid; len: csize): cint {.importc.}
 ## *
 ##  Read the header of an object from the database, without
 ##  reading its full contents.
@@ -145,8 +146,8 @@ proc git_odb_read_prefix*(`out`: ptr ptr git_odb_object; db: ptr git_odb;
 ##  - GIT_ENOTFOUND if the object is not in the database.
 ## 
 
-proc git_odb_read_header*(len_out: ptr csize; type_out: ptr git_otype; db: ptr git_odb;
-                         id: ptr git_oid): cint
+proc git_odb_read_header*(len_out: ptr csize; type_out: ptr git_otype; db: ptr git_odb; 
+                         id: ptr git_oid): cint {.importc.}
 ## *
 ##  Determine if the given object can be found in the object database.
 ## 
@@ -157,7 +158,7 @@ proc git_odb_read_header*(len_out: ptr csize; type_out: ptr git_otype; db: ptr g
 ##  - 0, otherwise
 ## 
 
-proc git_odb_exists*(db: ptr git_odb; id: ptr git_oid): cint
+proc git_odb_exists*(db: ptr git_odb; id: ptr git_oid): cint  {.importc.}
 ## *
 ##  Determine if an object can be found in the object database by an
 ##  abbreviated object ID.
@@ -170,8 +171,8 @@ proc git_odb_exists*(db: ptr git_odb; id: ptr git_oid): cint
 ##          matches were found, other value < 0 if there was a read error.
 ## 
 
-proc git_odb_exists_prefix*(`out`: ptr git_oid; db: ptr git_odb; short_id: ptr git_oid;
-                           len: csize): cint
+proc git_odb_exists_prefix*(`out`: ptr git_oid; db: ptr git_odb; short_id: ptr git_oid; 
+                           len: csize): cint {.importc.}
 ## *
 ##  The information about object IDs to query in `git_odb_expand_ids`,
 ##  which will be populated upon return.
@@ -210,7 +211,7 @@ type
 ##  @return 0 on success or an error code on failure
 ## 
 
-proc git_odb_expand_ids*(db: ptr git_odb; ids: ptr git_odb_expand_id; count: csize): cint
+proc git_odb_expand_ids*(db: ptr git_odb; ids: ptr git_odb_expand_id; count: csize): cint  {.importc.}
 ## *
 ##  Refresh the object database to load newly added files.
 ## 
@@ -230,7 +231,7 @@ proc git_odb_expand_ids*(db: ptr git_odb; ids: ptr git_odb_expand_id; count: csi
 ##  @return 0 on success, error code otherwise
 ## 
 
-proc git_odb_refresh*(db: ptr git_odb): cint
+proc git_odb_refresh*(db: ptr git_odb): cint  {.importc.}
 ## *
 ##  List all objects available in the database
 ## 
@@ -245,7 +246,7 @@ proc git_odb_refresh*(db: ptr git_odb): cint
 ##  @return 0 on success, non-zero callback return value, or error code
 ## 
 
-proc git_odb_foreach*(db: ptr git_odb; cb: git_odb_foreach_cb; payload: pointer): cint
+proc git_odb_foreach*(db: ptr git_odb; cb: git_odb_foreach_cb; payload: pointer): cint  {.importc.}
 ## *
 ##  Write an object directly into the ODB
 ## 
@@ -265,8 +266,8 @@ proc git_odb_foreach*(db: ptr git_odb; cb: git_odb_foreach_cb; payload: pointer)
 ##  @return 0 or an error code
 ## 
 
-proc git_odb_write*(`out`: ptr git_oid; odb: ptr git_odb; data: pointer; len: csize;
-                   `type`: git_otype): cint
+proc git_odb_write*(`out`: ptr git_oid; odb: ptr git_odb; data: pointer; len: csize; 
+                   `type`: git_otype): cint {.importc.}
 ## *
 ##  Open a stream to write an object into the ODB
 ## 
@@ -289,8 +290,8 @@ proc git_odb_write*(`out`: ptr git_oid; odb: ptr git_odb; data: pointer; len: cs
 ##  @return 0 if the stream was created; error code otherwise
 ## 
 
-proc git_odb_open_wstream*(`out`: ptr ptr git_odb_stream; db: ptr git_odb;
-                          size: git_off_t; `type`: git_otype): cint
+proc git_odb_open_wstream*(`out`: ptr ptr git_odb_stream; db: ptr git_odb; 
+                          size: git_off_t; `type`: git_otype): cint {.importc.}
 ## *
 ##  Write to an odb stream
 ## 
@@ -303,7 +304,7 @@ proc git_odb_open_wstream*(`out`: ptr ptr git_odb_stream; db: ptr git_odb;
 ##  @return 0 if the write succeeded; error code otherwise
 ## 
 
-proc git_odb_stream_write*(stream: ptr git_odb_stream; buffer: cstring; len: csize): cint
+proc git_odb_stream_write*(stream: ptr git_odb_stream; buffer: cstring; len: csize): cint  {.importc.}
 ## *
 ##  Finish writing to an odb stream
 ## 
@@ -318,21 +319,21 @@ proc git_odb_stream_write*(stream: ptr git_odb_stream; buffer: cstring; len: csi
 ##  @return 0 on success; an error code otherwise
 ## 
 
-proc git_odb_stream_finalize_write*(`out`: ptr git_oid; stream: ptr git_odb_stream): cint
+proc git_odb_stream_finalize_write*(`out`: ptr git_oid; stream: ptr git_odb_stream): cint  {.importc.}
 ## *
 ##  Read from an odb stream
 ## 
 ##  Most backends don't implement streaming reads
 ## 
 
-proc git_odb_stream_read*(stream: ptr git_odb_stream; buffer: cstring; len: csize): cint
+proc git_odb_stream_read*(stream: ptr git_odb_stream; buffer: cstring; len: csize): cint  {.importc.}
 ## *
 ##  Free an odb stream
 ## 
 ##  @param stream the stream to free
 ## 
 
-proc git_odb_stream_free*(stream: ptr git_odb_stream)
+proc git_odb_stream_free*(stream: ptr git_odb_stream)  {.importc.}
 ## *
 ##  Open a stream to read an object from the ODB
 ## 
@@ -358,8 +359,8 @@ proc git_odb_stream_free*(stream: ptr git_odb_stream)
 ##  @return 0 if the stream was created; error code otherwise
 ## 
 
-proc git_odb_open_rstream*(`out`: ptr ptr git_odb_stream; db: ptr git_odb;
-                          oid: ptr git_oid): cint
+proc git_odb_open_rstream*(`out`: ptr ptr git_odb_stream; db: ptr git_odb; 
+                          oid: ptr git_oid): cint {.importc.}
 ## *
 ##  Open a stream for writing a pack file to the ODB.
 ## 
@@ -379,9 +380,9 @@ proc git_odb_open_rstream*(`out`: ptr ptr git_odb_stream; db: ptr git_odb;
 ##  @param progress_payload payload for the progress callback
 ## 
 
-proc git_odb_write_pack*(`out`: ptr ptr git_odb_writepack; db: ptr git_odb;
+proc git_odb_write_pack*(`out`: ptr ptr git_odb_writepack; db: ptr git_odb; 
                         progress_cb: git_transfer_progress_cb;
-                        progress_payload: pointer): cint
+                        progress_payload: pointer): cint {.importc.}
 ## *
 ##  Determine the object-ID (sha1 hash) of a data buffer
 ## 
@@ -395,7 +396,7 @@ proc git_odb_write_pack*(`out`: ptr ptr git_odb_writepack; db: ptr git_odb;
 ##  @return 0 or an error code
 ## 
 
-proc git_odb_hash*(`out`: ptr git_oid; data: pointer; len: csize; `type`: git_otype): cint
+proc git_odb_hash*(`out`: ptr git_oid; data: pointer; len: csize; `type`: git_otype): cint  {.importc.}
 ## *
 ##  Read a file from disk and fill a git_oid with the object id
 ##  that the file would have if it were written to the Object
@@ -410,7 +411,7 @@ proc git_odb_hash*(`out`: ptr git_oid; data: pointer; len: csize; `type`: git_ot
 ##  @return 0 or an error code
 ## 
 
-proc git_odb_hashfile*(`out`: ptr git_oid; path: cstring; `type`: git_otype): cint
+proc git_odb_hashfile*(`out`: ptr git_oid; path: cstring; `type`: git_otype): cint  {.importc.}
 ## *
 ##  Create a copy of an odb_object
 ## 
@@ -424,7 +425,7 @@ proc git_odb_hashfile*(`out`: ptr git_oid; path: cstring; `type`: git_otype): ci
 ##  @return 0 or an error code
 ## 
 
-proc git_odb_object_dup*(dest: ptr ptr git_odb_object; source: ptr git_odb_object): cint
+proc git_odb_object_dup*(dest: ptr ptr git_odb_object; source: ptr git_odb_object): cint  {.importc.}
 ## *
 ##  Close an ODB object
 ## 
@@ -434,7 +435,7 @@ proc git_odb_object_dup*(dest: ptr ptr git_odb_object; source: ptr git_odb_objec
 ##  @param object object to close
 ## 
 
-proc git_odb_object_free*(`object`: ptr git_odb_object)
+proc git_odb_object_free*(`object`: ptr git_odb_object)  {.importc.}
 ## *
 ##  Return the OID of an ODB object
 ## 
@@ -444,7 +445,7 @@ proc git_odb_object_free*(`object`: ptr git_odb_object)
 ##  @return a pointer to the OID
 ## 
 
-proc git_odb_object_id*(`object`: ptr git_odb_object): ptr git_oid
+proc git_odb_object_id*(`object`: ptr git_odb_object): ptr git_oid  {.importc.}
 ## *
 ##  Return the data of an ODB object
 ## 
@@ -457,7 +458,7 @@ proc git_odb_object_id*(`object`: ptr git_odb_object): ptr git_oid
 ##  @return a pointer to the data
 ## 
 
-proc git_odb_object_data*(`object`: ptr git_odb_object): pointer
+proc git_odb_object_data*(`object`: ptr git_odb_object): pointer  {.importc.}
 ## *
 ##  Return the size of an ODB object
 ## 
@@ -468,7 +469,7 @@ proc git_odb_object_data*(`object`: ptr git_odb_object): pointer
 ##  @return the size
 ## 
 
-proc git_odb_object_size*(`object`: ptr git_odb_object): csize
+proc git_odb_object_size*(`object`: ptr git_odb_object): csize  {.importc.}
 ## *
 ##  Return the type of an ODB object
 ## 
@@ -476,7 +477,7 @@ proc git_odb_object_size*(`object`: ptr git_odb_object): csize
 ##  @return the type
 ## 
 
-proc git_odb_object_type*(`object`: ptr git_odb_object): git_otype
+proc git_odb_object_type*(`object`: ptr git_odb_object): git_otype  {.importc.}
 ## *
 ##  Add a custom backend to an existing Object DB
 ## 
@@ -491,8 +492,8 @@ proc git_odb_object_type*(`object`: ptr git_odb_object): git_otype
 ##  @return 0 on success; error code otherwise
 ## 
 
-proc git_odb_add_backend*(odb: ptr git_odb; backend: ptr git_odb_backend;
-                         priority: cint): cint
+proc git_odb_add_backend*(odb: ptr git_odb; backend: ptr git_odb_backend; 
+                         priority: cint): cint {.importc.}
 ## *
 ##  Add a custom backend to an existing Object DB; this
 ##  backend will work as an alternate.
@@ -513,8 +514,8 @@ proc git_odb_add_backend*(odb: ptr git_odb; backend: ptr git_odb_backend;
 ##  @return 0 on success; error code otherwise
 ## 
 
-proc git_odb_add_alternate*(odb: ptr git_odb; backend: ptr git_odb_backend;
-                           priority: cint): cint
+proc git_odb_add_alternate*(odb: ptr git_odb; backend: ptr git_odb_backend; 
+                           priority: cint): cint {.importc.}
 ## *
 ##  Get the number of ODB backend objects
 ## 
@@ -522,7 +523,7 @@ proc git_odb_add_alternate*(odb: ptr git_odb; backend: ptr git_odb_backend;
 ##  @return number of backends in the ODB
 ## 
 
-proc git_odb_num_backends*(odb: ptr git_odb): csize
+proc git_odb_num_backends*(odb: ptr git_odb): csize  {.importc.}
 ## *
 ##  Lookup an ODB backend object by index
 ## 
@@ -532,5 +533,5 @@ proc git_odb_num_backends*(odb: ptr git_odb): csize
 ##  @return 0 on success; GIT_ENOTFOUND if pos is invalid; other errors < 0
 ## 
 
-proc git_odb_get_backend*(`out`: ptr ptr git_odb_backend; odb: ptr git_odb; pos: csize): cint
+proc git_odb_get_backend*(`out`: ptr ptr git_odb_backend; odb: ptr git_odb; pos: csize): cint  {.importc.}
 ## * @}

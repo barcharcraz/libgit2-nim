@@ -4,10 +4,11 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
-  common, types, oid, remote, checkout
+  common, types, oid, remote, checkout, buffer
 
 ## *
 ##  @file git2/submodule.h
@@ -85,19 +86,19 @@ type
 
 
 const
-  GIT_SUBMODULE_STATUS__IN_FLAGS* = 0x0000000F
-  GIT_SUBMODULE_STATUS__INDEX_FLAGS* = 0x00000070
-  GIT_SUBMODULE_STATUS__WD_FLAGS* = 0x00003F80
+  GIT_SUBMODULE_STATUS_IN_FLAGS* = 0x0000000F
+  GIT_SUBMODULE_STATUS_INDEX_FLAGS* = 0x00000070
+  GIT_SUBMODULE_STATUS_WD_FLAGS* = 0x00003F80
 
 template GIT_SUBMODULE_STATUS_IS_UNMODIFIED*(S: untyped): untyped =
-  (((S) and not GIT_SUBMODULE_STATUS__IN_FLAGS) == 0)
+  (((S) and not GIT_SUBMODULE_STATUS_IN_FLAGS) == 0)
 
 template GIT_SUBMODULE_STATUS_IS_INDEX_UNMODIFIED*(S: untyped): untyped =
-  (((S) and GIT_SUBMODULE_STATUS__INDEX_FLAGS) == 0)
+  (((S) and GIT_SUBMODULE_STATUS_INDEX_FLAGS) == 0)
 
 template GIT_SUBMODULE_STATUS_IS_WD_UNMODIFIED*(S: untyped): untyped =
   (((S) and
-      (GIT_SUBMODULE_STATUS__WD_FLAGS and
+      (GIT_SUBMODULE_STATUS_WD_FLAGS and
       not GIT_SUBMODULE_STATUS_WD_UNINITIALIZED)) == 0)
 
 template GIT_SUBMODULE_STATUS_IS_WD_DIRTY*(S: untyped): untyped =
@@ -116,7 +117,7 @@ template GIT_SUBMODULE_STATUS_IS_WD_DIRTY*(S: untyped): untyped =
 ## 
 
 type
-  git_submodule_cb* = proc (sm: ptr git_submodule; name: cstring; payload: pointer): cint
+  git_submodule_cb* = proc (sm: ptr git_submodule; name: cstring; payload: pointer): cint  {.importc.}
 
 ## *
 ##  Submodule update options structure
@@ -161,8 +162,8 @@ const
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_submodule_update_init_options*(opts: ptr git_submodule_update_options;
-                                       version: cuint): cint
+proc git_submodule_update_init_options*(opts: ptr git_submodule_update_options; 
+                                       version: cuint): cint {.importc.}
 ## *
 ##  Update a submodule. This will clone a missing submodule and
 ##  checkout the subrepository to the commit specified in the index of
@@ -182,8 +183,8 @@ proc git_submodule_update_init_options*(opts: ptr git_submodule_update_options;
 ##          `giterr_last` for a detailed error message).
 ## 
 
-proc git_submodule_update*(submodule: ptr git_submodule; init: cint;
-                          options: ptr git_submodule_update_options): cint
+proc git_submodule_update*(submodule: ptr git_submodule; init: cint; 
+                          options: ptr git_submodule_update_options): cint {.importc.}
 ## *
 ##  Lookup submodule information by name or path.
 ## 
@@ -212,15 +213,15 @@ proc git_submodule_update*(submodule: ptr git_submodule; init: cint;
 ##          -1 on other errors.
 ## 
 
-proc git_submodule_lookup*(`out`: ptr ptr git_submodule; repo: ptr git_repository;
-                          name: cstring): cint
+proc git_submodule_lookup*(`out`: ptr ptr git_submodule; repo: ptr git_repository; 
+                          name: cstring): cint {.importc.}
 ## *
 ##  Release a submodule
 ## 
 ##  @param submodule Submodule object
 ## 
 
-proc git_submodule_free*(submodule: ptr git_submodule)
+proc git_submodule_free*(submodule: ptr git_submodule)  {.importc.}
 ## *
 ##  Iterate over all tracked submodules of a repository.
 ## 
@@ -240,8 +241,8 @@ proc git_submodule_free*(submodule: ptr git_submodule)
 ##  @return 0 on success, -1 on error, or non-zero return value of callback
 ## 
 
-proc git_submodule_foreach*(repo: ptr git_repository; callback: git_submodule_cb;
-                           payload: pointer): cint
+proc git_submodule_foreach*(repo: ptr git_repository; callback: git_submodule_cb; 
+                           payload: pointer): cint {.importc.}
 ## *
 ##  Set up a new git submodule for checkout.
 ## 
@@ -268,8 +269,8 @@ proc git_submodule_foreach*(repo: ptr git_repository; callback: git_submodule_cb
 ##          -1 on other errors.
 ## 
 
-proc git_submodule_add_setup*(`out`: ptr ptr git_submodule; repo: ptr git_repository;
-                             url: cstring; path: cstring; use_gitlink: cint): cint
+proc git_submodule_add_setup*(`out`: ptr ptr git_submodule; repo: ptr git_repository; 
+                             url: cstring; path: cstring; use_gitlink: cint): cint {.importc.}
 ## *
 ##  Resolve the setup of a new git submodule.
 ## 
@@ -281,7 +282,7 @@ proc git_submodule_add_setup*(`out`: ptr ptr git_submodule; repo: ptr git_reposi
 ##  @param submodule The submodule to finish adding.
 ## 
 
-proc git_submodule_add_finalize*(submodule: ptr git_submodule): cint
+proc git_submodule_add_finalize*(submodule: ptr git_submodule): cint  {.importc.}
 ## *
 ##  Add current submodule HEAD commit to index of superproject.
 ## 
@@ -293,7 +294,7 @@ proc git_submodule_add_finalize*(submodule: ptr git_submodule): cint
 ##  @return 0 on success, <0 on failure
 ## 
 
-proc git_submodule_add_to_index*(submodule: ptr git_submodule; write_index: cint): cint
+proc git_submodule_add_to_index*(submodule: ptr git_submodule; write_index: cint): cint  {.importc.}
 ## *
 ##  Get the containing repository for a submodule.
 ## 
@@ -306,7 +307,7 @@ proc git_submodule_add_to_index*(submodule: ptr git_submodule; write_index: cint
 ##  @return Pointer to `git_repository`
 ## 
 
-proc git_submodule_owner*(submodule: ptr git_submodule): ptr git_repository
+proc git_submodule_owner*(submodule: ptr git_submodule): ptr git_repository  {.importc.}
 ## *
 ##  Get the name of submodule.
 ## 
@@ -314,7 +315,7 @@ proc git_submodule_owner*(submodule: ptr git_submodule): ptr git_repository
 ##  @return Pointer to the submodule name
 ## 
 
-proc git_submodule_name*(submodule: ptr git_submodule): cstring
+proc git_submodule_name*(submodule: ptr git_submodule): cstring  {.importc.}
 ## *
 ##  Get the path to the submodule.
 ## 
@@ -325,7 +326,7 @@ proc git_submodule_name*(submodule: ptr git_submodule): cstring
 ##  @return Pointer to the submodule path
 ## 
 
-proc git_submodule_path*(submodule: ptr git_submodule): cstring
+proc git_submodule_path*(submodule: ptr git_submodule): cstring  {.importc.}
 ## *
 ##  Get the URL for the submodule.
 ## 
@@ -333,7 +334,7 @@ proc git_submodule_path*(submodule: ptr git_submodule): cstring
 ##  @return Pointer to the submodule url
 ## 
 
-proc git_submodule_url*(submodule: ptr git_submodule): cstring
+proc git_submodule_url*(submodule: ptr git_submodule): cstring  {.importc.}
 ## *
 ##  Resolve a submodule url relative to the given repository.
 ## 
@@ -343,8 +344,8 @@ proc git_submodule_url*(submodule: ptr git_submodule): cstring
 ##  @return 0 or an error code
 ## 
 
-proc git_submodule_resolve_url*(`out`: ptr git_buf; repo: ptr git_repository;
-                               url: cstring): cint
+proc git_submodule_resolve_url*(`out`: ptr git_buf; repo: ptr git_repository; 
+                               url: cstring): cint {.importc.}
 ## *
 ##  Get the branch for the submodule.
 ## 
@@ -352,7 +353,7 @@ proc git_submodule_resolve_url*(`out`: ptr git_buf; repo: ptr git_repository;
 ##  @return Pointer to the submodule branch
 ## 
 
-proc git_submodule_branch*(submodule: ptr git_submodule): cstring
+proc git_submodule_branch*(submodule: ptr git_submodule): cstring  {.importc.}
 ## *
 ##  Set the branch for the submodule in the configuration
 ## 
@@ -365,8 +366,8 @@ proc git_submodule_branch*(submodule: ptr git_submodule): cstring
 ##  @return 0 on success, <0 on failure
 ## 
 
-proc git_submodule_set_branch*(repo: ptr git_repository; name: cstring;
-                              branch: cstring): cint
+proc git_submodule_set_branch*(repo: ptr git_repository; name: cstring; 
+                              branch: cstring): cint {.importc.}
 ## *
 ##  Set the URL for the submodule in the configuration
 ## 
@@ -380,7 +381,7 @@ proc git_submodule_set_branch*(repo: ptr git_repository; name: cstring;
 ##  @return 0 on success, <0 on failure
 ## 
 
-proc git_submodule_set_url*(repo: ptr git_repository; name: cstring; url: cstring): cint
+proc git_submodule_set_url*(repo: ptr git_repository; name: cstring; url: cstring): cint  {.importc.}
 ## *
 ##  Get the OID for the submodule in the index.
 ## 
@@ -388,7 +389,7 @@ proc git_submodule_set_url*(repo: ptr git_repository; name: cstring; url: cstrin
 ##  @return Pointer to git_oid or NULL if submodule is not in index.
 ## 
 
-proc git_submodule_index_id*(submodule: ptr git_submodule): ptr git_oid
+proc git_submodule_index_id*(submodule: ptr git_submodule): ptr git_oid  {.importc.}
 ## *
 ##  Get the OID for the submodule in the current HEAD tree.
 ## 
@@ -396,7 +397,7 @@ proc git_submodule_index_id*(submodule: ptr git_submodule): ptr git_oid
 ##  @return Pointer to git_oid or NULL if submodule is not in the HEAD.
 ## 
 
-proc git_submodule_head_id*(submodule: ptr git_submodule): ptr git_oid
+proc git_submodule_head_id*(submodule: ptr git_submodule): ptr git_oid  {.importc.}
 ## *
 ##  Get the OID for the submodule in the current working directory.
 ## 
@@ -409,7 +410,7 @@ proc git_submodule_head_id*(submodule: ptr git_submodule): ptr git_oid
 ##  @return Pointer to git_oid or NULL if submodule is not checked out.
 ## 
 
-proc git_submodule_wd_id*(submodule: ptr git_submodule): ptr git_oid
+proc git_submodule_wd_id*(submodule: ptr git_submodule): ptr git_oid  {.importc.}
 ## *
 ##  Get the ignore rule that will be used for the submodule.
 ## 
@@ -434,7 +435,7 @@ proc git_submodule_wd_id*(submodule: ptr git_submodule): ptr git_oid
 ##          this submodule.
 ## 
 
-proc git_submodule_ignore*(submodule: ptr git_submodule): git_submodule_ignore_t
+proc git_submodule_ignore*(submodule: ptr git_submodule): git_submodule_ignore_t  {.importc.}
 ## *
 ##  Set the ignore rule for the submodule in the configuration
 ## 
@@ -446,8 +447,8 @@ proc git_submodule_ignore*(submodule: ptr git_submodule): git_submodule_ignore_t
 ##  @return 0 or an error code
 ## 
 
-proc git_submodule_set_ignore*(repo: ptr git_repository; name: cstring;
-                              ignore: git_submodule_ignore_t): cint
+proc git_submodule_set_ignore*(repo: ptr git_repository; name: cstring; 
+                              ignore: git_submodule_ignore_t): cint {.importc.}
 ## *
 ##  Get the update rule that will be used for the submodule.
 ## 
@@ -459,7 +460,7 @@ proc git_submodule_set_ignore*(repo: ptr git_repository; name: cstring;
 ##          for this submodule.
 ## 
 
-proc git_submodule_update_strategy*(submodule: ptr git_submodule): git_submodule_update_t
+proc git_submodule_update_strategy*(submodule: ptr git_submodule): git_submodule_update_t  {.importc.}
 ## *
 ##  Set the update rule for the submodule in the configuration
 ## 
@@ -471,8 +472,8 @@ proc git_submodule_update_strategy*(submodule: ptr git_submodule): git_submodule
 ##  @return 0 or an error code
 ## 
 
-proc git_submodule_set_update*(repo: ptr git_repository; name: cstring;
-                              update: git_submodule_update_t): cint
+proc git_submodule_set_update*(repo: ptr git_repository; name: cstring; 
+                              update: git_submodule_update_t): cint {.importc.}
 ## *
 ##  Read the fetchRecurseSubmodules rule for a submodule.
 ## 
@@ -485,7 +486,7 @@ proc git_submodule_set_update*(repo: ptr git_repository; name: cstring;
 ##  @return 0 if fetchRecurseSubmodules is false, 1 if true
 ## 
 
-proc git_submodule_fetch_recurse_submodules*(submodule: ptr git_submodule): git_submodule_recurse_t
+proc git_submodule_fetch_recurse_submodules*(submodule: ptr git_submodule): git_submodule_recurse_t  {.importc.}
 ## *
 ##  Set the fetchRecurseSubmodules rule for a submodule in the configuration
 ## 
@@ -497,8 +498,8 @@ proc git_submodule_fetch_recurse_submodules*(submodule: ptr git_submodule): git_
 ##  @return old value for fetchRecurseSubmodules
 ## 
 
-proc git_submodule_set_fetch_recurse_submodules*(repo: ptr git_repository;
-    name: cstring; fetch_recurse_submodules: git_submodule_recurse_t): cint
+proc git_submodule_set_fetch_recurse_submodules*(repo: ptr git_repository; 
+    name: cstring; fetch_recurse_submodules: git_submodule_recurse_t): cint {.importc.}
 ## *
 ##  Copy submodule info into ".git/config" file.
 ## 
@@ -513,7 +514,7 @@ proc git_submodule_set_fetch_recurse_submodules*(repo: ptr git_repository;
 ##  @return 0 on success, <0 on failure.
 ## 
 
-proc git_submodule_init*(submodule: ptr git_submodule; overwrite: cint): cint
+proc git_submodule_init*(submodule: ptr git_submodule; overwrite: cint): cint  {.importc.}
 ## *
 ##  Set up the subrepository for a submodule in preparation for clone.
 ## 
@@ -528,8 +529,8 @@ proc git_submodule_init*(submodule: ptr git_submodule; overwrite: cint): cint
 ##  @return 0 on success, <0 on failure.
 ## 
 
-proc git_submodule_repo_init*(`out`: ptr ptr git_repository; sm: ptr git_submodule;
-                             use_gitlink: cint): cint
+proc git_submodule_repo_init*(`out`: ptr ptr git_repository; sm: ptr git_submodule; 
+                             use_gitlink: cint): cint {.importc.}
 ## *
 ##  Copy submodule remote info into submodule repo.
 ## 
@@ -539,7 +540,7 @@ proc git_submodule_repo_init*(`out`: ptr ptr git_repository; sm: ptr git_submodu
 ##  fetch of upstream changes) and you need to update your local repo.
 ## 
 
-proc git_submodule_sync*(submodule: ptr git_submodule): cint
+proc git_submodule_sync*(submodule: ptr git_submodule): cint  {.importc.}
 ## *
 ##  Open the repository for a submodule.
 ## 
@@ -553,7 +554,7 @@ proc git_submodule_sync*(submodule: ptr git_submodule): cint
 ##  @return 0 on success, <0 if submodule repo could not be opened.
 ## 
 
-proc git_submodule_open*(repo: ptr ptr git_repository; submodule: ptr git_submodule): cint
+proc git_submodule_open*(repo: ptr ptr git_repository; submodule: ptr git_submodule): cint  {.importc.}
 ## *
 ##  Reread submodule info from config, index, and HEAD.
 ## 
@@ -565,7 +566,7 @@ proc git_submodule_open*(repo: ptr ptr git_repository; submodule: ptr git_submod
 ##  @return 0 on success, <0 on error
 ## 
 
-proc git_submodule_reload*(submodule: ptr git_submodule; force: cint): cint
+proc git_submodule_reload*(submodule: ptr git_submodule; force: cint): cint  {.importc.}
 ## *
 ##  Get the status for a submodule.
 ## 
@@ -581,8 +582,8 @@ proc git_submodule_reload*(submodule: ptr git_submodule; force: cint): cint
 ##  @return 0 on success, <0 on error
 ## 
 
-proc git_submodule_status*(status: ptr cuint; repo: ptr git_repository; name: cstring;
-                          ignore: git_submodule_ignore_t): cint
+proc git_submodule_status*(status: ptr cuint; repo: ptr git_repository; name: cstring; 
+                          ignore: git_submodule_ignore_t): cint {.importc.}
 ## *
 ##  Get the locations of submodule information.
 ## 
@@ -598,6 +599,6 @@ proc git_submodule_status*(status: ptr cuint; repo: ptr git_repository; name: cs
 ##  @return 0 on success, <0 on error
 ## 
 
-proc git_submodule_location*(location_status: ptr cuint;
-                            submodule: ptr git_submodule): cint
+proc git_submodule_location*(location_status: ptr cuint; 
+                            submodule: ptr git_submodule): cint {.importc.}
 ## * @}

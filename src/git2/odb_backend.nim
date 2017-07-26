@@ -4,10 +4,11 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
-  common, types
+  common, types, oid
 
 ## *
 ##  @file git2/backend.h
@@ -28,7 +29,7 @@ import
 ##  @return 0 or an error code
 ## 
 
-proc git_odb_backend_pack*(`out`: ptr ptr git_odb_backend; objects_dir: cstring): cint
+proc git_odb_backend_pack*(`out`: ptr ptr git_odb_backend; objects_dir: cstring): cint  {.importc.}
 ## *
 ##  Create a backend for loose objects
 ## 
@@ -42,9 +43,9 @@ proc git_odb_backend_pack*(`out`: ptr ptr git_odb_backend; objects_dir: cstring)
 ##  @return 0 or an error code
 ## 
 
-proc git_odb_backend_loose*(`out`: ptr ptr git_odb_backend; objects_dir: cstring;
+proc git_odb_backend_loose*(`out`: ptr ptr git_odb_backend; objects_dir: cstring; 
                            compression_level: cint; do_fsync: cint; dir_mode: cuint;
-                           file_mode: cuint): cint
+                           file_mode: cuint): cint {.importc.}
 ## *
 ##  Create a backend out of a single packfile
 ## 
@@ -57,13 +58,13 @@ proc git_odb_backend_loose*(`out`: ptr ptr git_odb_backend; objects_dir: cstring
 ##  @return 0 or an error code
 ## 
 
-proc git_odb_backend_one_pack*(`out`: ptr ptr git_odb_backend; index_file: cstring): cint
+proc git_odb_backend_one_pack*(`out`: ptr ptr git_odb_backend; index_file: cstring): cint  {.importc.}
 ## * Streaming mode
 
 type
   git_odb_stream_t* = enum
     GIT_STREAM_RDONLY = (1 shl 1), GIT_STREAM_WRONLY = (1 shl 2),
-    GIT_STREAM_RW = (GIT_STREAM_RDONLY or GIT_STREAM_WRONLY)
+    GIT_STREAM_RW = (ord(GIT_STREAM_RDONLY) or ord(GIT_STREAM_WRONLY))
 
 
 ## *
@@ -84,10 +85,10 @@ type
     received_bytes*: git_off_t ## *
                              ##  Write at most `len` bytes into `buffer` and advance the stream.
                              ## 
-    read*: proc (stream: ptr git_odb_stream; buffer: cstring; len: csize): cint ## *
+    read*: proc (stream: ptr git_odb_stream; buffer: cstring; len: csize): cint ## *  {.importc.}
                                                                       ##  Write `len` bytes from `buffer` into the stream.
                                                                       ## 
-    write*: proc (stream: ptr git_odb_stream; buffer: cstring; len: csize): cint ## *
+    write*: proc (stream: ptr git_odb_stream; buffer: cstring; len: csize): cint ## *  {.importc.}
                                                                        ##  Store the contents of the stream as an object with the id
                                                                        ##  specified in `oid`.
                                                                        ## 
@@ -97,13 +98,13 @@ type
                                                                        ##  - the final number of received bytes differs from the size declared
                                                                        ##    with `git_odb_open_wstream()`
                                                                        ## 
-    finalize_write*: proc (stream: ptr git_odb_stream; oid: ptr git_oid): cint ## *
+    finalize_write*: proc (stream: ptr git_odb_stream; oid: ptr git_oid): cint ## *  {.importc.}
                                                                       ##  Free the stream's memory.
                                                                       ## 
                                                                       ##  This method might be called without a call to `finalize_write` if
                                                                       ##  an error occurs or if the object is already present in the ODB.
                                                                       ## 
-    free*: proc (stream: ptr git_odb_stream)
+    free*: proc (stream: ptr git_odb_stream) 
 
 
 ## * A stream to write a pack file to the ODB
@@ -111,8 +112,8 @@ type
 type
   git_odb_writepack* {.bycopy.} = object
     backend*: ptr git_odb_backend
-    append*: proc (writepack: ptr git_odb_writepack; data: pointer; size: csize;
+    append*: proc (writepack: ptr git_odb_writepack; data: pointer; size: csize; 
                  stats: ptr git_transfer_progress): cint
-    commit*: proc (writepack: ptr git_odb_writepack; stats: ptr git_transfer_progress): cint
-    free*: proc (writepack: ptr git_odb_writepack)
+    commit*: proc (writepack: ptr git_odb_writepack; stats: ptr git_transfer_progress): cint  {.importc.}
+    free*: proc (writepack: ptr git_odb_writepack) 
 

@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, indexer, types, oid, strarray
 
@@ -20,7 +21,7 @@ import
 
 type
   git_index_time* {.bycopy.} = object
-    seconds*: int32_t          ##  nsec should not be stored as time_t compatible
+    seconds*: int32          ##  nsec should not be stored as time_t compatible
     nanoseconds*: uint32
 
 
@@ -89,7 +90,7 @@ template GIT_IDXENTRY_STAGE*(E: untyped): untyped =
 
 template GIT_IDXENTRY_STAGE_SET*(E, S: untyped): void =
   while true:
-  (E).flags = ((E).flags and not GIT_IDXENTRY_STAGEMASK) or
+    (E).flags = ((E).flags and not GIT_IDXENTRY_STAGEMASK) or
       (((S) and 0x00000003) shl GIT_IDXENTRY_STAGESHIFT)
   if not 0: break
 
@@ -113,18 +114,21 @@ template GIT_IDXENTRY_STAGE_SET*(E, S: untyped): void =
 
 type
   git_idxentry_extended_flag_t* = enum
-    GIT_IDXENTRY_INTENT_TO_ADD = (1 shl 13), GIT_IDXENTRY_SKIP_WORKTREE = (1 shl 14), ## * 
-                                                                            ## Reserved for 
-                                                                            ## future 
-                                                                            ## extension
-    GIT_IDXENTRY_EXTENDED2 = (1 shl 15), GIT_IDXENTRY_EXTENDED_FLAGS = (
-        GIT_IDXENTRY_INTENT_TO_ADD or GIT_IDXENTRY_SKIP_WORKTREE),
+
     GIT_IDXENTRY_UPDATE = (1 shl 0), GIT_IDXENTRY_REMOVE = (1 shl 1),
     GIT_IDXENTRY_UPTODATE = (1 shl 2), GIT_IDXENTRY_ADDED = (1 shl 3),
     GIT_IDXENTRY_HASHED = (1 shl 4), GIT_IDXENTRY_UNHASHED = (1 shl 5), GIT_IDXENTRY_WT_REMOVE = (
         1 shl 6),               ## *< remove in work directory
     GIT_IDXENTRY_CONFLICTED = (1 shl 7), GIT_IDXENTRY_UNPACKED = (1 shl 8),
-    GIT_IDXENTRY_NEW_SKIP_WORKTREE = (1 shl 9)
+    GIT_IDXENTRY_NEW_SKIP_WORKTREE = (1 shl 9),
+
+        GIT_IDXENTRY_INTENT_TO_ADD = (1 shl 13), GIT_IDXENTRY_SKIP_WORKTREE = (1 shl 14), ## * 
+                                                                            ## Reserved for 
+                                                                            ## future 
+      GIT_IDXENTRY_EXTENDED_FLAGS = (
+        ord(GIT_IDXENTRY_INTENT_TO_ADD) or ord(GIT_IDXENTRY_SKIP_WORKTREE)),                                                                        ## extension
+    GIT_IDXENTRY_EXTENDED2 = (1 shl 15)
+
 
 
 ## * Capabilities of system that affect index actions.
@@ -138,7 +142,7 @@ type
 ## * Callback for APIs that add/remove/update files matching pathspec
 
 type
-  git_index_matched_path_cb* = proc (path: cstring; matched_pathspec: cstring;
+  git_index_matched_path_cb* = proc (path: cstring; matched_pathspec: cstring; 
                                   payload: pointer): cint
 
 ## * Flags for APIs that add files matching pathspec
@@ -186,7 +190,7 @@ type ## *
 ##  @return 0 or an error code
 ## 
 
-proc git_index_open*(`out`: ptr ptr git_index; index_path: cstring): cint
+proc git_index_open*(`out`: ptr ptr git_index; index_path: cstring): cint  {.importc.}
 ## *
 ##  Create an in-memory index object.
 ## 
@@ -199,14 +203,14 @@ proc git_index_open*(`out`: ptr ptr git_index; index_path: cstring): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_index_new*(`out`: ptr ptr git_index): cint
+proc git_index_new*(`out`: ptr ptr git_index): cint  {.importc.}
 ## *
 ##  Free an existing index object.
 ## 
 ##  @param index an existing index object
 ## 
 
-proc git_index_free*(index: ptr git_index)
+proc git_index_free*(index: ptr git_index)  {.importc.}
 ## *
 ##  Get the repository this index relates to
 ## 
@@ -214,7 +218,7 @@ proc git_index_free*(index: ptr git_index)
 ##  @return A pointer to the repository
 ## 
 
-proc git_index_owner*(index: ptr git_index): ptr git_repository
+proc git_index_owner*(index: ptr git_index): ptr git_repository  {.importc.}
 ## *
 ##  Read index capabilities flags.
 ## 
@@ -222,7 +226,7 @@ proc git_index_owner*(index: ptr git_index): ptr git_repository
 ##  @return A combination of GIT_INDEXCAP values
 ## 
 
-proc git_index_caps*(index: ptr git_index): cint
+proc git_index_caps*(index: ptr git_index): cint  {.importc.}
 ## *
 ##  Set index capabilities flags.
 ## 
@@ -235,7 +239,7 @@ proc git_index_caps*(index: ptr git_index): cint
 ##  @return 0 on success, -1 on failure
 ## 
 
-proc git_index_set_caps*(index: ptr git_index; caps: cint): cint
+proc git_index_set_caps*(index: ptr git_index; caps: cint): cint  {.importc.}
 ## *
 ##  Get index on-disk version.
 ## 
@@ -247,7 +251,7 @@ proc git_index_set_caps*(index: ptr git_index; caps: cint): cint
 ##  @return the index version
 ## 
 
-proc git_index_version*(index: ptr git_index): cuint
+proc git_index_version*(index: ptr git_index): cuint  {.importc.}
 ## *
 ##  Set index on-disk version.
 ## 
@@ -260,7 +264,7 @@ proc git_index_version*(index: ptr git_index): cuint
 ##  @return 0 on success, -1 on failure
 ## 
 
-proc git_index_set_version*(index: ptr git_index; version: cuint): cint
+proc git_index_set_version*(index: ptr git_index; version: cuint): cint  {.importc.}
 ## *
 ##  Update the contents of an existing index object in memory by reading
 ##  from the hard disk.
@@ -279,7 +283,7 @@ proc git_index_set_version*(index: ptr git_index; version: cuint): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_index_read*(index: ptr git_index; force: cint): cint
+proc git_index_read*(index: ptr git_index; force: cint): cint  {.importc.}
 ## *
 ##  Write an existing index object from memory back to disk
 ##  using an atomic file lock.
@@ -288,7 +292,7 @@ proc git_index_read*(index: ptr git_index; force: cint): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_index_write*(index: ptr git_index): cint
+proc git_index_write*(index: ptr git_index): cint  {.importc.}
 ## *
 ##  Get the full path to the index file on disk.
 ## 
@@ -296,7 +300,7 @@ proc git_index_write*(index: ptr git_index): cint
 ##  @return path to index file or NULL for in-memory index
 ## 
 
-proc git_index_path*(index: ptr git_index): cstring
+proc git_index_path*(index: ptr git_index): cstring  {.importc.}
 ## *
 ##  Get the checksum of the index
 ## 
@@ -308,7 +312,7 @@ proc git_index_path*(index: ptr git_index): cstring
 ##  @return a pointer to the checksum of the index
 ## 
 
-proc git_index_checksum*(index: ptr git_index): ptr git_oid
+proc git_index_checksum*(index: ptr git_index): ptr git_oid  {.importc.}
 ## *
 ##  Read a tree into the index file with stats
 ## 
@@ -319,7 +323,7 @@ proc git_index_checksum*(index: ptr git_index): ptr git_oid
 ##  @return 0 or an error code
 ## 
 
-proc git_index_read_tree*(index: ptr git_index; tree: ptr git_tree): cint
+proc git_index_read_tree*(index: ptr git_index; tree: ptr git_tree): cint  {.importc.}
 ## *
 ##  Write the index as a tree
 ## 
@@ -340,7 +344,7 @@ proc git_index_read_tree*(index: ptr git_index; tree: ptr git_tree): cint
 ##  or an error code
 ## 
 
-proc git_index_write_tree*(`out`: ptr git_oid; index: ptr git_index): cint
+proc git_index_write_tree*(`out`: ptr git_oid; index: ptr git_index): cint  {.importc.}
 ## *
 ##  Write the index as a tree to the given repository
 ## 
@@ -357,8 +361,8 @@ proc git_index_write_tree*(`out`: ptr git_oid; index: ptr git_index): cint
 ##  or an error code
 ## 
 
-proc git_index_write_tree_to*(`out`: ptr git_oid; index: ptr git_index;
-                             repo: ptr git_repository): cint
+proc git_index_write_tree_to*(`out`: ptr git_oid; index: ptr git_index; 
+                             repo: ptr git_repository): cint {.importc.}
 ## *@}
 ## * @name Raw Index Entry Functions
 ## 
@@ -374,7 +378,7 @@ proc git_index_write_tree_to*(`out`: ptr git_oid; index: ptr git_index;
 ##  @return integer of count of current entries
 ## 
 
-proc git_index_entrycount*(index: ptr git_index): csize
+proc git_index_entrycount*(index: ptr git_index): csize  {.importc.}
 ## *
 ##  Clear the contents (all the entries) of an index object.
 ## 
@@ -385,7 +389,7 @@ proc git_index_entrycount*(index: ptr git_index): csize
 ##  @return 0 on success, error code < 0 on failure
 ## 
 
-proc git_index_clear*(index: ptr git_index): cint
+proc git_index_clear*(index: ptr git_index): cint  {.importc.}
 ## *
 ##  Get a pointer to one of the entries in the index
 ## 
@@ -398,7 +402,7 @@ proc git_index_clear*(index: ptr git_index): cint
 ##  @return a pointer to the entry; NULL if out of bounds
 ## 
 
-proc git_index_get_byindex*(index: ptr git_index; n: csize): ptr git_index_entry
+proc git_index_get_byindex*(index: ptr git_index; n: csize): ptr git_index_entry  {.importc.}
 ## *
 ##  Get a pointer to one of the entries in the index
 ## 
@@ -412,7 +416,7 @@ proc git_index_get_byindex*(index: ptr git_index; n: csize): ptr git_index_entry
 ##  @return a pointer to the entry; NULL if it was not found
 ## 
 
-proc git_index_get_bypath*(index: ptr git_index; path: cstring; stage: cint): ptr git_index_entry
+proc git_index_get_bypath*(index: ptr git_index; path: cstring; stage: cint): ptr git_index_entry  {.importc.}
 ## *
 ##  Remove an entry from the index
 ## 
@@ -422,7 +426,7 @@ proc git_index_get_bypath*(index: ptr git_index; path: cstring; stage: cint): pt
 ##  @return 0 or an error code
 ## 
 
-proc git_index_remove*(index: ptr git_index; path: cstring; stage: cint): cint
+proc git_index_remove*(index: ptr git_index; path: cstring; stage: cint): cint  {.importc.}
 ## *
 ##  Remove all entries from the index under a given directory
 ## 
@@ -432,7 +436,7 @@ proc git_index_remove*(index: ptr git_index; path: cstring; stage: cint): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_index_remove_directory*(index: ptr git_index; dir: cstring; stage: cint): cint
+proc git_index_remove_directory*(index: ptr git_index; dir: cstring; stage: cint): cint  {.importc.}
 ## *
 ##  Add or update an index entry from an in-memory struct
 ## 
@@ -448,7 +452,7 @@ proc git_index_remove_directory*(index: ptr git_index; dir: cstring; stage: cint
 ##  @return 0 or an error code
 ## 
 
-proc git_index_add*(index: ptr git_index; source_entry: ptr git_index_entry): cint
+proc git_index_add*(index: ptr git_index; source_entry: ptr git_index_entry): cint  {.importc.}
 ## *
 ##  Return the stage number from a git index entry
 ## 
@@ -460,7 +464,7 @@ proc git_index_add*(index: ptr git_index; source_entry: ptr git_index_entry): ci
 ##  @return the stage number
 ## 
 
-proc git_index_entry_stage*(entry: ptr git_index_entry): cint
+proc git_index_entry_stage*(entry: ptr git_index_entry): cint  {.importc.}
 ## *
 ##  Return whether the given index entry is a conflict (has a high stage
 ##  entry).  This is simply shorthand for `git_index_entry_stage > 0`.
@@ -469,7 +473,7 @@ proc git_index_entry_stage*(entry: ptr git_index_entry): cint
 ##  @return 1 if the entry is a conflict entry, 0 otherwise
 ## 
 
-proc git_index_entry_is_conflict*(entry: ptr git_index_entry): cint
+proc git_index_entry_is_conflict*(entry: ptr git_index_entry): cint  {.importc.}
 ## *@}
 ## * @name Workdir Index Entry Functions
 ## 
@@ -498,7 +502,7 @@ proc git_index_entry_is_conflict*(entry: ptr git_index_entry): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_index_add_bypath*(index: ptr git_index; path: cstring): cint
+proc git_index_add_bypath*(index: ptr git_index; path: cstring): cint  {.importc.}
 ## *
 ##  Add or update an index entry from a buffer in memory
 ## 
@@ -527,8 +531,8 @@ proc git_index_add_bypath*(index: ptr git_index; path: cstring): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_index_add_frombuffer*(index: ptr git_index; entry: ptr git_index_entry;
-                              buffer: pointer; len: csize): cint
+proc git_index_add_frombuffer*(index: ptr git_index; entry: ptr git_index_entry; 
+                              buffer: pointer; len: csize): cint {.importc.}
 ## *
 ##  Remove an index entry corresponding to a file on disk
 ## 
@@ -544,7 +548,7 @@ proc git_index_add_frombuffer*(index: ptr git_index; entry: ptr git_index_entry;
 ##  @return 0 or an error code
 ## 
 
-proc git_index_remove_bypath*(index: ptr git_index; path: cstring): cint
+proc git_index_remove_bypath*(index: ptr git_index; path: cstring): cint  {.importc.}
 ## *
 ##  Add or update index entries matching files in the working directory.
 ## 
@@ -592,8 +596,8 @@ proc git_index_remove_bypath*(index: ptr git_index; path: cstring): cint
 ##  @return 0 on success, negative callback return value, or error code
 ## 
 
-proc git_index_add_all*(index: ptr git_index; pathspec: ptr git_strarray; flags: cuint;
-                       callback: git_index_matched_path_cb; payload: pointer): cint
+proc git_index_add_all*(index: ptr git_index; pathspec: ptr git_strarray; flags: cuint; 
+                       callback: git_index_matched_path_cb; payload: pointer): cint {.importc.}
 ## *
 ##  Remove all matching index entries.
 ## 
@@ -610,8 +614,8 @@ proc git_index_add_all*(index: ptr git_index; pathspec: ptr git_strarray; flags:
 ##  @return 0 on success, negative callback return value, or error code
 ## 
 
-proc git_index_remove_all*(index: ptr git_index; pathspec: ptr git_strarray;
-                          callback: git_index_matched_path_cb; payload: pointer): cint
+proc git_index_remove_all*(index: ptr git_index; pathspec: ptr git_strarray; 
+                          callback: git_index_matched_path_cb; payload: pointer): cint {.importc.}
 ## *
 ##  Update all index entries to match the working directory
 ## 
@@ -636,8 +640,8 @@ proc git_index_remove_all*(index: ptr git_index; pathspec: ptr git_strarray;
 ##  @return 0 on success, negative callback return value, or error code
 ## 
 
-proc git_index_update_all*(index: ptr git_index; pathspec: ptr git_strarray;
-                          callback: git_index_matched_path_cb; payload: pointer): cint
+proc git_index_update_all*(index: ptr git_index; pathspec: ptr git_strarray; 
+                          callback: git_index_matched_path_cb; payload: pointer): cint {.importc.}
 ## *
 ##  Find the first position of any entries which point to given
 ##  path in the Git index.
@@ -648,7 +652,7 @@ proc git_index_update_all*(index: ptr git_index; pathspec: ptr git_strarray;
 ##  @return a zero-based position in the index if found; GIT_ENOTFOUND otherwise
 ## 
 
-proc git_index_find*(at_pos: ptr csize; index: ptr git_index; path: cstring): cint
+proc git_index_find*(at_pos: ptr csize; index: ptr git_index; path: cstring): cint  {.importc.}
 ## *
 ##  Find the first position of any entries matching a prefix. To find the first position
 ##  of a path inside a given folder, suffix the prefix with a '/'.
@@ -659,7 +663,7 @@ proc git_index_find*(at_pos: ptr csize; index: ptr git_index; path: cstring): ci
 ##  @return 0 with valid value in at_pos; an error code otherwise
 ## 
 
-proc git_index_find_prefix*(at_pos: ptr csize; index: ptr git_index; prefix: cstring): cint
+proc git_index_find_prefix*(at_pos: ptr csize; index: ptr git_index; prefix: cstring): cint  {.importc.}
 ## *@}
 ## * @name Conflict Index Entry Functions
 ## 
@@ -682,10 +686,10 @@ proc git_index_find_prefix*(at_pos: ptr csize; index: ptr git_index; prefix: cst
 ##  @return 0 or an error code
 ## 
 
-proc git_index_conflict_add*(index: ptr git_index;
+proc git_index_conflict_add*(index: ptr git_index; 
                             ancestor_entry: ptr git_index_entry;
                             our_entry: ptr git_index_entry;
-                            their_entry: ptr git_index_entry): cint
+                            their_entry: ptr git_index_entry): cint {.importc.}
 ## *
 ##  Get the index entries that represent a conflict of a single file.
 ## 
@@ -701,10 +705,10 @@ proc git_index_conflict_add*(index: ptr git_index;
 ##  @return 0 or an error code
 ## 
 
-proc git_index_conflict_get*(ancestor_out: ptr ptr git_index_entry;
+proc git_index_conflict_get*(ancestor_out: ptr ptr git_index_entry; 
                             our_out: ptr ptr git_index_entry;
                             their_out: ptr ptr git_index_entry;
-                            index: ptr git_index; path: cstring): cint
+                            index: ptr git_index; path: cstring): cint {.importc.}
 ## *
 ##  Removes the index entries that represent a conflict of a single file.
 ## 
@@ -713,7 +717,7 @@ proc git_index_conflict_get*(ancestor_out: ptr ptr git_index_entry;
 ##  @return 0 or an error code
 ## 
 
-proc git_index_conflict_remove*(index: ptr git_index; path: cstring): cint
+proc git_index_conflict_remove*(index: ptr git_index; path: cstring): cint  {.importc.}
 ## *
 ##  Remove all conflicts in the index (entries with a stage greater than 0).
 ## 
@@ -721,14 +725,14 @@ proc git_index_conflict_remove*(index: ptr git_index; path: cstring): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_index_conflict_cleanup*(index: ptr git_index): cint
+proc git_index_conflict_cleanup*(index: ptr git_index): cint  {.importc.}
 ## *
 ##  Determine if the index contains entries representing file conflicts.
 ## 
 ##  @return 1 if at least one conflict is found, 0 otherwise.
 ## 
 
-proc git_index_has_conflicts*(index: ptr git_index): cint
+proc git_index_has_conflicts*(index: ptr git_index): cint  {.importc.}
 ## *
 ##  Create an iterator for the conflicts in the index.
 ## 
@@ -739,8 +743,8 @@ proc git_index_has_conflicts*(index: ptr git_index): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_index_conflict_iterator_new*(iterator_out: ptr ptr git_index_conflict_iterator;
-                                     index: ptr git_index): cint
+proc git_index_conflict_iterator_new*(iterator_out: ptr ptr git_index_conflict_iterator; 
+                                     index: ptr git_index): cint {.importc.}
 ## *
 ##  Returns the current conflict (ancestor, ours and theirs entry) and
 ##  advance the iterator internally to the next value.
@@ -752,16 +756,16 @@ proc git_index_conflict_iterator_new*(iterator_out: ptr ptr git_index_conflict_i
 ##          (negative value)
 ## 
 
-proc git_index_conflict_next*(ancestor_out: ptr ptr git_index_entry;
+proc git_index_conflict_next*(ancestor_out: ptr ptr git_index_entry; 
                              our_out: ptr ptr git_index_entry;
                              their_out: ptr ptr git_index_entry;
-                             `iterator`: ptr git_index_conflict_iterator): cint
+                             `iterator`: ptr git_index_conflict_iterator): cint {.importc.}
 ## *
 ##  Frees a `git_index_conflict_iterator`.
 ## 
 ##  @param iterator pointer to the iterator
 ## 
 
-proc git_index_conflict_iterator_free*(`iterator`: ptr git_index_conflict_iterator)
+proc git_index_conflict_iterator_free*(`iterator`: ptr git_index_conflict_iterator)  {.importc.}
 ## *@}
 ## * @}

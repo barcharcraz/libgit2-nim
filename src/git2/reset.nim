@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types, strarray, checkout
 
@@ -57,8 +58,8 @@ type
 ##  @return 0 on success or an error code
 ## 
 
-proc git_reset*(repo: ptr git_repository; target: ptr git_object;
-               reset_type: git_reset_t; checkout_opts: ptr git_checkout_options): cint
+proc git_reset*(repo: ptr git_repository; target: ptr git_object; 
+               reset_type: git_reset_t; checkout_opts: ptr git_checkout_options): cint {.importc.}
 ## *
 ##  Sets the current head to the specified commit oid and optionally
 ##  resets the index and working tree to match.
@@ -72,7 +73,7 @@ proc git_reset*(repo: ptr git_repository; target: ptr git_object;
 ##  @see git_reset
 ## 
 
-proc git_reset_from_annotated*(repo: ptr git_repository;
+proc git_reset_from_annotated*(repo: ptr git_repository; 
                               commit: ptr git_annotated_commit;
                               reset_type: git_reset_t;
                               checkout_opts: ptr git_checkout_options): cint
@@ -95,6 +96,6 @@ proc git_reset_from_annotated*(repo: ptr git_repository;
 ##  @return 0 on success or an error code < 0
 ## 
 
-proc git_reset_default*(repo: ptr git_repository; target: ptr git_object;
-                       pathspecs: ptr git_strarray): cint
+proc git_reset_default*(repo: ptr git_repository; target: ptr git_object; 
+                       pathspecs: ptr git_strarray): cint {.importc.}
 ## * @}

@@ -4,10 +4,11 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
-  common, types
+  common, types, oid, checkout
 
 ## *
 ##  @file git2/stash.h
@@ -56,8 +57,8 @@ type                          ## *
 ##  or error code.
 ## 
 
-proc git_stash_save*(`out`: ptr git_oid; repo: ptr git_repository;
-                    stasher: ptr git_signature; message: cstring; flags: uint32): cint
+proc git_stash_save*(`out`: ptr git_oid; repo: ptr git_repository; 
+                    stasher: ptr git_signature; message: cstring; flags: uint32): cint {.importc.}
 ## * Stash application flags.
 
 type
@@ -85,8 +86,8 @@ type
 ## 
 
 type
-  git_stash_apply_progress_cb* = proc (progress: git_stash_apply_progress_t;
-                                    payload: pointer): cint
+  git_stash_apply_progress_cb* = proc (progress: git_stash_apply_progress_t; 
+                                    payload: pointer): cint {.importc.}
 
 ## * Stash application options structure.
 ## 
@@ -118,7 +119,7 @@ const
 ##  @return Zero on success; -1 on failure.
 ## 
 
-proc git_stash_apply_init_options*(opts: ptr git_stash_apply_options; version: cuint): cint
+proc git_stash_apply_init_options*(opts: ptr git_stash_apply_options; version: cuint): cint  {.importc.}
 ## *
 ##  Apply a single stashed state from the stash list.
 ## 
@@ -146,8 +147,8 @@ proc git_stash_apply_init_options*(opts: ptr git_stash_apply_options; version: c
 ##          directory, or an error code
 ## 
 
-proc git_stash_apply*(repo: ptr git_repository; index: csize;
-                     options: ptr git_stash_apply_options): cint
+proc git_stash_apply*(repo: ptr git_repository; index: csize; 
+                     options: ptr git_stash_apply_options): cint {.importc.}
 ## *
 ##  This is a callback function you can provide to iterate over all the
 ##  stashed states that will be invoked per entry.
@@ -161,8 +162,8 @@ proc git_stash_apply*(repo: ptr git_repository; index: csize;
 ## 
 
 type
-  git_stash_cb* = proc (index: csize; message: cstring; stash_id: ptr git_oid;
-                     payload: pointer): cint
+  git_stash_cb* = proc (index: csize; message: cstring; stash_id: ptr git_oid; 
+                     payload: pointer): cint {.importc.}
 
 ## *
 ##  Loop over all the stashed states and issue a callback for each one.
@@ -179,8 +180,8 @@ type
 ##  @return 0 on success, non-zero callback return value, or error code.
 ## 
 
-proc git_stash_foreach*(repo: ptr git_repository; callback: git_stash_cb;
-                       payload: pointer): cint
+proc git_stash_foreach*(repo: ptr git_repository; callback: git_stash_cb; 
+                       payload: pointer): cint {.importc.}
 ## *
 ##  Remove a single stashed state from the stash list.
 ## 
@@ -193,7 +194,7 @@ proc git_stash_foreach*(repo: ptr git_repository; callback: git_stash_cb;
 ##  index, or error code.
 ## 
 
-proc git_stash_drop*(repo: ptr git_repository; index: csize): cint
+proc git_stash_drop*(repo: ptr git_repository; index: csize): cint  {.importc.}
 ## *
 ##  Apply a single stashed state from the stash list and remove it from the list
 ##  if successful.
@@ -207,6 +208,6 @@ proc git_stash_drop*(repo: ptr git_repository; index: csize): cint
 ##  index, or error code. (see git_stash_apply() above for details)
 ## 
 
-proc git_stash_pop*(repo: ptr git_repository; index: csize;
-                   options: ptr git_stash_apply_options): cint
+proc git_stash_pop*(repo: ptr git_repository; index: csize; 
+                   options: ptr git_stash_apply_options): cint {.importc.}
 ## * @}

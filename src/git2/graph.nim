@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types, oid
 
@@ -31,9 +32,9 @@ import
 ##  @param upstream the commit for upstream
 ## 
 
-proc git_graph_ahead_behind*(ahead: ptr csize; behind: ptr csize;
+proc git_graph_ahead_behind*(ahead: ptr csize; behind: ptr csize; 
                             repo: ptr git_repository; local: ptr git_oid;
-                            upstream: ptr git_oid): cint
+                            upstream: ptr git_oid): cint {.importc.}
 ## *
 ##  Determine if a commit is the descendant of another commit.
 ## 
@@ -43,6 +44,6 @@ proc git_graph_ahead_behind*(ahead: ptr csize; behind: ptr csize;
 ##  0 if not, error code otherwise.
 ## 
 
-proc git_graph_descendant_of*(repo: ptr git_repository; commit: ptr git_oid;
-                             ancestor: ptr git_oid): cint
+proc git_graph_descendant_of*(repo: ptr git_repository; commit: ptr git_oid; 
+                             ancestor: ptr git_oid): cint {.importc.}
 ## * @}

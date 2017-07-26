@@ -28,9 +28,9 @@ import
 ##  buffer (after any existing content).
 ## 
 
-proc git_diff_print_callback__to_buf*(delta: ptr git_diff_delta;
+proc git_diff_print_callback__to_buf*(delta: ptr git_diff_delta; 
                                      hunk: ptr git_diff_hunk;
-                                     line: ptr git_diff_line; payload: pointer): cint
+                                     line: ptr git_diff_line; payload: pointer): cint {.importc.}
 ## *< payload must be a `git_buf *`
 ## *
 ##  Diff print callback that writes to stdio FILE handle.
@@ -47,8 +47,8 @@ proc git_diff_print_callback__to_buf*(delta: ptr git_diff_delta;
 ##  data to `stdout`.
 ## 
 
-proc git_diff_print_callback__to_file_handle*(delta: ptr git_diff_delta;
-    hunk: ptr git_diff_hunk; line: ptr git_diff_line; payload: pointer): cint
+proc git_diff_print_callback__to_file_handle*(delta: ptr git_diff_delta; 
+    hunk: ptr git_diff_hunk; line: ptr git_diff_line; payload: pointer): cint {.importc.}
 ## *< payload must be a `FILE *`
 ## *
 ##  Performance data from diffing
@@ -72,11 +72,11 @@ const
 ##  @return 0 for success, <0 for error
 ## 
 
-proc git_diff_get_perfdata*(`out`: ptr git_diff_perfdata; diff: ptr git_diff): cint
+proc git_diff_get_perfdata*(`out`: ptr git_diff_perfdata; diff: ptr git_diff): cint  {.importc.}
 ## *
 ##  Get performance data for diffs from a git_status_list
 ## 
 
-proc git_status_list_get_perfdata*(`out`: ptr git_diff_perfdata;
-                                  status: ptr git_status_list): cint
+proc git_status_list_get_perfdata*(`out`: ptr git_diff_perfdata; 
+                                  status: ptr git_status_list): cint {.importc.}
 ## * @}

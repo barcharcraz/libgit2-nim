@@ -4,10 +4,11 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
-  common, types, oid, diff
+  common, types, oid, diff, buffer
 
 ## *
 ##  @file git2/patch.h
@@ -44,7 +45,7 @@ import
 ##  @return 0 on success, other value < 0 on error
 ## 
 
-proc git_patch_from_diff*(`out`: ptr ptr git_patch; diff: ptr git_diff; idx: csize): cint
+proc git_patch_from_diff*(`out`: ptr ptr git_patch; diff: ptr git_diff; idx: csize): cint  {.importc.}
 ## *
 ##  Directly generate a patch from the difference between two blobs.
 ## 
@@ -62,9 +63,9 @@ proc git_patch_from_diff*(`out`: ptr ptr git_patch; diff: ptr git_diff; idx: csi
 ##  @return 0 on success or error code < 0
 ## 
 
-proc git_patch_from_blobs*(`out`: ptr ptr git_patch; old_blob: ptr git_blob;
+proc git_patch_from_blobs*(`out`: ptr ptr git_patch; old_blob: ptr git_blob; 
                           old_as_path: cstring; new_blob: ptr git_blob;
-                          new_as_path: cstring; opts: ptr git_diff_options): cint
+                          new_as_path: cstring; opts: ptr git_diff_options): cint {.importc.}
 ## *
 ##  Directly generate a patch from the difference between a blob and a buffer.
 ## 
@@ -83,7 +84,7 @@ proc git_patch_from_blobs*(`out`: ptr ptr git_patch; old_blob: ptr git_blob;
 ##  @return 0 on success or error code < 0
 ## 
 
-proc git_patch_from_blob_and_buffer*(`out`: ptr ptr git_patch;
+proc git_patch_from_blob_and_buffer*(`out`: ptr ptr git_patch; 
                                     old_blob: ptr git_blob; old_as_path: cstring;
                                     buffer: cstring; buffer_len: csize;
                                     buffer_as_path: cstring;
@@ -107,7 +108,7 @@ proc git_patch_from_blob_and_buffer*(`out`: ptr ptr git_patch;
 ##  @return 0 on success or error code < 0
 ## 
 
-proc git_patch_from_buffers*(`out`: ptr ptr git_patch; old_buffer: pointer;
+proc git_patch_from_buffers*(`out`: ptr ptr git_patch; old_buffer: pointer; 
                             old_len: csize; old_as_path: cstring;
                             new_buffer: cstring; new_len: csize;
                             new_as_path: cstring; opts: ptr git_diff_options): cint
@@ -115,18 +116,18 @@ proc git_patch_from_buffers*(`out`: ptr ptr git_patch; old_buffer: pointer;
 ##  Free a git_patch object.
 ## 
 
-proc git_patch_free*(patch: ptr git_patch)
+proc git_patch_free*(patch: ptr git_patch)  {.importc.}
 ## *
 ##  Get the delta associated with a patch.  This delta points to internal
 ##  data and you do not have to release it when you are done with it.
 ## 
 
-proc git_patch_get_delta*(patch: ptr git_patch): ptr git_diff_delta
+proc git_patch_get_delta*(patch: ptr git_patch): ptr git_diff_delta  {.importc.}
 ## *
 ##  Get the number of hunks in a patch
 ## 
 
-proc git_patch_num_hunks*(patch: ptr git_patch): csize
+proc git_patch_num_hunks*(patch: ptr git_patch): csize  {.importc.}
 ## *
 ##  Get line counts of each type in a patch.
 ## 
@@ -144,8 +145,8 @@ proc git_patch_num_hunks*(patch: ptr git_patch): csize
 ##  @return 0 on success, <0 on error
 ## 
 
-proc git_patch_line_stats*(total_context: ptr csize; total_additions: ptr csize;
-                          total_deletions: ptr csize; patch: ptr git_patch): cint
+proc git_patch_line_stats*(total_context: ptr csize; total_additions: ptr csize; 
+                          total_deletions: ptr csize; patch: ptr git_patch): cint {.importc.}
 ## *
 ##  Get the information about a hunk in a patch
 ## 
@@ -160,8 +161,8 @@ proc git_patch_line_stats*(total_context: ptr csize; total_additions: ptr csize;
 ##  @return 0 on success, GIT_ENOTFOUND if hunk_idx out of range, <0 on error
 ## 
 
-proc git_patch_get_hunk*(`out`: ptr ptr git_diff_hunk; lines_in_hunk: ptr csize;
-                        patch: ptr git_patch; hunk_idx: csize): cint
+proc git_patch_get_hunk*(`out`: ptr ptr git_diff_hunk; lines_in_hunk: ptr csize; 
+                        patch: ptr git_patch; hunk_idx: csize): cint {.importc.}
 ## *
 ##  Get the number of lines in a hunk.
 ## 
@@ -170,7 +171,7 @@ proc git_patch_get_hunk*(`out`: ptr ptr git_diff_hunk; lines_in_hunk: ptr csize;
 ##  @return Number of lines in hunk or GIT_ENOTFOUND if invalid hunk index
 ## 
 
-proc git_patch_num_lines_in_hunk*(patch: ptr git_patch; hunk_idx: csize): cint
+proc git_patch_num_lines_in_hunk*(patch: ptr git_patch; hunk_idx: csize): cint  {.importc.}
 ## *
 ##  Get data about a line in a hunk of a patch.
 ## 
@@ -186,8 +187,8 @@ proc git_patch_num_lines_in_hunk*(patch: ptr git_patch; hunk_idx: csize): cint
 ##  @return 0 on success, <0 on failure
 ## 
 
-proc git_patch_get_line_in_hunk*(`out`: ptr ptr git_diff_line; patch: ptr git_patch;
-                                hunk_idx: csize; line_of_hunk: csize): cint
+proc git_patch_get_line_in_hunk*(`out`: ptr ptr git_diff_line; patch: ptr git_patch; 
+                                hunk_idx: csize; line_of_hunk: csize): cint {.importc.}
 ## *
 ##  Look up size of patch diff data in bytes
 ## 
@@ -205,8 +206,8 @@ proc git_patch_get_line_in_hunk*(`out`: ptr ptr git_diff_line; patch: ptr git_pa
 ##  @return The number of bytes of data
 ## 
 
-proc git_patch_size*(patch: ptr git_patch; include_context: cint;
-                    include_hunk_headers: cint; include_file_headers: cint): csize
+proc git_patch_size*(patch: ptr git_patch; include_context: cint; 
+                    include_hunk_headers: cint; include_file_headers: cint): csize {.importc.}
 ## *
 ##  Serialize the patch to text via callback.
 ## 
@@ -220,8 +221,8 @@ proc git_patch_size*(patch: ptr git_patch; include_context: cint;
 ##  @return 0 on success, non-zero callback return value, or error code
 ## 
 
-proc git_patch_print*(patch: ptr git_patch; print_cb: git_diff_line_cb;
-                     payload: pointer): cint
+proc git_patch_print*(patch: ptr git_patch; print_cb: git_diff_line_cb; 
+                     payload: pointer): cint {.importc.}
 ## *
 ##  Get the content of a patch as a single diff text.
 ## 
@@ -230,5 +231,5 @@ proc git_patch_print*(patch: ptr git_patch; print_cb: git_diff_line_cb;
 ##  @return 0 on success, <0 on failure.
 ## 
 
-proc git_patch_to_buf*(`out`: ptr git_buf; patch: ptr git_patch): cint
+proc git_patch_to_buf*(`out`: ptr git_buf; patch: ptr git_patch): cint  {.importc.}
 ## *@}

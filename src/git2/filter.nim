@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types, oid, buffer
 
@@ -86,9 +87,9 @@ type
 ##          needed for the requested file), <0 on error
 ## 
 
-proc git_filter_list_load*(filters: ptr ptr git_filter_list;
+proc git_filter_list_load*(filters: ptr ptr git_filter_list; 
                           repo: ptr git_repository; blob: ptr git_blob; path: cstring;
-                          mode: git_filter_mode_t; flags: uint32): cint
+                          mode: git_filter_mode_t; flags: uint32): cint {.importc.}
   ##  can be NULL
 ## *
 ##  Query the filter list to see if a given filter (by name) will run.
@@ -103,7 +104,7 @@ proc git_filter_list_load*(filters: ptr ptr git_filter_list;
 ##  @return 1 if the filter is in the list, 0 otherwise
 ## 
 
-proc git_filter_list_contains*(filters: ptr git_filter_list; name: cstring): cint
+proc git_filter_list_contains*(filters: ptr git_filter_list; name: cstring): cint  {.importc.}
 ## *
 ##  Apply filter list to a data buffer.
 ## 
@@ -125,8 +126,8 @@ proc git_filter_list_contains*(filters: ptr git_filter_list; name: cstring): cin
 ##  @return 0 on success, an error code otherwise
 ## 
 
-proc git_filter_list_apply_to_data*(`out`: ptr git_buf;
-                                   filters: ptr git_filter_list; `in`: ptr git_buf): cint
+proc git_filter_list_apply_to_data*(`out`: ptr git_buf; 
+                                   filters: ptr git_filter_list; `in`: ptr git_buf): cint {.importc.}
 ## *
 ##  Apply a filter list to the contents of a file on disk
 ## 
@@ -137,9 +138,9 @@ proc git_filter_list_apply_to_data*(`out`: ptr git_buf;
 ##  taken as relative to the workdir
 ## 
 
-proc git_filter_list_apply_to_file*(`out`: ptr git_buf;
+proc git_filter_list_apply_to_file*(`out`: ptr git_buf; 
                                    filters: ptr git_filter_list;
-                                   repo: ptr git_repository; path: cstring): cint
+                                   repo: ptr git_repository; path: cstring): cint {.importc.}
 ## *
 ##  Apply a filter list to the contents of a blob
 ## 
@@ -148,8 +149,8 @@ proc git_filter_list_apply_to_file*(`out`: ptr git_buf;
 ##  @param blob the blob to filter
 ## 
 
-proc git_filter_list_apply_to_blob*(`out`: ptr git_buf;
-                                   filters: ptr git_filter_list; blob: ptr git_blob): cint
+proc git_filter_list_apply_to_blob*(`out`: ptr git_buf; 
+                                   filters: ptr git_filter_list; blob: ptr git_blob): cint {.importc.}
 ## *
 ##  Apply a filter list to an arbitrary buffer as a stream
 ## 
@@ -158,8 +159,8 @@ proc git_filter_list_apply_to_blob*(`out`: ptr git_buf;
 ##  @param target the stream into which the data will be written
 ## 
 
-proc git_filter_list_stream_data*(filters: ptr git_filter_list; data: ptr git_buf;
-                                 target: ptr git_writestream): cint
+proc git_filter_list_stream_data*(filters: ptr git_filter_list; data: ptr git_buf; 
+                                 target: ptr git_writestream): cint {.importc.}
 ## *
 ##  Apply a filter list to a file as a stream
 ## 
@@ -170,9 +171,9 @@ proc git_filter_list_stream_data*(filters: ptr git_filter_list; data: ptr git_bu
 ##  @param target the stream into which the data will be written
 ## 
 
-proc git_filter_list_stream_file*(filters: ptr git_filter_list;
+proc git_filter_list_stream_file*(filters: ptr git_filter_list; 
                                  repo: ptr git_repository; path: cstring;
-                                 target: ptr git_writestream): cint
+                                 target: ptr git_writestream): cint {.importc.}
 ## *
 ##  Apply a filter list to a blob as a stream
 ## 
@@ -181,13 +182,13 @@ proc git_filter_list_stream_file*(filters: ptr git_filter_list;
 ##  @param target the stream into which the data will be written
 ## 
 
-proc git_filter_list_stream_blob*(filters: ptr git_filter_list; blob: ptr git_blob;
-                                 target: ptr git_writestream): cint
+proc git_filter_list_stream_blob*(filters: ptr git_filter_list; blob: ptr git_blob; 
+                                 target: ptr git_writestream): cint {.importc.}
 ## *
 ##  Free a git_filter_list
 ## 
 ##  @param filters A git_filter_list created by `git_filter_list_load`
 ## 
 
-proc git_filter_list_free*(filters: ptr git_filter_list)
+proc git_filter_list_free*(filters: ptr git_filter_list)  {.importc.}
 ## * @}

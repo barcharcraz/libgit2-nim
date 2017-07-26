@@ -8,8 +8,9 @@
 ## * Declare a public function exported for application use.
 
 ## * Declare a function's takes printf style arguments.
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 when (defined(Windows)):
   const
     GIT_WIN32* = 1
@@ -55,7 +56,7 @@ const
 ##  @param rev Store the revision (patch) number
 ## 
 
-proc git_libgit2_version*(major: ptr cint; minor: ptr cint; rev: ptr cint)
+proc git_libgit2_version*(major: ptr cint; minor: ptr cint; rev: ptr cint) {.importc.}
 ## *
 ##  Combinations of these values describe the features with which libgit2
 ##  was compiled
@@ -102,7 +103,7 @@ type ## *
 ##    the libssh2 library to be found when compiling libgit2
 ## 
 
-proc git_libgit2_features*(): cint
+proc git_libgit2_features*(): cint  {.importc.}
 ## *
 ##  Global library options
 ## 
@@ -290,5 +291,5 @@ type
 ##  @return 0 on success, <0 on failure
 ## 
 
-proc git_libgit2_opts*(option: cint): cint {.varargs.}
+proc git_libgit2_opts*(option: cint): cint {.varargs, importc.} 
 ## * @}

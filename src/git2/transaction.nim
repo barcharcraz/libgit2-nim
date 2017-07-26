@@ -4,10 +4,11 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
-  common
+  common, types, oid
 
 ## *
 ##  @file git2/transaction.h
@@ -27,7 +28,7 @@ import
 ##  @return 0 or an error code
 ## 
 
-proc git_transaction_new*(`out`: ptr ptr git_transaction; repo: ptr git_repository): cint
+proc git_transaction_new*(`out`: ptr ptr git_transaction; repo: ptr git_repository): cint  {.importc.}
 ## *
 ##  Lock a reference
 ## 
@@ -39,7 +40,7 @@ proc git_transaction_new*(`out`: ptr ptr git_transaction; repo: ptr git_reposito
 ##  @return 0 or an error message
 ## 
 
-proc git_transaction_lock_ref*(tx: ptr git_transaction; refname: cstring): cint
+proc git_transaction_lock_ref*(tx: ptr git_transaction; refname: cstring): cint  {.importc.}
 ## *
 ##  Set the target of a reference
 ## 
@@ -54,9 +55,9 @@ proc git_transaction_lock_ref*(tx: ptr git_transaction; refname: cstring): cint
 ##  @return 0, GIT_ENOTFOUND if the reference is not among the locked ones, or an error code
 ## 
 
-proc git_transaction_set_target*(tx: ptr git_transaction; refname: cstring;
+proc git_transaction_set_target*(tx: ptr git_transaction; refname: cstring; 
                                 target: ptr git_oid; sig: ptr git_signature;
-                                msg: cstring): cint
+                                msg: cstring): cint {.importc.}
 ## *
 ##  Set the target of a reference
 ## 
@@ -71,8 +72,8 @@ proc git_transaction_set_target*(tx: ptr git_transaction; refname: cstring;
 ##  @return 0, GIT_ENOTFOUND if the reference is not among the locked ones, or an error code
 ## 
 
-proc git_transaction_set_symbolic_target*(tx: ptr git_transaction; refname: cstring;
-    target: cstring; sig: ptr git_signature; msg: cstring): cint
+proc git_transaction_set_symbolic_target*(tx: ptr git_transaction; refname: cstring; 
+    target: cstring; sig: ptr git_signature; msg: cstring): cint {.importc.}
 ## *
 ##  Set the reflog of a reference
 ## 
@@ -85,8 +86,8 @@ proc git_transaction_set_symbolic_target*(tx: ptr git_transaction; refname: cstr
 ##  @return 0, GIT_ENOTFOUND if the reference is not among the locked ones, or an error code
 ## 
 
-proc git_transaction_set_reflog*(tx: ptr git_transaction; refname: cstring;
-                                reflog: ptr git_reflog): cint
+proc git_transaction_set_reflog*(tx: ptr git_transaction; refname: cstring; 
+                                reflog: ptr git_reflog): cint {.importc.}
 ## *
 ##  Remove a reference
 ## 
@@ -95,7 +96,7 @@ proc git_transaction_set_reflog*(tx: ptr git_transaction; refname: cstring;
 ##  @return 0, GIT_ENOTFOUND if the reference is not among the locked ones, or an error code
 ## 
 
-proc git_transaction_remove*(tx: ptr git_transaction; refname: cstring): cint
+proc git_transaction_remove*(tx: ptr git_transaction; refname: cstring): cint  {.importc.}
 ## *
 ##  Commit the changes from the transaction
 ## 
@@ -106,7 +107,7 @@ proc git_transaction_remove*(tx: ptr git_transaction; refname: cstring): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_transaction_commit*(tx: ptr git_transaction): cint
+proc git_transaction_commit*(tx: ptr git_transaction): cint  {.importc.}
 ## *
 ##  Free the resources allocated by this transaction
 ## 
@@ -116,5 +117,5 @@ proc git_transaction_commit*(tx: ptr git_transaction): cint
 ##  @param tx the transaction
 ## 
 
-proc git_transaction_free*(tx: ptr git_transaction)
+proc git_transaction_free*(tx: ptr git_transaction)  {.importc.}
 ## * @}

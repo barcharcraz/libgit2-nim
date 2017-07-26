@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types, oid, buffer
 
@@ -35,8 +36,8 @@ import
 ##  @return 0 or an error code
 ## 
 
-proc git_object_lookup*(`object`: ptr ptr git_object; repo: ptr git_repository;
-                       id: ptr git_oid; `type`: git_otype): cint
+proc git_object_lookup*(`object`: ptr ptr git_object; repo: ptr git_repository; 
+                       id: ptr git_oid; `type`: git_otype): cint {.importc.}
 ## *
 ##  Lookup a reference to one of the objects in a repository,
 ##  given a prefix of its identifier (short id).
@@ -65,9 +66,9 @@ proc git_object_lookup*(`object`: ptr ptr git_object; repo: ptr git_repository;
 ##  @return 0 or an error code
 ## 
 
-proc git_object_lookup_prefix*(object_out: ptr ptr git_object;
+proc git_object_lookup_prefix*(object_out: ptr ptr git_object; 
                               repo: ptr git_repository; id: ptr git_oid; len: csize;
-                              `type`: git_otype): cint
+                              `type`: git_otype): cint {.importc.}
 ## *
 ##  Lookup an object that represents a tree entry.
 ## 
@@ -79,8 +80,8 @@ proc git_object_lookup_prefix*(object_out: ptr ptr git_object;
 ##  @return 0 on success, or an error code
 ## 
 
-proc git_object_lookup_bypath*(`out`: ptr ptr git_object; treeish: ptr git_object;
-                              path: cstring; `type`: git_otype): cint
+proc git_object_lookup_bypath*(`out`: ptr ptr git_object; treeish: ptr git_object; 
+                              path: cstring; `type`: git_otype): cint {.importc.}
 ## *
 ##  Get the id (SHA1) of a repository object
 ## 
@@ -88,7 +89,7 @@ proc git_object_lookup_bypath*(`out`: ptr ptr git_object; treeish: ptr git_objec
 ##  @return the SHA1 id
 ## 
 
-proc git_object_id*(obj: ptr git_object): ptr git_oid
+proc git_object_id*(obj: ptr git_object): ptr git_oid  {.importc.}
 ## *
 ##  Get a short abbreviated OID string for the object
 ## 
@@ -102,7 +103,7 @@ proc git_object_id*(obj: ptr git_object): ptr git_oid
 ##  @return 0 on success, <0 for error
 ## 
 
-proc git_object_short_id*(`out`: ptr git_buf; obj: ptr git_object): cint
+proc git_object_short_id*(`out`: ptr git_buf; obj: ptr git_object): cint  {.importc.}
 ## *
 ##  Get the object type of an object
 ## 
@@ -110,7 +111,7 @@ proc git_object_short_id*(`out`: ptr git_buf; obj: ptr git_object): cint
 ##  @return the object's type
 ## 
 
-proc git_object_type*(obj: ptr git_object): git_otype
+proc git_object_type*(obj: ptr git_object): git_otype  {.importc.}
 ## *
 ##  Get the repository that owns this object
 ## 
@@ -124,7 +125,7 @@ proc git_object_type*(obj: ptr git_object): git_otype
 ##  @return the repository who owns this object
 ## 
 
-proc git_object_owner*(obj: ptr git_object): ptr git_repository
+proc git_object_owner*(obj: ptr git_object): ptr git_repository  {.importc.}
 ## *
 ##  Close an open object
 ## 
@@ -141,7 +142,7 @@ proc git_object_owner*(obj: ptr git_object): ptr git_repository
 ##  @param object the object to close
 ## 
 
-proc git_object_free*(`object`: ptr git_object)
+proc git_object_free*(`object`: ptr git_object)  {.importc.}
 ## *
 ##  Convert an object type to its string representation.
 ## 
@@ -152,7 +153,7 @@ proc git_object_free*(`object`: ptr git_object)
 ##  @return the corresponding string representation.
 ## 
 
-proc git_object_type2string*(`type`: git_otype): cstring
+proc git_object_type2string*(`type`: git_otype): cstring  {.importc.}
 ## *
 ##  Convert a string object type representation to it's git_otype.
 ## 
@@ -160,7 +161,7 @@ proc git_object_type2string*(`type`: git_otype): cstring
 ##  @return the corresponding git_otype.
 ## 
 
-proc git_object_string2type*(str: cstring): git_otype
+proc git_object_string2type*(str: cstring): git_otype  {.importc.}
 ## *
 ##  Determine if the given git_otype is a valid loose object type.
 ## 
@@ -169,7 +170,7 @@ proc git_object_string2type*(str: cstring): git_otype
 ##  false otherwise.
 ## 
 
-proc git_object_typeisloose*(`type`: git_otype): cint
+proc git_object_typeisloose*(`type`: git_otype): cint  {.importc.}
 ## *
 ##  Get the size in bytes for the structure which
 ##  acts as an in-memory representation of any given
@@ -183,7 +184,7 @@ proc git_object_typeisloose*(`type`: git_otype): cint
 ##  @return size in bytes of the object
 ## 
 
-proc git_object_size*(`type`: git_otype): csize
+proc git_object_size*(`type`: git_otype): csize  {.importc.}
 ## *
 ##  Recursively peel an object until an object of the specified type is met.
 ## 
@@ -208,8 +209,8 @@ proc git_object_size*(`type`: git_otype): csize
 ##  @return 0 on success, GIT_EINVALIDSPEC, GIT_EPEEL, or an error code
 ## 
 
-proc git_object_peel*(peeled: ptr ptr git_object; `object`: ptr git_object;
-                     target_type: git_otype): cint
+proc git_object_peel*(peeled: ptr ptr git_object; `object`: ptr git_object; 
+                     target_type: git_otype): cint {.importc.}
 ## *
 ##  Create an in-memory copy of a Git object. The copy must be
 ##  explicitly free'd or it will leak.
@@ -218,5 +219,5 @@ proc git_object_peel*(peeled: ptr ptr git_object; `object`: ptr git_object;
 ##  @param source Original object to copy
 ## 
 
-proc git_object_dup*(dest: ptr ptr git_object; source: ptr git_object): cint
+proc git_object_dup*(dest: ptr ptr git_object; source: ptr git_object): cint  {.importc.}
 ## * @}

@@ -24,7 +24,7 @@ import
 ##  @return the created git_reference or NULL on error
 ## 
 
-proc git_reference__alloc*(name: cstring; oid: ptr git_oid; peel: ptr git_oid): ptr git_reference
+proc git_reference__alloc*(name: cstring; oid: ptr git_oid; peel: ptr git_oid): ptr git_reference  {.importc.}
 ## *
 ##  Create a new symbolic reference.
 ## 
@@ -33,5 +33,5 @@ proc git_reference__alloc*(name: cstring; oid: ptr git_oid; peel: ptr git_oid): 
 ##  @return the created git_reference or NULL on error
 ## 
 
-proc git_reference__alloc_symbolic*(name: cstring; target: cstring): ptr git_reference
+proc git_reference__alloc_symbolic*(name: cstring; target: cstring): ptr git_reference  {.importc.}
 ## * @}

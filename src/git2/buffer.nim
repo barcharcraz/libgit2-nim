@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common
 
@@ -49,7 +50,7 @@ import
 ## 
 
 type
-  git_buf* {.bycopy.} = object
+  git_buf* = object
     `ptr`*: cstring
     asize*: csize
     size*: csize
@@ -70,7 +71,7 @@ type
 ##  @param buffer The buffer to deallocate
 ## 
 
-proc git_buf_free*(buffer: ptr git_buf)
+proc git_buf_free*(buffer: ptr git_buf) {.importc.}
 ## *
 ##  Resize the buffer allocation to make more space.
 ## 
@@ -93,7 +94,7 @@ proc git_buf_free*(buffer: ptr git_buf)
 ##  @return 0 on success, -1 on allocation failure
 ## 
 
-proc git_buf_grow*(buffer: ptr git_buf; target_size: csize): cint
+proc git_buf_grow*(buffer: ptr git_buf; target_size: csize): cint  {.importc.}
 ## *
 ##  Set buffer to a copy of some raw data.
 ## 
@@ -103,7 +104,7 @@ proc git_buf_grow*(buffer: ptr git_buf; target_size: csize): cint
 ##  @return 0 on success, -1 on allocation failure
 ## 
 
-proc git_buf_set*(buffer: ptr git_buf; data: pointer; datalen: csize): cint
+proc git_buf_set*(buffer: ptr git_buf; data: pointer; datalen: csize): cint  {.importc.}
 ## *
 ##  Check quickly if buffer looks like it contains binary data
 ## 
@@ -111,7 +112,7 @@ proc git_buf_set*(buffer: ptr git_buf; data: pointer; datalen: csize): cint
 ##  @return 1 if buffer looks like non-text data
 ## 
 
-proc git_buf_is_binary*(buf: ptr git_buf): cint
+proc git_buf_is_binary*(buf: ptr git_buf): cint  {.importc.}
 ## *
 ##  Check quickly if buffer contains a NUL byte
 ## 
@@ -119,5 +120,5 @@ proc git_buf_is_binary*(buf: ptr git_buf): cint
 ##  @return 1 if buffer contains a NUL byte
 ## 
 
-proc git_buf_contains_nul*(buf: ptr git_buf): cint
+proc git_buf_contains_nul*(buf: ptr git_buf): cint  {.importc.}
 ## * @}

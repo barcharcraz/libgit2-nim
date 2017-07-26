@@ -4,8 +4,9 @@
 ##  This file is part of libgit2, distributed under the GNU GPL v2 with
 ##  a Linking Exception. For full terms see the included COPYING file.
 ## 
-{.push importc.}
+
 {.push dynlib: "libgit2".}
+{.push callconv: cdecl.}
 import
   common, types, buffer
 
@@ -51,7 +52,7 @@ type
     name*: cstring             ## *< Name of the entry (normalised)
     value*: cstring            ## *< String value of the entry
     level*: git_config_level_t ## *< Which config file this was found in
-    free*: proc (entry: ptr git_config_entry) ## *< Free function for this entry
+    free*: proc (entry: ptr git_config_entry) ## *< Free function for this entry 
     payload*: pointer          ## *< Opaque value for the free function. Do not read or write
   
 
@@ -59,9 +60,9 @@ type
 ##  Free a config entry
 ## 
 
-proc git_config_entry_free*(a2: ptr git_config_entry)
+proc git_config_entry_free*(a2: ptr git_config_entry)  {.importc.}
 type
-  git_config_foreach_cb* = proc (a2: ptr git_config_entry; a3: pointer): cint
+  git_config_foreach_cb* = proc (a2: ptr git_config_entry; a3: pointer): cint  {.importc.}
 
 ## *
 ##  Config var type
@@ -101,7 +102,7 @@ type
 ##  @return 0 if a global configuration file has been found. Its path will be stored in `out`.
 ## 
 
-proc git_config_find_global*(`out`: ptr git_buf): cint
+proc git_config_find_global*(`out`: ptr git_buf): cint  {.importc.}
 ## *
 ##  Locate the path to the global xdg compatible configuration file
 ## 
@@ -118,7 +119,7 @@ proc git_config_find_global*(`out`: ptr git_buf): cint
 ## 	found. Its path will be stored in `out`.
 ## 
 
-proc git_config_find_xdg*(`out`: ptr git_buf): cint
+proc git_config_find_xdg*(`out`: ptr git_buf): cint  {.importc.}
 ## *
 ##  Locate the path to the system configuration file
 ## 
@@ -130,7 +131,7 @@ proc git_config_find_xdg*(`out`: ptr git_buf): cint
 ## 	found. Its path will be stored in `out`.
 ## 
 
-proc git_config_find_system*(`out`: ptr git_buf): cint
+proc git_config_find_system*(`out`: ptr git_buf): cint  {.importc.}
 ## *
 ##  Locate the path to the configuration file in ProgramData
 ## 
@@ -141,7 +142,7 @@ proc git_config_find_system*(`out`: ptr git_buf): cint
 ## 	found. Its path will be stored in `out`.
 ## 
 
-proc git_config_find_programdata*(`out`: ptr git_buf): cint
+proc git_config_find_programdata*(`out`: ptr git_buf): cint  {.importc.}
 ## *
 ##  Open the global, XDG and system configuration files
 ## 
@@ -153,7 +154,7 @@ proc git_config_find_programdata*(`out`: ptr git_buf): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_config_open_default*(`out`: ptr ptr git_config): cint
+proc git_config_open_default*(`out`: ptr ptr git_config): cint  {.importc.}
 ## *
 ##  Allocate a new configuration object
 ## 
@@ -164,7 +165,7 @@ proc git_config_open_default*(`out`: ptr ptr git_config): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_config_new*(`out`: ptr ptr git_config): cint
+proc git_config_new*(`out`: ptr ptr git_config): cint  {.importc.}
 ## *
 ##  Add an on-disk config file instance to an existing config
 ## 
@@ -191,8 +192,8 @@ proc git_config_new*(`out`: ptr ptr git_config): cint
 ##   GIT_ENOTFOUND when the file doesn't exist or error code
 ## 
 
-proc git_config_add_file_ondisk*(cfg: ptr git_config; path: cstring;
-                                level: git_config_level_t; force: cint): cint
+proc git_config_add_file_ondisk*(cfg: ptr git_config; path: cstring; 
+                                level: git_config_level_t; force: cint): cint {.importc.}
 ## *
 ##  Create a new config instance containing a single on-disk file
 ## 
@@ -206,7 +207,7 @@ proc git_config_add_file_ondisk*(cfg: ptr git_config; path: cstring;
 ##  @return 0 on success, or an error code
 ## 
 
-proc git_config_open_ondisk*(`out`: ptr ptr git_config; path: cstring): cint
+proc git_config_open_ondisk*(`out`: ptr ptr git_config; path: cstring): cint  {.importc.}
 ## *
 ##  Build a single-level focused config object from a multi-level one.
 ## 
@@ -224,8 +225,8 @@ proc git_config_open_ondisk*(`out`: ptr ptr git_config; path: cstring): cint
 ##  multi-level parent config, or an error code
 ## 
 
-proc git_config_open_level*(`out`: ptr ptr git_config; parent: ptr git_config;
-                           level: git_config_level_t): cint
+proc git_config_open_level*(`out`: ptr ptr git_config; parent: ptr git_config; 
+                           level: git_config_level_t): cint {.importc.}
 ## *
 ##  Open the global/XDG configuration file according to git's rules
 ## 
@@ -239,7 +240,7 @@ proc git_config_open_level*(`out`: ptr ptr git_config; parent: ptr git_config;
 ##  @param config the config object in which to look
 ## 
 
-proc git_config_open_global*(`out`: ptr ptr git_config; config: ptr git_config): cint
+proc git_config_open_global*(`out`: ptr ptr git_config; config: ptr git_config): cint  {.importc.}
 ## *
 ##  Create a snapshot of the configuration
 ## 
@@ -255,14 +256,14 @@ proc git_config_open_global*(`out`: ptr ptr git_config; config: ptr git_config):
 ##  @return 0 or an error code
 ## 
 
-proc git_config_snapshot*(`out`: ptr ptr git_config; config: ptr git_config): cint
+proc git_config_snapshot*(`out`: ptr ptr git_config; config: ptr git_config): cint  {.importc.}
 ## *
 ##  Free the configuration and its associated memory and files
 ## 
 ##  @param cfg the configuration to free
 ## 
 
-proc git_config_free*(cfg: ptr git_config)
+proc git_config_free*(cfg: ptr git_config)  {.importc.}
 ## *
 ##  Get the git_config_entry of a config variable.
 ## 
@@ -274,8 +275,8 @@ proc git_config_free*(cfg: ptr git_config)
 ##  @return 0 or an error code
 ## 
 
-proc git_config_get_entry*(`out`: ptr ptr git_config_entry; cfg: ptr git_config;
-                          name: cstring): cint
+proc git_config_get_entry*(`out`: ptr ptr git_config_entry; cfg: ptr git_config; 
+                          name: cstring): cint {.importc.}
 ## *
 ##  Get the value of an integer config variable.
 ## 
@@ -289,7 +290,7 @@ proc git_config_get_entry*(`out`: ptr ptr git_config_entry; cfg: ptr git_config;
 ##  @return 0 or an error code
 ## 
 
-proc git_config_get_int32*(`out`: ptr int32_t; cfg: ptr git_config; name: cstring): cint
+proc git_config_get_int32*(`out`: ptr int32; cfg: ptr git_config; name: cstring): cint  {.importc.}
 ## *
 ##  Get the value of a long integer config variable.
 ## 
@@ -303,7 +304,7 @@ proc git_config_get_int32*(`out`: ptr int32_t; cfg: ptr git_config; name: cstrin
 ##  @return 0 or an error code
 ## 
 
-proc git_config_get_int64*(`out`: ptr int64_t; cfg: ptr git_config; name: cstring): cint
+proc git_config_get_int64*(`out`: ptr int64; cfg: ptr git_config; name: cstring): cint  {.importc.}
 ## *
 ##  Get the value of a boolean config variable.
 ## 
@@ -320,7 +321,7 @@ proc git_config_get_int64*(`out`: ptr int64_t; cfg: ptr git_config; name: cstrin
 ##  @return 0 or an error code
 ## 
 
-proc git_config_get_bool*(`out`: ptr cint; cfg: ptr git_config; name: cstring): cint
+proc git_config_get_bool*(`out`: ptr cint; cfg: ptr git_config; name: cstring): cint  {.importc.}
 ## *
 ##  Get the value of a path config variable.
 ## 
@@ -338,7 +339,7 @@ proc git_config_get_bool*(`out`: ptr cint; cfg: ptr git_config; name: cstring): 
 ##  @return 0 or an error code
 ## 
 
-proc git_config_get_path*(`out`: ptr git_buf; cfg: ptr git_config; name: cstring): cint
+proc git_config_get_path*(`out`: ptr git_buf; cfg: ptr git_config; name: cstring): cint  {.importc.}
 ## *
 ##  Get the value of a string config variable.
 ## 
@@ -356,7 +357,7 @@ proc git_config_get_path*(`out`: ptr git_buf; cfg: ptr git_config; name: cstring
 ##  @return 0 or an error code
 ## 
 
-proc git_config_get_string*(`out`: cstringArray; cfg: ptr git_config; name: cstring): cint
+proc git_config_get_string*(`out`: cstringArray; cfg: ptr git_config; name: cstring): cint  {.importc.}
 ## *
 ##  Get the value of a string config variable.
 ## 
@@ -372,7 +373,7 @@ proc git_config_get_string*(`out`: cstringArray; cfg: ptr git_config; name: cstr
 ##  @return 0 or an error code
 ## 
 
-proc git_config_get_string_buf*(`out`: ptr git_buf; cfg: ptr git_config; name: cstring): cint
+proc git_config_get_string_buf*(`out`: ptr git_buf; cfg: ptr git_config; name: cstring): cint  {.importc.}
 ## *
 ##  Get each value of a multivar in a foreach callback
 ## 
@@ -386,7 +387,7 @@ proc git_config_get_string_buf*(`out`: ptr git_buf; cfg: ptr git_config; name: c
 ##  @param payload opaque pointer to pass to the callback
 ## 
 
-proc git_config_get_multivar_foreach*(cfg: ptr git_config; name: cstring;
+proc git_config_get_multivar_foreach*(cfg: ptr git_config; name: cstring; 
                                      regexp: cstring;
                                      callback: git_config_foreach_cb;
                                      payload: pointer): cint
@@ -400,9 +401,9 @@ proc git_config_get_multivar_foreach*(cfg: ptr git_config; name: cstring;
 ##  interested in. Use NULL to indicate all
 ## 
 
-proc git_config_multivar_iterator_new*(`out`: ptr ptr git_config_iterator;
+proc git_config_multivar_iterator_new*(`out`: ptr ptr git_config_iterator; 
                                       cfg: ptr git_config; name: cstring;
-                                      regexp: cstring): cint
+                                      regexp: cstring): cint {.importc.}
 ## *
 ##  Return the current entry and advance the iterator
 ## 
@@ -414,14 +415,14 @@ proc git_config_multivar_iterator_new*(`out`: ptr ptr git_config_iterator;
 ##  @return 0 or an error code. GIT_ITEROVER if the iteration has completed
 ## 
 
-proc git_config_next*(entry: ptr ptr git_config_entry; iter: ptr git_config_iterator): cint
+proc git_config_next*(entry: ptr ptr git_config_entry; iter: ptr git_config_iterator): cint  {.importc.}
 ## *
 ##  Free a config iterator
 ## 
 ##  @param iter the iterator to free
 ## 
 
-proc git_config_iterator_free*(iter: ptr git_config_iterator)
+proc git_config_iterator_free*(iter: ptr git_config_iterator)  {.importc.}
 ## *
 ##  Set the value of an integer config variable in the config file
 ##  with the highest level (usually the local one).
@@ -432,7 +433,7 @@ proc git_config_iterator_free*(iter: ptr git_config_iterator)
 ##  @return 0 or an error code
 ## 
 
-proc git_config_set_int32*(cfg: ptr git_config; name: cstring; value: int32_t): cint
+proc git_config_set_int32*(cfg: ptr git_config; name: cstring; value: int32): cint  {.importc.}
 ## *
 ##  Set the value of a long integer config variable in the config file
 ##  with the highest level (usually the local one).
@@ -443,7 +444,7 @@ proc git_config_set_int32*(cfg: ptr git_config; name: cstring; value: int32_t): 
 ##  @return 0 or an error code
 ## 
 
-proc git_config_set_int64*(cfg: ptr git_config; name: cstring; value: int64_t): cint
+proc git_config_set_int64*(cfg: ptr git_config; name: cstring; value: int64): cint  {.importc.}
 ## *
 ##  Set the value of a boolean config variable in the config file
 ##  with the highest level (usually the local one).
@@ -454,7 +455,7 @@ proc git_config_set_int64*(cfg: ptr git_config; name: cstring; value: int64_t): 
 ##  @return 0 or an error code
 ## 
 
-proc git_config_set_bool*(cfg: ptr git_config; name: cstring; value: cint): cint
+proc git_config_set_bool*(cfg: ptr git_config; name: cstring; value: cint): cint  {.importc.}
 ## *
 ##  Set the value of a string config variable in the config file
 ##  with the highest level (usually the local one).
@@ -468,7 +469,7 @@ proc git_config_set_bool*(cfg: ptr git_config; name: cstring; value: cint): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_config_set_string*(cfg: ptr git_config; name: cstring; value: cstring): cint
+proc git_config_set_string*(cfg: ptr git_config; name: cstring; value: cstring): cint  {.importc.}
 ## *
 ##  Set a multivar in the local config file.
 ## 
@@ -478,8 +479,8 @@ proc git_config_set_string*(cfg: ptr git_config; name: cstring; value: cstring):
 ##  @param value the new value.
 ## 
 
-proc git_config_set_multivar*(cfg: ptr git_config; name: cstring; regexp: cstring;
-                             value: cstring): cint
+proc git_config_set_multivar*(cfg: ptr git_config; name: cstring; regexp: cstring; 
+                             value: cstring): cint {.importc.}
 ## *
 ##  Delete a config variable from the config file
 ##  with the highest level (usually the local one).
@@ -488,7 +489,7 @@ proc git_config_set_multivar*(cfg: ptr git_config; name: cstring; regexp: cstrin
 ##  @param name the variable to delete
 ## 
 
-proc git_config_delete_entry*(cfg: ptr git_config; name: cstring): cint
+proc git_config_delete_entry*(cfg: ptr git_config; name: cstring): cint  {.importc.}
 ## *
 ##  Deletes one or several entries from a multivar in the local config file.
 ## 
@@ -499,7 +500,7 @@ proc git_config_delete_entry*(cfg: ptr git_config; name: cstring): cint
 ##  @return 0 or an error code
 ## 
 
-proc git_config_delete_multivar*(cfg: ptr git_config; name: cstring; regexp: cstring): cint
+proc git_config_delete_multivar*(cfg: ptr git_config; name: cstring; regexp: cstring): cint  {.importc.}
 ## *
 ##  Perform an operation on each config variable.
 ## 
@@ -517,8 +518,8 @@ proc git_config_delete_multivar*(cfg: ptr git_config; name: cstring; regexp: cst
 ##  @return 0 on success, non-zero callback return value, or error code
 ## 
 
-proc git_config_foreach*(cfg: ptr git_config; callback: git_config_foreach_cb;
-                        payload: pointer): cint
+proc git_config_foreach*(cfg: ptr git_config; callback: git_config_foreach_cb; 
+                        payload: pointer): cint {.importc.}
 ## *
 ##  Iterate over all the config variables
 ## 
@@ -529,7 +530,7 @@ proc git_config_foreach*(cfg: ptr git_config; callback: git_config_foreach_cb;
 ##  @param cfg where to ge the variables from
 ## 
 
-proc git_config_iterator_new*(`out`: ptr ptr git_config_iterator; cfg: ptr git_config): cint
+proc git_config_iterator_new*(`out`: ptr ptr git_config_iterator; cfg: ptr git_config): cint  {.importc.}
 ## *
 ##  Iterate over all the config variables whose name matches a pattern
 ## 
@@ -541,8 +542,8 @@ proc git_config_iterator_new*(`out`: ptr ptr git_config_iterator; cfg: ptr git_c
 ##  @param regexp regular expression to match the names
 ## 
 
-proc git_config_iterator_glob_new*(`out`: ptr ptr git_config_iterator;
-                                  cfg: ptr git_config; regexp: cstring): cint
+proc git_config_iterator_glob_new*(`out`: ptr ptr git_config_iterator; 
+                                  cfg: ptr git_config; regexp: cstring): cint {.importc.}
 ## *
 ##  Perform an operation on each config variable matching a regular expression.
 ## 
@@ -560,8 +561,8 @@ proc git_config_iterator_glob_new*(`out`: ptr ptr git_config_iterator;
 ##  @return 0 or the return value of the callback which didn't return 0
 ## 
 
-proc git_config_foreach_match*(cfg: ptr git_config; regexp: cstring;
-                              callback: git_config_foreach_cb; payload: pointer): cint
+proc git_config_foreach_match*(cfg: ptr git_config; regexp: cstring; 
+                              callback: git_config_foreach_cb; payload: pointer): cint {.importc.}
 ## *
 ##  Query the value of a config variable and return it mapped to
 ##  an integer constant.
@@ -597,8 +598,8 @@ proc git_config_foreach_match*(cfg: ptr git_config; regexp: cstring;
 ##  @return 0 on success, error code otherwise
 ## 
 
-proc git_config_get_mapped*(`out`: ptr cint; cfg: ptr git_config; name: cstring;
-                           maps: ptr git_cvar_map; map_n: csize): cint
+proc git_config_get_mapped*(`out`: ptr cint; cfg: ptr git_config; name: cstring; 
+                           maps: ptr git_cvar_map; map_n: csize): cint {.importc.}
 ## *
 ##  Maps a string value to an integer constant
 ## 
@@ -608,8 +609,8 @@ proc git_config_get_mapped*(`out`: ptr cint; cfg: ptr git_config; name: cstring;
 ##  @param value value to parse
 ## 
 
-proc git_config_lookup_map_value*(`out`: ptr cint; maps: ptr git_cvar_map;
-                                 map_n: csize; value: cstring): cint
+proc git_config_lookup_map_value*(`out`: ptr cint; maps: ptr git_cvar_map; 
+                                 map_n: csize; value: cstring): cint {.importc.}
 ## *
 ##  Parse a string value as a bool.
 ## 
@@ -621,7 +622,7 @@ proc git_config_lookup_map_value*(`out`: ptr cint; maps: ptr git_cvar_map;
 ##  @param value value to parse
 ## 
 
-proc git_config_parse_bool*(`out`: ptr cint; value: cstring): cint
+proc git_config_parse_bool*(`out`: ptr cint; value: cstring): cint  {.importc.}
 ## *
 ##  Parse a string value as an int32.
 ## 
@@ -633,7 +634,7 @@ proc git_config_parse_bool*(`out`: ptr cint; value: cstring): cint
 ##  @param value value to parse
 ## 
 
-proc git_config_parse_int32*(`out`: ptr int32_t; value: cstring): cint
+proc git_config_parse_int32*(`out`: ptr int32; value: cstring): cint  {.importc.}
 ## *
 ##  Parse a string value as an int64.
 ## 
@@ -645,7 +646,7 @@ proc git_config_parse_int32*(`out`: ptr int32_t; value: cstring): cint
 ##  @param value value to parse
 ## 
 
-proc git_config_parse_int64*(`out`: ptr int64_t; value: cstring): cint
+proc git_config_parse_int64*(`out`: ptr int64; value: cstring): cint  {.importc.}
 ## *
 ##  Parse a string value as a path.
 ## 
@@ -660,7 +661,7 @@ proc git_config_parse_int64*(`out`: ptr int64_t; value: cstring): cint
 ##  @param value the path to evaluate
 ## 
 
-proc git_config_parse_path*(`out`: ptr git_buf; value: cstring): cint
+proc git_config_parse_path*(`out`: ptr git_buf; value: cstring): cint  {.importc.}
 ## *
 ##  Perform an operation on each config variable in given config backend
 ##  matching a regular expression.
@@ -674,7 +675,7 @@ proc git_config_parse_path*(`out`: ptr git_buf; value: cstring): cint
 ##  @param payload the data to pass to the callback
 ## 
 
-proc git_config_backend_foreach_match*(backend: ptr git_config_backend;
+proc git_config_backend_foreach_match*(backend: ptr git_config_backend; 
                                       regexp: cstring;
                                       callback: git_config_foreach_cb;
                                       payload: pointer): cint
@@ -695,5 +696,5 @@ proc git_config_backend_foreach_match*(backend: ptr git_config_backend;
 ##  @return 0 or an error code
 ## 
 
-proc git_config_lock*(tx: ptr ptr git_transaction; cfg: ptr git_config): cint
+proc git_config_lock*(tx: ptr ptr git_transaction; cfg: ptr git_config): cint  {.importc.}
 ## * @}
