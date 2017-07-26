@@ -62,7 +62,7 @@ type
 
 proc git_config_entry_free*(a2: ptr git_config_entry)  {.importc.}
 type
-  git_config_foreach_cb* = proc (a2: ptr git_config_entry; a3: pointer): cint  {.importc.}
+  git_config_foreach_cb* = proc (a2: ptr git_config_entry; a3: pointer): cint
 
 ## *
 ##  Config var type
@@ -390,7 +390,7 @@ proc git_config_get_string_buf*(`out`: ptr git_buf; cfg: ptr git_config; name: c
 proc git_config_get_multivar_foreach*(cfg: ptr git_config; name: cstring; 
                                      regexp: cstring;
                                      callback: git_config_foreach_cb;
-                                     payload: pointer): cint
+                                     payload: pointer): cint {.importc.}
 ## *
 ##  Get each value of a multivar
 ## 
@@ -678,7 +678,7 @@ proc git_config_parse_path*(`out`: ptr git_buf; value: cstring): cint  {.importc
 proc git_config_backend_foreach_match*(backend: ptr git_config_backend; 
                                       regexp: cstring;
                                       callback: git_config_foreach_cb;
-                                      payload: pointer): cint
+                                      payload: pointer): cint {.importc.}
 ## *
 ##  Lock the backend with the highest priority
 ## 

@@ -324,7 +324,7 @@ proc git_commit_create*(id: ptr git_oid; repo: ptr git_repository; update_ref: c
                        author: ptr git_signature; committer: ptr git_signature;
                        message_encoding: cstring; message: cstring;
                        tree: ptr git_tree; parent_count: csize;
-                       parents: ptr ptr git_commit): cint
+                       parents: ptr ptr git_commit): cint {.importc.}
 ## *
 ##  Create new commit in the repository using a variable argument list.
 ## 
@@ -344,7 +344,7 @@ proc git_commit_create_v*(id: ptr git_oid; repo: ptr git_repository;
                          update_ref: cstring; author: ptr git_signature;
                          committer: ptr git_signature; message_encoding: cstring;
                          message: cstring; tree: ptr git_tree; parent_count: csize): cint {.
-    varargs.}
+    varargs, importc.}
 ## *
 ##  Amend an existing commit by replacing only non-NULL values.
 ## 
@@ -370,7 +370,7 @@ proc git_commit_create_v*(id: ptr git_oid; repo: ptr git_repository;
 proc git_commit_amend*(id: ptr git_oid; commit_to_amend: ptr git_commit; 
                       update_ref: cstring; author: ptr git_signature;
                       committer: ptr git_signature; message_encoding: cstring;
-                      message: cstring; tree: ptr git_tree): cint
+                      message: cstring; tree: ptr git_tree): cint {.importc.}
 ## *
 ##  Create a commit and write it into a buffer
 ## 
@@ -412,7 +412,7 @@ proc git_commit_create_buffer*(`out`: ptr git_buf; repo: ptr git_repository;
                               committer: ptr git_signature;
                               message_encoding: cstring; message: cstring;
                               tree: ptr git_tree; parent_count: csize;
-                              parents: ptr ptr git_commit): cint
+                              parents: ptr ptr git_commit): cint {.importc.}
 ## *
 ##  Create a commit object from the given buffer and signature
 ## 

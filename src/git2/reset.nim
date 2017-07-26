@@ -76,7 +76,7 @@ proc git_reset*(repo: ptr git_repository; target: ptr git_object;
 proc git_reset_from_annotated*(repo: ptr git_repository; 
                               commit: ptr git_annotated_commit;
                               reset_type: git_reset_t;
-                              checkout_opts: ptr git_checkout_options): cint
+                              checkout_opts: ptr git_checkout_options): cint {.importc.}
 ## *
 ##  Updates some entries in the index from the target commit tree.
 ## 

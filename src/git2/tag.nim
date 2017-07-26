@@ -290,7 +290,7 @@ proc git_tag_list*(tag_names: ptr git_strarray; repo: ptr git_repository): cint 
 proc git_tag_list_match*(tag_names: ptr git_strarray; pattern: cstring; 
                         repo: ptr git_repository): cint {.importc.}
 type
-  git_tag_foreach_cb* = proc (name: cstring; oid: ptr git_oid; payload: pointer): cint  {.importc.}
+  git_tag_foreach_cb* = proc (name: cstring; oid: ptr git_oid; payload: pointer): cint 
 
 ## *
 ##  Call callback `cb' for each tag in the repository

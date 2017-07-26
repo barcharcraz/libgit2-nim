@@ -22,7 +22,7 @@ import
 ## 
 
 type
-  git_odb_foreach_cb* = proc (id: ptr git_oid; payload: pointer): cint  {.importc.}
+  git_odb_foreach_cb* = proc (id: ptr git_oid; payload: pointer): cint
 
 ## *
 ##  Create a new object database with no backends.

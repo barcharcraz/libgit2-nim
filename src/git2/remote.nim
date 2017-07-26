@@ -232,7 +232,7 @@ proc git_remote_get_refspec*(remote: ptr git_remote; n: csize): ptr git_refspec 
 proc git_remote_connect*(remote: ptr git_remote; direction: git_direction; 
                         callbacks: ptr git_remote_callbacks;
                         proxy_opts: ptr git_proxy_options;
-                        custom_headers: ptr git_strarray): cint
+                        custom_headers: ptr git_strarray): cint {.importc.}
 ## *
 ##  Get the remote repository's reference advertisement list
 ## 
@@ -322,7 +322,7 @@ type
 
 type
   git_push_transfer_progress* = proc (current: cuint; total: cuint; bytes: csize; 
-                                   payload: pointer): cint {.importc.}
+                                   payload: pointer): cint
 
 ## *
 ##  Represents an update which will be performed on the remote during push
@@ -356,7 +356,7 @@ type
 
 type
   git_push_negotiation* = proc (updates: ptr ptr git_push_update; len: csize; 
-                             payload: pointer): cint {.importc.}
+                             payload: pointer): cint
 
 ## *
 ##  The callback settings structure
@@ -622,7 +622,7 @@ proc git_remote_update_tips*(remote: ptr git_remote;
                             callbacks: ptr git_remote_callbacks;
                             update_fetchhead: cint;
                             download_tags: git_remote_autotag_option_t;
-                            reflog_message: cstring): cint
+                            reflog_message: cstring): cint {.importc.}
 ## *
 ##  Download new data and update tips
 ## 

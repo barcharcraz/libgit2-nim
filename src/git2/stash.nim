@@ -87,7 +87,7 @@ type
 
 type
   git_stash_apply_progress_cb* = proc (progress: git_stash_apply_progress_t; 
-                                    payload: pointer): cint {.importc.}
+                                    payload: pointer): cint
 
 ## * Stash application options structure.
 ## 
@@ -163,7 +163,7 @@ proc git_stash_apply*(repo: ptr git_repository; index: csize;
 
 type
   git_stash_cb* = proc (index: csize; message: cstring; stash_id: ptr git_oid; 
-                     payload: pointer): cint {.importc.}
+                     payload: pointer): cint
 
 ## *
 ##  Loop over all the stashed states and issue a callback for each one.

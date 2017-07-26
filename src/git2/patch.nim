@@ -88,7 +88,7 @@ proc git_patch_from_blob_and_buffer*(`out`: ptr ptr git_patch;
                                     old_blob: ptr git_blob; old_as_path: cstring;
                                     buffer: cstring; buffer_len: csize;
                                     buffer_as_path: cstring;
-                                    opts: ptr git_diff_options): cint
+                                    opts: ptr git_diff_options): cint {.importc.}
 ## *
 ##  Directly generate a patch from the difference between two buffers.
 ## 
@@ -111,7 +111,7 @@ proc git_patch_from_blob_and_buffer*(`out`: ptr ptr git_patch;
 proc git_patch_from_buffers*(`out`: ptr ptr git_patch; old_buffer: pointer; 
                             old_len: csize; old_as_path: cstring;
                             new_buffer: cstring; new_len: csize;
-                            new_as_path: cstring; opts: ptr git_diff_options): cint
+                            new_as_path: cstring; opts: ptr git_diff_options): cint {.importc.}
 ## *
 ##  Free a git_patch object.
 ## 

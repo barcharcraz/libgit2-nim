@@ -174,9 +174,9 @@ proc git_packbuilder_write*(pb: ptr git_packbuilder; path: cstring; mode: cuint;
 ##  @param pb The packbuilder object
 ## 
 
-proc git_packbuilder_hash*(pb: ptr git_packbuilder): ptr git_oid 
+proc git_packbuilder_hash*(pb: ptr git_packbuilder): ptr git_oid {.importc.}
 type
-  git_packbuilder_foreach_cb* = proc (buf: pointer; size: csize; payload: pointer): cint  {.importc.}
+  git_packbuilder_foreach_cb* = proc (buf: pointer; size: csize; payload: pointer): cint
 
 ## *
 ##  Create the new pack and pass each object to the callback
@@ -209,7 +209,7 @@ proc git_packbuilder_written*(pb: ptr git_packbuilder): csize  {.importc.}
 
 type
   git_packbuilder_progress* = proc (stage: cint; current: uint32; total: uint32; 
-                                 payload: pointer): cint {.importc.}
+                                 payload: pointer): cint
 
 ## *
 ##  Set the callbacks for a packbuilder

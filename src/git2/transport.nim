@@ -21,7 +21,7 @@ import
 
 type
   git_transport_cb* = proc (`out`: ptr ptr git_transport; owner: ptr git_remote; 
-                         param: pointer): cint {.importc.}
+                         param: pointer): cint
 
 ## *
 ##  Type of SSH host fingerprint
@@ -124,7 +124,7 @@ when not defined(LIBSSH2_VERSION):
 type
   git_cred_sign_callback* = proc (session: ptr LIBSSH2_SESSION; sig: ptr ptr cuchar; 
                                sig_len: ptr csize; data: ptr cuchar; data_len: csize;
-                               abstract: ptr pointer): cint {.importc.}
+                               abstract: ptr pointer): cint
   git_cred_ssh_interactive_callback* = proc (name: cstring; name_len: cint; 
       instruction: cstring; instruction_len: cint; num_prompts: cint;
       prompts: ptr LIBSSH2_USERAUTH_KBDINT_PROMPT;
@@ -261,7 +261,7 @@ proc git_cred_ssh_key_from_agent*(`out`: ptr ptr git_cred; username: cstring): c
 proc git_cred_ssh_custom_new*(`out`: ptr ptr git_cred; username: cstring; 
                              publickey: cstring; publickey_len: csize;
                              sign_callback: git_cred_sign_callback;
-                             payload: pointer): cint
+                             payload: pointer): cint {.importc.}
 ## *
 ##  Create a "default" credential usable for Negotiate mechanisms like NTLM
 ##  or Kerberos authentication.
@@ -318,6 +318,6 @@ proc git_cred_free*(cred: ptr git_cred)  {.importc.}
 type
   git_cred_acquire_cb* = proc (cred: ptr ptr git_cred; url: cstring; 
                             username_from_url: cstring; allowed_types: cuint;
-                            payload: pointer): cint {.importc.}
+                            payload: pointer): cint
 
 ## * @}

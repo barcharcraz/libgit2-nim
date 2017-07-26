@@ -117,7 +117,7 @@ template GIT_SUBMODULE_STATUS_IS_WD_DIRTY*(S: untyped): untyped =
 ## 
 
 type
-  git_submodule_cb* = proc (sm: ptr git_submodule; name: cstring; payload: pointer): cint  {.importc.}
+  git_submodule_cb* = proc (sm: ptr git_submodule; name: cstring; payload: pointer): cint
 
 ## *
 ##  Submodule update options structure

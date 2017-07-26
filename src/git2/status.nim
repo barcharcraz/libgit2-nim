@@ -50,7 +50,7 @@ type
 ## 
 
 type
-  git_status_cb* = proc (path: cstring; status_flags: cuint; payload: pointer): cint  {.importc.}
+  git_status_cb* = proc (path: cstring; status_flags: cuint; payload: pointer): cint
 
 ## *
 ##  Select the files on which to report status.

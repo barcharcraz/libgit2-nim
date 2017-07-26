@@ -55,6 +55,6 @@ type
 ## 
 
 type
-  git_headlist_cb* = proc (rhead: ptr git_remote_head; payload: pointer): cint  {.importc.}
+  git_headlist_cb* = proc (rhead: ptr git_remote_head; payload: pointer): cint
 
 ## * @}

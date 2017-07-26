@@ -267,7 +267,7 @@ proc git_revwalk_repository*(walk: ptr git_revwalk): ptr git_repository  {.impor
 ## 
 
 type
-  git_revwalk_hide_cb* = proc (commit_id: ptr git_oid; payload: pointer): cint  {.importc.}
+  git_revwalk_hide_cb* = proc (commit_id: ptr git_oid; payload: pointer): cint
 
 ## *
 ##  Adds a callback function to hide a commit and its parents

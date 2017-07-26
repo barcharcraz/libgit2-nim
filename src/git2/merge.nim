@@ -295,7 +295,7 @@ proc git_merge_analysis*(analysis_out: ptr git_merge_analysis_t;
                         preference_out: ptr git_merge_preference_t;
                         repo: ptr git_repository;
                         their_heads: ptr ptr git_annotated_commit;
-                        their_heads_len: csize): cint
+                        their_heads_len: csize): cint {.importc.}
 ## *
 ##  Find a merge base between two commits
 ## 
@@ -398,7 +398,7 @@ proc git_merge_file_from_index*(`out`: ptr git_merge_file_result;
                                ancestor: ptr git_index_entry;
                                ours: ptr git_index_entry;
                                theirs: ptr git_index_entry;
-                               opts: ptr git_merge_file_options): cint
+                               opts: ptr git_merge_file_options): cint {.importc.}
 ## *
 ##  Frees a `git_merge_file_result`.
 ## 

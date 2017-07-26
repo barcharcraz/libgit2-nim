@@ -114,6 +114,6 @@ type
     backend*: ptr git_odb_backend
     append*: proc (writepack: ptr git_odb_writepack; data: pointer; size: csize; 
                  stats: ptr git_transfer_progress): cint
-    commit*: proc (writepack: ptr git_odb_writepack; stats: ptr git_transfer_progress): cint  {.importc.}
+    commit*: proc (writepack: ptr git_odb_writepack; stats: ptr git_transfer_progress): cint
     free*: proc (writepack: ptr git_odb_writepack) 
 

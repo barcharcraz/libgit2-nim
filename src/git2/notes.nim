@@ -28,7 +28,7 @@ import
 
 type
   git_note_foreach_cb* = proc (blob_id: ptr git_oid; annotated_object_id: ptr git_oid; 
-                            payload: pointer): cint {.importc.}
+                            payload: pointer): cint
 
 ## *
 ##  note iterator

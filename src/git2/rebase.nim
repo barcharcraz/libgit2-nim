@@ -153,7 +153,7 @@ proc git_rebase_init_options*(opts: ptr git_rebase_options; version: cuint): cin
 proc git_rebase_init*(`out`: ptr ptr git_rebase; repo: ptr git_repository; 
                      branch: ptr git_annotated_commit;
                      upstream: ptr git_annotated_commit;
-                     onto: ptr git_annotated_commit; opts: ptr git_rebase_options): cint
+                     onto: ptr git_annotated_commit; opts: ptr git_rebase_options): cint {.importc.}
 ## *
 ##  Opens an existing rebase that was previously started by either an
 ##  invocation of `git_rebase_init` or by another client.

@@ -60,7 +60,7 @@ type ## *
 
 type
   git_remote_create_cb* = proc (`out`: ptr ptr git_remote; repo: ptr git_repository; 
-                             name: cstring; url: cstring; payload: pointer): cint {.importc.}
+                             name: cstring; url: cstring; payload: pointer): cint 
 
 ## *
 ##  The signature of a function matchin git_repository_init, with an
@@ -79,7 +79,7 @@ type
 
 type
   git_repository_create_cb* = proc (`out`: ptr ptr git_repository; path: cstring; 
-                                 bare: cint; payload: pointer): cint {.importc.}
+                                 bare: cint; payload: pointer): cint
 
 ## *
 ##  Clone options structure
